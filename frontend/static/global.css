@@ -1,0 +1,135 @@
+@font-face {
+  font-family: 'arizona-flare-light';
+  src: url('./fonts/ABCArizonaFlare-Light-Trial.woff2') format("woff2");
+  src: url('./fonts/ABCArizonaFlare-Light-Trial.woff') format("woff");
+  src: local('☺︎'),
+    url('./fonts/ABCArizonaFlare-Light-Trial.woff2') format("woff2");
+    url('./fonts/ABCArizonaFlare-Light-Trial.woff') format("woff");
+  }
+@media screen and (max-device-width: 480px) {
+  @font-face {
+    font-family: 'arizona-flare-light';
+    src: url('./fonts/ABCArizonaFlare-Light-Trial.woff2') format("woff2");
+    src: url('./fonts/ABCArizonaFlare-Light-Trial.woff') format("woff");
+}}
+
+:root {
+  --gutter: 8px;
+  --margin: 16px;
+  --sectionMargin: 130px;
+  --transition: all 1000ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+  --white: #FFF;
+  --black: #000;
+  --lightGray: #EDEDED;
+  --gray: #E3E3E3;
+  --darkGray: #A0A0A0;
+}
+
+html {
+  font-family: 'neue-haas-unica', Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  color: var(--black);
+  background-color: var(--white);
+  font-size: 15px;
+  line-height: 18px;
+}
+body {
+  /* scroll-behavior: smooth; */
+}
+h1,h2,h3,h4,h5 {
+  font-weight: 400;
+  margin: 0;
+}
+.arizona {
+  font-family: 'arizona-flare-light', 'Times New Roman', Times, serif;
+  font-weight: 200;
+}
+.arizona.l {
+  font-size: 60px;
+  line-height: 60px;
+  letter-spacing: -0.03em;
+}
+.arizona.xl {
+  font-size: 90px;
+  line-height: 80px;
+  letter-spacing: -0.04em;
+}
+a {
+  text-decoration: none;
+}
+a:visited,
+a:-webkit-any-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+p {
+  margin: 0;
+}
+.btn {
+  background-color: var(--gray);
+  padding: 2px 18px 5px;
+  text-decoration: none;
+  border-radius: 18px;
+  border: none;
+  line-height: 18px;
+  display: inline;
+  cursor: pointer;
+}
+button.btn {
+  line-height: initial;
+}
+.btn>a {
+  text-decoration: none !important;
+}
+.btn:hover {
+  background-color: var(--black);
+  color: var(--white);
+}
+.btn>a:hover {
+  color: var(--white) !important;
+}
+.btn.primary {
+  background-color: var(--black);
+  color: var(--white);
+  padding: 2px 18px 5px;
+  border-radius: var(--gutter);
+  font-size: 22px;
+  line-height: 26px;
+  display: inline;
+  cursor: pointer;
+}
+.hidden {
+  display: none;
+}
+.transparent {
+  opacity: 0;
+}
+.mobileOnly {
+  display: none !important;
+}
+@media only screen and (max-width: 900px) {
+  html {
+    font-size: 14px;
+    line-height: 17px;
+  }
+  .desktopOnly {
+    display: none !important;
+  }
+  .mobileOnly {
+    display: block !important;
+  }
+  .btn,
+  .btn-mobile {
+    background-color: var(--gray);
+    padding: 1px 14px 4px;
+    text-decoration: none;
+    border-radius: 18px;
+    border: none;
+    line-height: 18px;
+    display: inline;
+    cursor: pointer;
+  }
+}
