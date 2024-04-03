@@ -12,6 +12,8 @@
   $: scrollY = ""
   $: logoHeight = "";
   $: navHeight = "";
+  $: mobileMenu = false;
+  
   let headerPosition = "down";
   let prevScrollY = 0;
   function scrolling() {
@@ -47,6 +49,16 @@
       ready = true
     }
 	});
+  $: delay1s = false;
+  beforeNavigate(() => {
+    delay1s = true
+    setTimeout(() => {
+      delay1s = false
+    }, 1000);
+	});
+  afterNavigate(() => {
+    mobileMenu = false
+	});
   function pageTransition(node, { delay, duration, offset=window.scrollY}) {
 		return {
 			delay,
@@ -60,13 +72,15 @@
 			}
 		};
 	}
-  $: mobileMenu = false
   function openMenu() {
     mobileMenu = !mobileMenu
 	}
   $: mobileNewsletter = false
   function openNewsletter() {
-    mobileNewsletter = !mobileNewsletter
+    mobileNewsletter = true
+	}
+  function closeNewsletter() {
+    mobileNewsletter = false
 	}
 </script>
 
@@ -80,7 +94,7 @@
   class:headerBgBorder={$page.url.pathname !== "/" || scrollY > innerHeight - logoHeight}>
   </div>
   {#if data.siteSettings[0].logo}
-    <a id="logo" class:noTransition={noTransition == true} class:true={mobileMenu} class:closed={$page.url.pathname !== "/" || scrollY >= 100} href="/" aria-current={$page.url.pathname === '/'}>
+    <a id="logo" class:noTransition={noTransition == true} class:delay1s={delay1s == true} class:true={mobileMenu} class:closed={$page.url.pathname !== "/" || scrollY >= 100} href="/" aria-current={$page.url.pathname === '/'}>
       {@html data.siteSettings[0].logo}
     </a>
   {/if}
@@ -120,16 +134,21 @@
 {#if ready}
 <div id="newsletter"
 transition:slide={{duration: 1000, easing: quartInOut}}
-on:click={openNewsletter}
+on:mouseenter={openNewsletter}
+on:mouseleave={closeNewsletter}
 class:true={mobileNewsletter}>
   <p>Join the newsletter</p>
   <p>Sign-up to enjoy 10% off your first order.</p>
-  <form action="YOUR_MAILCHIMP_FORM_ACTION_URL" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-    <div id="mc_embed_signup_scroll">
-      <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email" required>
-      <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
-    </div>
-  </form>
+  <div id="mc_embed_shell">
+  <div id="mc_embed_signup">
+    <form action="https://hodamilano.us22.list-manage.com/subscribe/post?u=2116d9d590155d776f4f24a83&amp;id=65445ebeaf&amp;f_id=0042c6e1f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_self" novalidate="">
+        <div id="mc_embed_signup_scroll">
+          <input type="email" name="EMAIL" class="required email" placeholder="Email" id="mce-EMAIL" required="" value="">
+          <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button" value="Subscribe">
+        </div>
+    </form>
+  </div>
+  </div>
 </div>
 {/if}
 
@@ -260,31 +279,34 @@ class:true={mobileNewsletter}>
   #newsletter>p+p {
     grid-column: span 2;
   }
-  #newsletter>form {
+  #mc_embed_shell, #mc_embed_signup {
+    display: contents;
+  }
+  form {
     display: flex;
     grid-column: span 3;
   }
-  #newsletter>form>div {
+  form>div {
     display: grid;
     gap: var(--gutter);
     grid-template-columns: repeat(3, 1fr);
     width: 100%;
   }
-  #newsletter>form>div>.email {
+  form>div>.email {
     border: none;
     padding: 0;
     background-color: transparent;
   }
-  #newsletter>form>div>input:focus{
+  form>div>input:focus{
     outline: none;
   }
-  #newsletter>form>div>input[type="submit"]{
+  form>div>input[type="submit"]{
     border: none;
     text-align: left;
     padding: 0;
     cursor: pointer;
   }
-  #newsletter>form>div>input[type="submit"]:hover{
+  form>div>input[type="submit"]:hover{
     color: var(--darkGray);
   }
   ::placeholder {
@@ -305,13 +327,16 @@ class:true={mobileNewsletter}>
     color: var(--darkGray);
   }
   @media only screen and (max-width: 900px) {
-    #logo {
-      margin-left: var(--margin);
-      width: 60vw;
+    header.up {
+      transform: translateY(-101%);
+      transition-duration: 800ms;
     }
-    #logo.true {
-      width: 140px;
-      transition-duration: 500ms;
+    header.up.true {
+      transform: translateY(0);
+    }
+    header,
+    header.closed {
+      padding: var(--margin) 0;
     }
     #menuSwitch {
       position: fixed;
@@ -324,15 +349,13 @@ class:true={mobileNewsletter}>
       background-color: var(--black);
       color: var(--white);
     }
-    header.up {
-      transform: translateY(-101%);
-      transition-duration: 800ms;
+    #logo {
+      margin-left: var(--margin);
+      width: 60vw;
+      transition-duration: 500ms;
     }
-    header.up.true {
-      transform: translateY(0);
-    }
-    header.closed {
-      padding: var(--margin) 0;
+    #logo.true {
+      width: 140px;
     }
     #logo.closed {
       width: 140px;
@@ -341,7 +364,11 @@ class:true={mobileNewsletter}>
     nav.noTransition {
       transition: none;
     }
-    nav {
+    #logo.delay1s {
+      transition-delay: 1s;
+    }
+    nav,
+    nav.closed {
       position: fixed;
       top: 0;
       left: 0;
@@ -351,19 +378,19 @@ class:true={mobileNewsletter}>
       height: auto;
       padding-bottom: var(--gutter);
       justify-content: flex-start;
-      transition-duration: 800ms;
+      transition-duration: 0ms;
       transition-delay: 0ms;
       opacity: 1;
     }
     nav.true {
       opacity: 1;
       transform: translateY(0);
-      transition-delay: 200ms;
+      transition-delay: 0ms;
     }
     .headerBg {
       transition: var(--transition);
-      transition-duration: 800ms;
-      transition-delay: 200ms;
+      transition-duration: 0ms;
+      transition-delay: 0ms;
       border-bottom: solid 1px var(--gray);
     }
     .headerBg.true {
@@ -374,7 +401,7 @@ class:true={mobileNewsletter}>
     ul {
       flex-direction: column;
       padding: 0 var(--margin);
-      margin-top: 24vw;
+      margin-top: 100px;
       gap: 0;
     }
     ul+ul {
@@ -405,7 +432,7 @@ class:true={mobileNewsletter}>
       display: flex;
       flex-direction: column;
       gap: 0;
-      bottom: -2.1em;
+      bottom: -1.8em;
       transition: var(--transition);
       padding: var(--margin);
     }

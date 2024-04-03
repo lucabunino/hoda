@@ -2,7 +2,6 @@
   import type { PageData } from './$types';
   export let data: PageData;
   console.log(data);
-  
 
   import {urlFor} from '$lib/utils/image';
   import { onMount } from 'svelte';
@@ -18,6 +17,12 @@
   let ready = false;
   onMount(() => {
     const swiperElements = document.querySelectorAll('.swiperEl');
+    let effect = ""
+    if (innerWidth > 900) {
+      effect = "fade"
+    } else {
+      effect = "slide"
+    }
     const params = {
       autoplay: {
         delay: "6000",
@@ -35,6 +40,19 @@
         }
         `,
       ],
+      effect: effect,
+      spaceBetween: 8,
+      slidesPerView:1.1,
+      rewind:'false',
+      loop:'true',
+      breakpoints: {
+        900: {
+          slidesPerView:1,
+          simulateTouch:'false',
+          rewind:'true',
+          loop:'false',
+        }
+      },
     };
     ready = true
 
@@ -48,9 +66,18 @@
       swiperTh.initialize();
     });
 	});
+  let prevWidth = innerWidth;
+  function handleResize() {
+    console.log(prevWidth);
+    if ((innerWidth > 900 && prevWidth <= 900) || (innerWidth <= 900 && prevWidth > 900)) {    
+      location.replace(location.href);
+    }
+    prevWidth = innerWidth;
+  }
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight/>
+<svelte:window bind:innerWidth bind:innerHeight on:resize={handleResize}/>
+
 {#if data.suitesPage[0].suitesIntro}
   <section id="intro">
     <h3>{data.suitesPage[0].suitesIntro.en}</h3>
@@ -58,17 +85,17 @@
 {/if}
 {#if data.suites}
   {#each data.suites as suite, i (suite)}
-  <section id="{suite.title}" class="suite" class:transparent={ready != true} style={`height: ${innerHeight - 34 - margin*2}px`}>
+  <section id="{suite.title}" class="suite" class:transparent={ready != true} style={innerWidth > 900 ? `height: ${innerHeight - 34 - margin*2}px` : `height: auto`}>
       <div class="suite-images">
         <swiper-container
         init=false
         direction={'vertical'}
-        class={`swiperThumbs swiperThumbs${i}`}
-        slides-per-view="auto"
+        class={`desktopOnly swiperThumbs swiperThumbs${i}`}
+        slides-per-view=auto
         free-mode=true
-        watch-slides-progress="true"
-        mousewheel="true"
-        space-between="3"
+        watch-slides-progress=true
+        mousewheel=true
+        space-between=3
         loop=false
         >
           {#each suite.slider as slide, i (slide)}
@@ -87,11 +114,10 @@
         init=false
         class={`swiperEl swiperEl${i}`}
         speed=500
-        loop=false
         thumbs-swiper={`.swiperThumbs${i}`}
-        effect='fade'
         slidesPerView=1
-        navigation={true}
+        navigation=true
+        simulateTouch=true
         >
           {#each suite.slider as slide, i (slide)}
             <swiper-slide>
@@ -157,29 +183,50 @@
 </section>
 <section style="padding: 100px;">
   <h3 style="margin-bottom: 30px;">Custom booking example, <br>after click on "Book now"</h3>
-  <div
-    id="lodgify-book-now-box"
-    data-rental-id="550300"
-    data-website-id="500098"
-    data-slug="luca-bunino"
-    data-language-code="it"
-    data-new-tab="true"
-    data-check-in-label="Arrivo"
-    data-check-out-label="Partenza"
-    data-guests-label="Ospiti"
-    data-guests-singular-label="&#123;&#123;NumberOfGuests&#125;&#125; ospite"
-    data-guests-plural-label="&#123;&#123;NumberOfGuests&#125;&#125; ospiti"
-    data-location-input-label="Località"
-    data-total-price-label="Prezzo totale:"
-    data-select-dates-to-see-price-label="Selezionare le date per vedere il prezzo totale"
-    data-minimum-price-per-night-first-label="Da"
-    data-minimum-price-per-night-second-label="a notte"
-    data-book-button-label="Prenota adesso"
-    
-    data-version="stable"
-    >
-  </div>
-  <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script>
+  <style>
+    :root {
+      --ldg-bnb-background: #ffffff;
+      --ldg-bnb-border-radius: 0.42em;
+      --ldg-bnb-box-shadow: 0px 24px 54px 0px rgba(0, 0, 0, 0.1);
+      --ldg-bnb-padding: 16px;
+      --ldg-bnb-input-background: #ffffff;
+      --ldg-bnb-button-border-radius: 0.42em;
+  
+      --ldg-bnb-color-primary: #000000;
+      --ldg-bnb-color-primary-lighter:#808080;
+      --ldg-bnb-color-primary-darker: #000000;
+      --ldg-bnb-color-primary-contrast: #ffffff;
+      --ldg-component-calendar-cell-selection-bg-color: #000000;
+      --ldg-component-calendar-cell-selection-color: #ffffff;
+      --ldg-component-calendar-cell-selected-bg-color: #808080;
+      --ldg-component-calendar-cell-selected-color: #ffffff;
+      --ldg-bnb-font-family: inherit;
+    }
+    #lodgify-book-now-box {    
+      width: 100%;
+    }
+    </style>
+    <div
+      id="lodgify-book-now-box"
+      data-rental-id="567810"
+      data-website-id="507783"
+      data-slug="sara-barbara"
+      data-language-code="it"
+      data-new-tab="true"
+      data-check-in-label="Arrivo"
+      data-check-out-label="Partenza"
+      data-guests-label="Ospiti"
+      data-guests-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospite"
+      data-guests-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospiti"
+      data-location-input-label="Località"
+      data-total-price-label="Prezzo totale:"
+      data-select-dates-to-see-price-label="Selezionare le date per vedere il prezzo totale"
+      data-minimum-price-per-night-first-label="Da"
+      data-minimum-price-per-night-second-label="a notte"
+      data-book-button-label="Prenota adesso"
+      data-version="stable"
+    ></div>
+    <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script> 
 </section>
 
 <style>
@@ -199,13 +246,22 @@
     margin: auto;
     max-width: 800px;
   }
+  @media only screen and (max-width: 900px) {
+    #intro {
+      padding: calc(70px + var(--gutter)) var(--margin) calc(var(--margin)*2);
+    }
+    h3 {
+      font-size: 18px;
+      line-height: 24px;
+      text-align: left;
+    }
+  }
 
   /* SUITES */
   h2 {
     font-size: 90px;
     line-height: 90px;
     letter-spacing: -0.04em;
-    padding: var(--margin) 0;
     max-width: 800px;
   }
   .suite {
@@ -315,6 +371,68 @@
     line-height: 15px;
     color: var(--darkGray);
   }
+  @media only screen and (max-width: 900px) {
+    h2 {
+      font-size: 56px;
+      line-height: 60px;
+      padding: 0;
+    }
+    .suite {
+      flex-direction: column;
+      gap: var(--margin);
+      margin-bottom: var(--sectionMargin);
+      padding: var(--margin) 0;
+    }
+    .suite:nth-of-type(odd),
+    .suite:nth-of-type(odd)>.suite-images {
+      flex-direction: column;
+    }
+    .suite-images {
+      width: auto;
+      gap: unset;
+    }
+    swiper-container.swiperEl {
+      width: 100%;
+    }
+    swiper-container::part(button-prev),
+    swiper-container::part(button-next) {
+      display: none;
+    }
+    swiper-container::part(wrapper) {
+      padding: 0 var(--margin);
+    }
+    .suite-content {
+      padding: 0 var(--margin);
+      width: auto;
+    }
+    .suite-title {
+      padding: 0;
+    }
+    .suite-description {
+      font-size: 18px;
+      line-height: 24px;
+      max-width: unset;
+    }
+    .suite-info {
+      max-width: unset;
+    }
+    .suite-book-container {
+      position: relative;
+      bottom: unset;
+    }
+    .suite-book {
+      margin-top: calc(var(--margin)*2);
+      display: block;
+      text-align: center;
+      font-size: 18px;
+    }
+    .suite-book-details {
+      margin-top: var(--margin);
+      font-size: 14px;
+      line-height: 17px;
+      max-width: unset;
+    }
+  }
 
   /* GENERAL INFO */
   #general-info {
@@ -357,5 +475,47 @@
     white-space: pre-line;
     font-size: 15px;
     line-height: 18px;
+  }
+
+  @media only screen and (max-width: 900px) {
+    #general-info {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    #general-info-left {
+      grid-column: span 1;
+      grid-template-columns: repeat(1, 1fr);
+    }
+    #general-info-right {
+      grid-column: span 1;
+    }
+    .general-info-title {
+      grid-column: span 1;
+    }
+    .general-info-row {
+      margin-bottom: calc(var(--margin)*4);
+    }
+    .general-info-row-title {
+      font-size: 18px;
+      line-height: 24px;
+      margin-bottom: var(--margin);
+    }
+    .general-info-row-content {
+      font-size: 14px;
+      line-height: 18px;
+    }
+  }
+  @media only screen and (max-width: 700px) {
+    #general-info {
+      grid-template-columns: repeat(1, 1fr);
+      gap: calc(var(--margin)*3);
+    }
+    #general-info-right {
+      gap: calc(var(--margin)*3);
+      display: grid;
+    }
+    .general-info-row-title,
+    .general-info-row-content {
+      width: 100%;
+    }
   }
 </style>

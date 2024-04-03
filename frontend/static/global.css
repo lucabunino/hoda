@@ -111,6 +111,16 @@ button.btn {
   display: none !important;
 }
 @media only screen and (max-width: 900px) {
+  :root {
+    --margin: 12px;
+    --sectionMargin: 130px;
+    --transition: all 1000ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+    --white: #FFF;
+    --black: #000;
+    --lightGray: #EDEDED;
+    --gray: #E3E3E3;
+    --darkGray: #A0A0A0;
+  }
   html {
     font-size: 14px;
     line-height: 17px;
@@ -132,4 +142,13 @@ button.btn {
     display: inline;
     cursor: pointer;
   }
+  .arizona.l {
+    font-size: 35px;
+    line-height: 35px;
+  }
+  .arizona.xl {
+    font-size: 50px;
+    line-height: 50px;
+  }
+
 }

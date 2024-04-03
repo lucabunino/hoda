@@ -174,6 +174,11 @@
     margin: auto;
     max-width: 900px;
   }
+  @media only screen and (max-width: 900px) {
+    #intro {
+      padding: calc(70px + var(--gutter)) var(--margin) calc(var(--margin)*2);
+    }
+  }
 
   /* IMAGES */
   #images {

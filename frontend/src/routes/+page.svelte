@@ -255,7 +255,13 @@
   }
   #suites {
     padding-top: 115px;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
   }
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  #suites::-webkit-scrollbar {
+    display: none;
+  } 
   #suites>h3 {
     padding: 0 var(--margin);
   }

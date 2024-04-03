@@ -52,9 +52,13 @@
   h3 {}
   h4 {}
   h5 {}
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: 900px) {
+    h2,p {
+      text-align: left;
+    }
     p {
-      color: green;
+      font-size: 18px;
+      line-height: 24px;
     }
   }
 </style>
