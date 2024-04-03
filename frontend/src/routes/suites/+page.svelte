@@ -183,29 +183,6 @@
 </section>
 <section style="padding: 100px;">
   <h3 style="margin-bottom: 30px;">Custom booking example, <br>after click on "Book now"</h3>
-  <style>
-    :root {
-      --ldg-bnb-background: #ffffff;
-      --ldg-bnb-border-radius: 0.42em;
-      --ldg-bnb-box-shadow: 0px 24px 54px 0px rgba(0, 0, 0, 0.1);
-      --ldg-bnb-padding: 16px;
-      --ldg-bnb-input-background: #ffffff;
-      --ldg-bnb-button-border-radius: 0.42em;
-  
-      --ldg-bnb-color-primary: #000000;
-      --ldg-bnb-color-primary-lighter:#808080;
-      --ldg-bnb-color-primary-darker: #000000;
-      --ldg-bnb-color-primary-contrast: #ffffff;
-      --ldg-component-calendar-cell-selection-bg-color: #000000;
-      --ldg-component-calendar-cell-selection-color: #ffffff;
-      --ldg-component-calendar-cell-selected-bg-color: #808080;
-      --ldg-component-calendar-cell-selected-color: #ffffff;
-      --ldg-bnb-font-family: inherit;
-    }
-    #lodgify-book-now-box {    
-      width: 100%;
-    }
-    </style>
     <div
       id="lodgify-book-now-box"
       data-rental-id="567810"
@@ -226,7 +203,7 @@
       data-book-button-label="Prenota adesso"
       data-version="stable"
     ></div>
-    <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script> 
+    <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script>
 </section>
 
 <style>
@@ -432,6 +409,29 @@
       line-height: 17px;
       max-width: unset;
     }
+  }
+
+  /* BOOK EMBED */
+  :root {
+    --ldg-bnb-background: #ffffff;
+    --ldg-bnb-border-radius: 0.42em;
+    --ldg-bnb-box-shadow: 0px 24px 54px 0px rgba(0, 0, 0, 0.1);
+    --ldg-bnb-padding: 16px;
+    --ldg-bnb-input-background: #ffffff;
+    --ldg-bnb-button-border-radius: 0.42em;
+
+    --ldg-bnb-color-primary: #000000;
+    --ldg-bnb-color-primary-lighter:#808080;
+    --ldg-bnb-color-primary-darker: #000000;
+    --ldg-bnb-color-primary-contrast: #ffffff;
+    --ldg-component-calendar-cell-selection-bg-color: #000000;
+    --ldg-component-calendar-cell-selection-color: #ffffff;
+    --ldg-component-calendar-cell-selected-bg-color: #808080;
+    --ldg-component-calendar-cell-selected-color: #ffffff;
+    --ldg-bnb-font-family: inherit;
+  }
+  #lodgify-book-now-box {    
+    width: 100%;
   }
 
   /* GENERAL INFO */
