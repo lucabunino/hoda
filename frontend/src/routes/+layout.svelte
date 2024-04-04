@@ -1,11 +1,14 @@
 <script lang="ts">
   import type { PageData } from './$types';
   export let data: PageData;
+  console.log(data);
+  
   import { onMount, afterUpdate, tick } from 'svelte';
   import { beforeNavigate, afterNavigate } from '$app/navigation';
   import { page, navigating } from '$app/stores';
   import { fade, slide, fly } from 'svelte/transition';
   import { quartInOut } from 'svelte/easing';
+  import { browser } from '$app/environment';
   
   $: innerWidth = 1
 	$: innerHeight = 1
@@ -82,6 +85,40 @@
   function closeNewsletter() {
     mobileNewsletter = false
 	}
+  let bookNowButtons = false;
+  let lodgifyActive = ""
+  let scrollTop = null;
+  let scrollLeft = null;
+  $: timer = 3000;
+  function book(i) {
+    timer = 20000;
+    console.log("book " + i);
+    disableScroll()
+    lodgifyActive = i
+  }
+  function unbook(i) {
+    timer = 3000;
+    bookNowButtons = false
+    console.log("unbook " + i);
+    lodgifyActive = false
+    enableScroll()
+  }
+  function disableScroll() {
+    if (browser) {
+      scrollTop = 
+        window.pageYOffset || window.document.documentElement.scrollTop;
+      scrollLeft = 
+        window.pageXOffset || window.document.documentElement.scrollLeft,
+        window.onscroll = function() {
+        window.scrollTo(scrollLeft, scrollTop);
+      }};
+    }
+
+  function enableScroll() {
+    if (browser) {
+      window.onscroll = function() {};
+    }
+  };
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={handleResize} on:scroll={scrolling}/>
@@ -117,7 +154,44 @@
       <li class="hidden"><a class="menu-item menu-item-mobile" href="/shop" aria-current={$page.url.pathname === '/shop'}>Shop</a></li>
     </ul>
     <ul>
-      <li><a class="menu-item menu-item-mobile btn" href="/about">Book now</a></li>
+      {#if !bookNowButtons}
+        <li in:fade={{duration: 0, easing: quartInOut}}>
+          <p class="menu-item menu-item-mobile btn" href="/about" on:click={() => bookNowButtons = true}>Book now</p>
+        </li>
+      {:else}
+        <div id="bookNowContainer" in:fade={{duration: 0, easing: quartInOut}} on:mouseleave={() => setTimeout(() => bookNowButtons = false)}>
+          {#each data.suitesIds as suite, i (suite)}
+            <li>
+              <p class="menu-item btn" on:click={() => book(i)}>{suite.title}</p>
+            </li>
+            {#if lodgifyActive === i}
+              <div id="lodgify-book-now-background" on:click={() => unbook(i)}></div>
+                <div
+                id="lodgify-book-now-box"
+                class="lodgify-book-now-box lodgify-{i}"
+                data-rental-id={suite.rentalId}
+                data-website-id="507783"
+                data-slug="sara-barbara"
+                data-language-code="en"
+                data-new-tab="true"
+                data-check-in-label="Arrival"
+                data-check-out-label="Departure"
+                data-guests-label="Guests"
+                data-guests-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospite"
+                data-guests-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospiti"
+                data-location-input-label="Location"
+                data-total-price-label="Total price:"
+                data-select-dates-to-see-price-label="Select dates to see total price"
+                data-minimum-price-per-night-first-label="From"
+                data-minimum-price-per-night-second-label="per night"
+                data-book-button-label="Book Now"
+                data-version="stable"
+                ></div>
+              <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script>
+            {/if}
+          {/each}
+        </div>
+      {/if}
       <li><a id="languageSwitch" class="menu-item btn-mobile" href="/it">En</a></li>
     </ul>
   </nav>
@@ -266,6 +340,15 @@ class:true={mobileNewsletter}>
   ul>button.active {
     text-decoration: underline;
   }
+  #bookNowContainer {
+    display: flex;
+    gap: var(--gutter);
+  }
+
+
+
+
+
   #newsletter {
     position: sticky;
     bottom: 0;

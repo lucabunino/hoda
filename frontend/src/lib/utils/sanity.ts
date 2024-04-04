@@ -74,6 +74,15 @@ export async function getSuites(): Promise<Suites[]> {
 	);
 }
 
+export async function getSuitesIds(): Promise<Suites[]> {
+	return await client.fetch(
+		groq`*[_type == "suite"]{
+			title,
+			rentalId,
+			} | order(year desc)`
+	);
+}
+
 export async function getMenu(): Promise<Menu[]> {
 	return await client.fetch(
 		groq`*[_type == "menu"] {

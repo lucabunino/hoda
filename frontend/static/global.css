@@ -100,6 +100,7 @@ button.btn {
   line-height: 26px;
   display: inline;
   cursor: pointer;
+  height: 40px;
 }
 .hidden {
   display: none;
@@ -110,6 +111,56 @@ button.btn {
 .mobileOnly {
   display: none !important;
 }
+
+/* BOOK EMBED */
+:root {
+  --ldg-bnb-background: #ffffff;
+  --ldg-bnb-border-radius: var(--gutter);
+  --ldg-bnb-box-shadow: 0px 24px 54px 0px rgba(0, 0, 0, 0.05);
+  --ldg-bnb-padding: 16px;
+  --ldg-bnb-input-background: #ffffff;
+  --ldg-bnb-button-border-radius: var(--gutter);
+  --ldg-bnb-color-primary: #000000;
+  --ldg-bnb-color-primary-lighter:#808080;
+  --ldg-bnb-color-primary-darker: #000000;
+  --ldg-bnb-color-primary-contrast: #ffffff;
+  --ldg-component-calendar-cell-selection-bg-color: #000000;
+  --ldg-component-calendar-cell-selection-color: #ffffff;
+  --ldg-component-calendar-cell-selected-bg-color: #808080;
+  --ldg-component-calendar-cell-selected-color: #ffffff;
+  --ldg-bnb-font-family: inherit;
+}
+#lodgify-book-now-background {    
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100%;
+  background-color: #FFF;
+  opacity: .8;
+  z-index: 2;
+}
+.lodgify-book-now-box {
+  width: auto;
+  position: fixed;
+  top: 50vh;
+  left: 50vw;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: 999;
+}
+.css-8xvdw6.styled-override {
+  background-color: var(--black) !important;
+  color: var(--white) !important;
+  padding: 2px 18px 5px;
+  border-radius: var(--gutter) !important;
+  font-size: 22px;
+  line-height: 33px;
+  display: block;
+  cursor: pointer;
+  text-align: center;
+}
+
+
 @media only screen and (max-width: 900px) {
   :root {
     --margin: 12px;
@@ -150,5 +201,4 @@ button.btn {
     font-size: 50px;
     line-height: 50px;
   }
-
 }

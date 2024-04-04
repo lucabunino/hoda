@@ -9,9 +9,19 @@
   import PortableTextStyle from '../components/portableTextStyle.svelte';
   import { fade, slide, fly } from 'svelte/transition';
   import { quartInOut } from 'svelte/easing';
+  import { browser } from '$app/environment';
+
+  export let form;
+  console.log(form);
+  $: userKind = "unset";
+  $: bg = "unset";
+  
+  import { enhance } from '$app/forms';  
 
   import { register } from 'swiper/element/bundle';
   register();
+
+  $: lang = "en"
 
   $: scrollX = 0
   $: innerWidth = 0
@@ -103,6 +113,35 @@
       });
     });
   });
+
+  let lodgifyActive = ""
+  let scrollTop = null;
+  let scrollLeft = null;
+  function book(i) {
+    console.log("book " + i);
+    disableScroll()
+    lodgifyActive = i
+  }
+  function unbook(i) {
+    console.log("unbook " + i);
+    lodgifyActive = false
+    enableScroll()
+  }
+  function disableScroll() {
+    if (browser) {
+      scrollTop = 
+        window.pageYOffset || window.document.documentElement.scrollTop;
+      scrollLeft = 
+        window.pageXOffset || window.document.documentElement.scrollLeft,
+        window.onscroll = function() {
+        window.scrollTo(scrollLeft, scrollTop);
+      }};
+    }
+  function enableScroll() {
+    if (browser) {
+      window.onscroll = function() {};
+    }
+  };
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight bind:scrollX/>
@@ -185,9 +224,34 @@
             {/each}
             </ul>
           {/if}
-          <a class="btn" href="{suite.reservationURL}">Book now</a>         
+          <button class="btn" on:click={() => book(i)}>Book now</button>     
           <a class="suite-more" href="/suites#{suite.title}">More info</a>
         </div>
+        {#if lodgifyActive === i}
+          <div id="lodgify-book-now-background" on:click={() => unbook(i)}></div>
+          <div
+          id="lodgify-book-now-box"
+          class="lodgify-book-now-box lodgify-{i}"
+          data-rental-id={suite.rentalId}
+          data-website-id="507783"
+          data-slug="sara-barbara"
+          data-language-code="en"
+          data-new-tab="true"
+          data-check-in-label="Arrival"
+          data-check-out-label="Departure"
+          data-guests-label="Guests"
+          data-guests-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospite"
+          data-guests-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospiti"
+          data-location-input-label="Location"
+          data-total-price-label="Total price:"
+          data-select-dates-to-see-price-label="Select dates to see total price"
+          data-minimum-price-per-night-first-label="From"
+          data-minimum-price-per-night-second-label="per night"
+          data-book-button-label="Book Now"
+          data-version="stable"
+          ></div>
+          <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script>
+        {/if}
       {/each}
     </div>
   </section>
@@ -202,14 +266,54 @@
     <div id="cleo-logo" class:cleoPopup={cleoPopupVisible}>{@html data.homepage[0].homepageLogoCleo}</div>
     <p id="cleo-payoff" class:cleoPopup={cleoPopupVisible}>Make a wish</p>
     <p id="cleo-content" class:cleoPopup={cleoPopupVisible}>{data.homepage[0].homepageCleo.en}</p>
-    <button id="cleo-btn" class="btn" class:cleoPopup={cleoPopupVisible} on:click={cleoPopup}>Ask anything</button>
+    <button id="cleo-btn" class="btn blue-azure" class:cleoPopup={cleoPopupVisible} on:click={cleoPopup}>Ask anything</button>
     {#if cleoPopupVisible}
       <div id="cleo-popup" in:fade={{duration: 1000, delay: 200, easing: quartInOut}} out:fade={{duration: 1000, delay: 0, easing: quartInOut}}>
-        <form action="">
-          <button class="cleo-form">Regular user</button>
-        </form>
-        <form action="">
-          <button class="cleo-form">HOD’A guest</button>
+        <form
+        id="cleo-form"
+        action="?/create"
+        method="POST"
+        use:enhance
+        >
+          {#if userKind === "unset"}
+            <button type="button" class="btn cleo dropShadow azure" id="hoda" name="hoda" on:click={() => userKind="hoda"}>HOD’A guest</button>
+            <button type="button" class="btn cleo dropShadow blue" id="regular" name="regular" on:click={() => userKind="regular"}>Regular user</button>
+          {/if}
+          {#if userKind === "hoda"}
+            <div class="formBackground dropShadow azure">
+              <p>Nice to meet you again</p>
+              <input type="text" id="fname" name="fname" value={form?.fname ?? ''} placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'} required>
+              <input type="text" id="lname" name="lname" value={form?.lname ?? ''} placeholder={lang == "en" ? `Last name (required)` : 'Cognome (obbligatorio)'} required>
+              <select id="suite" name="suite" form="cleo-form" required>
+                <option value="HOM">HO’M</option>
+                <option value="HOL">HO’L</option>
+                <option value="HOC">HO’C</option>
+              </select>
+              <button type="button" class="btn cleo dropShadow confirm" id="confirm" name="confirm" on:click={() => userKind="selected"}>Confirm</button>
+            </div>
+          {:else if userKind === "regular"}
+            <div class="formBackground dropShadow blue">
+              <!-- ADDD BG -->
+              <p>Fill in your contacts</p>
+              <input type="text" id="fname" name="fname" value={form?.fname ?? ''} placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'} required>
+              <input type="text" id="lname" name="lname" value={form?.lname ?? ''} placeholder={lang == "en" ? `Last name (required)` : 'Cognome (obbligatorio)'} required>
+              <input type="email" id="email" name="email" value={form?.email ?? ''} placeholder={lang == "en" ? `E-mail (required)` : 'E-mail (obbligatorio)'} required>
+              <input type="phone" id="phone" name="phone" value={form?.phone ?? ''} placeholder={lang == "en" ? `Phone number (required)` : 'Numero di telefono (obbligatorio)'} required>
+              <input type="company" id="company" name="company" value={form?.company ?? ''} placeholder={lang == "en" ? `Company name (required)` : 'Nome azienda (obbligatorio)'} required>
+              <button type="button" class="btn cleo dropShadow confirm" id="confirm" name="confirm" on:click={() => userKind="selected"}>Confirm</button>
+            </div>
+          {:else if userKind === "selected"}
+            <div class="formBackground dropShadow {bg}">
+              <p>Fill in your contacts</p>
+              <input type="text" id="fname" name="fname" value={form?.fname ?? ''} placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'} required>
+              <input type="text" id="lname" name="lname" value={form?.lname ?? ''} placeholder={lang == "en" ? `Last name (required)` : 'Cognome (obbligatorio)'} required>
+              <input type="email" id="email" name="email" value={form?.email ?? ''} placeholder={lang == "en" ? `E-mail (required)` : 'E-mail (obbligatorio)'} required>
+              <input type="phone" id="phone" name="phone" value={form?.phone ?? ''} placeholder={lang == "en" ? `Phone number (required)` : 'Numero di telefono (obbligatorio)'} required>
+              <input type="company" id="company" name="company" value={form?.company ?? ''} placeholder={lang == "en" ? `Company name (required)` : 'Nome azienda (obbligatorio)'} required>
+              <button type="button" class="btn cleo dropShadow confirm" id="confirm" name="confirm" on:click={() => userKind="selected"}>Confirm</button>
+            </div>
+          {/if}
+          <button id="submit" type="submit" class="btn">Submit</button>
         </form>
       </div>
     {/if}
@@ -375,12 +479,80 @@
     padding: 0 0 var(--margin);
     position: relative;
     z-index: 1;
+    transition: var(--transition);
+  }
+  #cleo-content.cleoPopup {
+    opacity: 0;
   }
   #cleo-btn {
     margin: 0 auto 20vh;
     z-index: 2;
     position: relative;
   }
+  .blue-azure {
+    background: linear-gradient(0.25turn, #91B0B6, #FFF, #D8FFF4);
+  }
+  .blue-azure:hover {
+    color: #444;
+  }
+  .blue {
+    background: linear-gradient(0.25turn, #91B0B6, #FFF);
+  }
+  .azure {
+    background: linear-gradient(0.25turn, #D8FFF4, #FFF);
+  }
+  .cleo {
+    padding: 12px 30px 17px;
+    border-radius: 5px;
+    font-size: 22px;
+    line-height: 26px;
+  }
+  .cleo:hover {
+    color: #444;
+  }
+  .dropShadow {
+    filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
+  }
+  .confirm {
+    background-color: #FFF;
+    border-radius: 99px;
+    height: 33px;
+    padding: 0px 30px 4px;
+    width: fit-content;
+    margin: auto;
+    margin-top: 1.3em;
+    margin-bottom: .5em;
+  }
+  .formBackground {
+    display: block;
+    padding: var(--margin);
+    min-height: 40vh;
+    width: 40vw;
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--gutter);
+    border-radius: 5px;
+  }
+  .formBackground>input {
+    color: #A0A0A0;
+    padding: 0px 10px 4px;
+    display: block;
+    font-size: 22px;
+    line-height: 26px;
+    height: 33px;
+    border-radius: 5px;
+    border: none;
+    width: -webkit-fill-available;
+    filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
+  }
+  .formBackground>p {
+    font-size: 22px;
+    line-height: 26px;
+    margin-top: .5em;
+    margin-bottom: 1.3em;
+  }
+
+
   #cleo-spline {
     width: 100%;
     height: 80%;

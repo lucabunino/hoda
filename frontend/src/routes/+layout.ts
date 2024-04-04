@@ -1,5 +1,6 @@
 // src/routes/+layout.js
 import { getSiteSettings } from '$lib/utils/sanity';
+import { getSuitesIds } from '$lib/utils/sanity';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
@@ -7,10 +8,12 @@ import type { PageLoad } from './$types';
 export const load:any = (async ({ url }) => {
   const { pathname } = url;
   const siteSettings = await getSiteSettings();
+  const suitesIds = await getSuitesIds();
   const initLocale = 'it'; // get from cookie, user session, ...
   // await loadTranslations(initLocale, pathname); // keep this just before the `return`
-  if (siteSettings) {
+  if (siteSettings && suitesIds) {
 		return {
+      suitesIds,
 			siteSettings,
       pathname
 		};

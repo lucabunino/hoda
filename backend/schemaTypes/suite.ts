@@ -51,5 +51,10 @@ export default {
       title: "Reservation URL",
       type: "url",
     },
+    {
+      name: "rentalId",
+      title: "Rental ID",
+      type: "string",
+    },
   ],
 }

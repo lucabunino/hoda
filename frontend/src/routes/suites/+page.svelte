@@ -5,6 +5,7 @@
 
   import {urlFor} from '$lib/utils/image';
   import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
 
   import { register } from 'swiper/element/bundle';
   register();
@@ -74,6 +75,35 @@
     }
     prevWidth = innerWidth;
   }
+
+  let lodgifyActive = ""
+  let scrollTop = null;
+  let scrollLeft = null;
+  function book(i) {
+    console.log("book " + i);
+    disableScroll()
+    lodgifyActive = i
+  }
+  function unbook(i) {
+    console.log("unbook " + i);
+    lodgifyActive = false
+    enableScroll()
+  }
+  function disableScroll() {
+    if (browser) {
+      scrollTop = 
+        window.pageYOffset || window.document.documentElement.scrollTop;
+      scrollLeft = 
+        window.pageXOffset || window.document.documentElement.scrollLeft,
+        window.onscroll = function() {
+      }};
+    }
+
+  function enableScroll() {
+    if (browser) {
+      window.onscroll = function() {};
+    }
+  };
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight on:resize={handleResize}/>
@@ -144,10 +174,35 @@
           </ul>
         {/if}
         <div class="suite-book-container">
-          <a class="btn primary suite-book" href="{suite.reservationURL}">Book now</a>
+          <button class="btn primary suite-book" on:click={() => book(i)}>Book now</button>
           <p class="suite-book-details">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
         </div>
       </div>
+      {#if lodgifyActive === i}
+        <div id="lodgify-book-now-background" on:click={() => unbook(i)}></div>
+        <div
+        id="lodgify-book-now-box"
+        class="lodgify-book-now-box lodgify-{i}"
+        data-rental-id={suite.rentalId}
+        data-website-id="507783"
+        data-slug="sara-barbara"
+        data-language-code="en"
+        data-new-tab="true"
+        data-check-in-label="Arrival"
+        data-check-out-label="Departure"
+        data-guests-label="Guests"
+        data-guests-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospite"
+        data-guests-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospiti"
+        data-location-input-label="Location"
+        data-total-price-label="Total price:"
+        data-select-dates-to-see-price-label="Select dates to see total price"
+        data-minimum-price-per-night-first-label="From"
+        data-minimum-price-per-night-second-label="per night"
+        data-book-button-label="Book Now"
+        data-version="stable"
+        ></div>
+        <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script>
+      {/if}
   </section>
   {/each}
 {/if}
@@ -181,31 +236,6 @@
     {/if}
   </div>
 </section>
-<section style="padding: 100px;">
-  <h3 style="margin-bottom: 30px;">Custom booking example, <br>after click on "Book now"</h3>
-    <div
-      id="lodgify-book-now-box"
-      data-rental-id="567810"
-      data-website-id="507783"
-      data-slug="sara-barbara"
-      data-language-code="it"
-      data-new-tab="true"
-      data-check-in-label="Arrivo"
-      data-check-out-label="Partenza"
-      data-guests-label="Ospiti"
-      data-guests-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospite"
-      data-guests-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospiti"
-      data-location-input-label="Località"
-      data-total-price-label="Prezzo totale:"
-      data-select-dates-to-see-price-label="Selezionare le date per vedere il prezzo totale"
-      data-minimum-price-per-night-first-label="Da"
-      data-minimum-price-per-night-second-label="a notte"
-      data-book-button-label="Prenota adesso"
-      data-version="stable"
-    ></div>
-    <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script>
-</section>
-
 <style>
   section {
     display: block;
@@ -409,29 +439,6 @@
       line-height: 17px;
       max-width: unset;
     }
-  }
-
-  /* BOOK EMBED */
-  :root {
-    --ldg-bnb-background: #ffffff;
-    --ldg-bnb-border-radius: 0.42em;
-    --ldg-bnb-box-shadow: 0px 24px 54px 0px rgba(0, 0, 0, 0.1);
-    --ldg-bnb-padding: 16px;
-    --ldg-bnb-input-background: #ffffff;
-    --ldg-bnb-button-border-radius: 0.42em;
-
-    --ldg-bnb-color-primary: #000000;
-    --ldg-bnb-color-primary-lighter:#808080;
-    --ldg-bnb-color-primary-darker: #000000;
-    --ldg-bnb-color-primary-contrast: #ffffff;
-    --ldg-component-calendar-cell-selection-bg-color: #000000;
-    --ldg-component-calendar-cell-selection-color: #ffffff;
-    --ldg-component-calendar-cell-selected-bg-color: #808080;
-    --ldg-component-calendar-cell-selected-color: #ffffff;
-    --ldg-bnb-font-family: inherit;
-  }
-  #lodgify-book-now-box {    
-    width: 100%;
   }
 
   /* GENERAL INFO */
