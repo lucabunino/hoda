@@ -35,6 +35,18 @@ export default {
       ],
     },
     {
+      name: "infoHomepage",
+      title: "Info in homepage",
+      type: "array",
+      of: [
+        {
+          name: "infoRow",
+          title: "Info Row",
+          type: 'string',
+        },
+      ],
+    },
+    {
       name: "slider",
       title: "Slider",
       type: "array",

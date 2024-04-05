@@ -225,9 +225,9 @@
             {/each}
           </swiper-container>
           <h2 class="suite-title arizona l">{suite.title}</h2>
-          {#if suite.info}
+          {#if suite.infoHomepage}
             <ul class="suite-info">
-            {#each suite.info as info, i (info)}
+            {#each suite.infoHomepage as info, i (info)}
               <li>{info}</li>
             {/each}
             </ul>
@@ -619,32 +619,38 @@
     color: #000;
   }
   .blue-azure {
-    background: -webkit-gradient(linear, left top, right top, from(#91B0B6), color-stop(#FFF), to(#D8FFF4));
+    /* background: -webkit-gradient(linear, left top, right top, from(#91B0B6), color-stop(#FFF), to(#D8FFF4));
     background: -o-linear-gradient(left, #91B0B6, #FFF, #D8FFF4);
-    background: linear-gradient(0.25turn, #91B0B6, #FFF, #D8FFF4);
+    background: linear-gradient(0.25turn, #91B0B6, #FFF, #D8FFF4); */
+    background-color: var(--gray);
   }
   .blue-azure:hover {
-    color: #444;
+    /* color: #444; */
+    background-color: #000;
   }
   .blue {
-    background: -webkit-gradient(linear, left top, right top, from(#91B0B6), to(#FFF));
+    /* background: -webkit-gradient(linear, left top, right top, from(#91B0B6), to(#FFF));
     background: -o-linear-gradient(left, #91B0B6, #FFF);
-    background: linear-gradient(0.25turn, #91B0B6, #FFF);
+    background: linear-gradient(0.25turn, #91B0B6, #FFF); */
+    background-color: #FFF;
   }
   .blueInverse {
-    background: -webkit-gradient(linear, left top, right top, from(#FFF), to(#91B0B6));
+    /* background: -webkit-gradient(linear, left top, right top, from(#FFF), to(#91B0B6));
     background: -o-linear-gradient(left, #FFF, #91B0B6);
-    background: linear-gradient(0.25turn, #FFF, #91B0B6);
+    background: linear-gradient(0.25turn, #FFF, #91B0B6); */
+    background-color: #FFF;
   }
   .azure {
-    background: -webkit-gradient(linear, left top, right top, from(#D8FFF4), to(#FFF));
+    /* background: -webkit-gradient(linear, left top, right top, from(#D8FFF4), to(#FFF));
     background: -o-linear-gradient(left, #D8FFF4, #FFF);
-    background: linear-gradient(0.25turn, #D8FFF4, #FFF);
+    background: linear-gradient(0.25turn, #D8FFF4, #FFF); */
+    background-color: #FFF;
   }
   .azureInverse {
-    background: -webkit-gradient(linear, left top, right top, from(#FFF), to(#D8FFF4));
+    /* background: -webkit-gradient(linear, left top, right top, from(#FFF), to(#D8FFF4));
     background: -o-linear-gradient(left, #FFF, #D8FFF4);
-    background: linear-gradient(0.25turn, #FFF, #D8FFF4);
+    background: linear-gradient(0.25turn, #FFF, #D8FFF4); */
+    background-color: #FFF;
   }
   .cleo {
     padding: 12px 30px 17px;
@@ -653,7 +659,8 @@
     line-height: 26px;
   }
   .cleo:hover {
-    color: #444;
+    color: #FFF;
+    background-color: #000;
   }
   .dropShadow {
     -webkit-filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
