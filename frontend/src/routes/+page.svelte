@@ -14,7 +14,8 @@
   console.log(form);
   $: userKind = "unset";
   $: bg = "unset";
-  $: valueFName = "";
+  $: valueFNameHoda = "";
+  $: valueFNameRegular = "";
   $: valueLName = "";
   $: valueEmail = "";
   $: valuePhone = "";
@@ -248,8 +249,8 @@
           data-check-in-label="Arrival"
           data-check-out-label="Departure"
           data-guests-label="Guests"
-          data-guests-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospite"
-          data-guests-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospiti"
+          data-guests-singular-label={`{{NumberOfGuests}} guest`}
+          data-guests-plural-label={`{{NumberOfGuests}} guests`}
           data-location-input-label="Location"
           data-total-price-label="Total price:"
           data-select-dates-to-see-price-label="Select dates to see total price"
@@ -268,7 +269,8 @@
   <section id="cleo">
     <div id="cleo-spline" class:cleoPopup={cleoPopupVisible}>
       <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.68/build/spline-viewer.js"></script>
-      <spline-viewer url="https://prod.spline.design/UEEj4bhUtCEMpMjB/scene.splinecode"></spline-viewer>
+      <spline-viewer class="desktopOnly" url="https://prod.spline.design/UEEj4bhUtCEMpMjB/scene.splinecode"></spline-viewer>
+      <spline-viewer class="mobileOnly" url="https://prod.spline.design/ImmL4rt5FrQ2k-I9/scene.splinecode"></spline-viewer>
       <div id="logo-cover"></div>
     </div>
     <div id="cleo-logo" class:cleoPopup={cleoPopupVisible}>{@html data.homepage[0].homepageLogoCleo}</div>
@@ -295,7 +297,7 @@
           <div class="form-step" class:active={userKind === "hoda"}>
             <div class="formBackground dropShadow azure">
               <p>Nice to meet you again</p>
-              <input bind:value={valueFName} type="text" id="fnameHoda" name="fnameHoda" placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'}>
+              <input bind:value={valueFNameHoda} type="text" id="fnameHoda" name="fnameHoda" placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'}>
               <input bind:value={valueLName} type="text" id="lname" name="lname" placeholder={lang == "en" ? `Last name (required)` : 'Cognome (obbligatorio)'}>
               <div style="display: flex;    align-items: baseline;">
                 <p style="margin-left: 10px; margin-right: var(--margin);">I'm in suite: </p>
@@ -306,20 +308,20 @@
                 </select>
               </div>
               <button type="button" class="btn cleo dropShadow next" id="next" name="next"
-              class:locked={valueFName === "" || valueLName === ""}
+              class:locked={valueFNameHoda === "" || valueLName === ""}
               on:click={() => {userKind="selected"; bg="azure"}}>Next</button>
             </div>
           </div>
           <div class="form-step" class:active={userKind === "regular"}>
             <div class="formBackground dropShadow blue">
               <p>Fill in your contacts</p>
-              <input type="text" bind:value={valueFName} id="fnameRegular" name="fnameRegular" placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'}>
+              <input type="text" bind:value={valueFNameRegular} id="fnameRegular" name="fnameRegular" placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'}>
               <input type="text" bind:value={valueLName} id="lname" name="lname" placeholder={lang == "en" ? `Last name (required)` : 'Cognome (obbligatorio)'}>
               <input type="text" bind:value={valueEmail} id="email" name="email" placeholder={lang == "en" ? `E-mail (required)` : 'E-mail (obbligatorio)'} >
               <input type="text" bind:value={valuePhone} id="phone" name="phone" placeholder={lang == "en" ? `Phone number (required)` : 'Numero di telefono (obbligatorio)'}>
               <input type="text" id="company" name="company" placeholder={lang == "en" ? `Company name` : 'Nome azienda'}>
               <button type="button" class="btn cleo dropShadow next" id="next" name="next"
-              class:locked={valueFName === "" || valueLName === "" || valueEmail === "" || valuePhone === ""}
+              class:locked={valueFNameRegular === "" || valueLName === "" || valueEmail === "" || valuePhone === ""}
               on:click={() => {userKind="selected"; bg="blue"}}>Next</button>
             </div>
           </div>
@@ -833,6 +835,9 @@
     height: auto;
     margin: auto;
   }
+  #cleo-form {
+    transform: scale(.8);
+  }
   @media only screen and (max-width: 1200px) {
     #suites>div {
       -ms-grid-columns: (1fr)[3];
@@ -879,6 +884,7 @@
       display: flex;
       flex-direction: column;
       gap: var(--margin);
+      transform: scale(.8);
     }
   }
 </style>

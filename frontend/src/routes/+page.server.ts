@@ -45,10 +45,10 @@ export const actions = {
 
       let intro =""
       let from =""
-      if (fnameHoda !== null) {
+      if (fnameHoda !== "") {
         intro = "New CLEO request from one of your guest"
         from = fnameHoda + " " + lname + " – " + suite
-      } else {
+      } else if (fnameRegular !== "") {
         intro = "New CLEO standard request"
         from = fnameRegular + " " + lname + " – " + email + " – " + phone + " – " + company
       }
@@ -116,8 +116,6 @@ export const actions = {
         html: html,
       };
 
-      console.log(html);
-
       const sendEmail = async (mail) => {
         await new Promise((resolve, reject) => {
           transporter.sendMail(mail, (err, info) => {
@@ -131,7 +129,34 @@ export const actions = {
         });
       };
 
+      let confirm = false
+      if (fnameRegular !== "") {
+        confirm = {
+          from: EMAIL,
+          to: email,
+          subject: "CLEO request",
+          text: "We've received your request and we're working at it. You'll get a response as soon as possible.",
+          html: "<p>We've received your request and we're working at it. You'll get a response as soon as possible.</p>",
+        };
+      }
+
+      const sendEmailConfirm = async (confirm) => {
+        await new Promise((resolve, reject) => {
+          transporter.sendMail(confirm, (err, info) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            } else {
+              resolve(info);
+            }
+          });
+        });
+      };
+
       await sendEmail(mail);
+      if (fnameRegular !== "") {
+        await sendEmailConfirm(confirm);
+      }
       
       return {
         success: true,
