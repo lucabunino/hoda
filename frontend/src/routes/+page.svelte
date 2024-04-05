@@ -812,6 +812,7 @@
   }
   #cleo-popup {
     position: absolute;
+    width: 500px;
     top: 47%;
     left: 50%;
     -webkit-transform: translateX(-50%) translateY(-50%);

@@ -111,6 +111,7 @@ export const actions = {
       const mail = {
         from: EMAIL,
         to: "welcome@hodamilano.eu",
+        subject: "CLEO request",
         text: body,
         html: html,
       };
