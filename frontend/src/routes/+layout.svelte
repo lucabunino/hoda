@@ -98,9 +98,16 @@
     lodgifyActive = false
     scrollLock = false
   }
+  let wip = true;
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={handleResize} on:scroll={scrolling} on:wheel|nonpassive={e => {if(scrollLock)e.preventDefault()}}/>
+
+{#if wip}
+<div style="position: fixed; display:grid; align-items:center; justify-items:center; background-color: #FFF, width: 100dvw; width: 100vw; height: 100dvh; height: 100vh;">
+  <h1>Coming soon</h1>
+</div>
+{:else}
 
 <header bind:clientHeight={logoHeight} class={headerPosition} class:true={mobileMenu} class:closed={$page.url.pathname !== "/"}>
   <div class="headerBg"
@@ -275,6 +282,7 @@ class:true={mobileNewsletter}>
     <p>Privacy policy</p>
   </div>
 </footer>
+{/if}
 
 <style lang="css">
   header {
