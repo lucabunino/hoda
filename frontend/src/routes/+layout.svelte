@@ -9,8 +9,8 @@
   import { quartInOut } from 'svelte/easing';
   import { browser } from '$app/environment';
   
-  $: innerWidth = 1
-	$: innerHeight = 1
+  $: innerWidth = 1280
+	$: innerHeight = 800
   $: scrollY = ""
   $: logoHeight = "";
   $: navHeight = "";

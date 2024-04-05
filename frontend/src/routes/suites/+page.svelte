@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types';
   export let data: PageData;
-  console.log(data);
 
   import {urlFor} from '$lib/utils/image';
   import { onMount } from 'svelte';
@@ -79,34 +78,18 @@
   let lodgifyActive = ""
   let scrollTop = null;
   let scrollLeft = null;
+  let scrollLock = false;
   function book(i) {
-    console.log("book " + i);
-    disableScroll()
+    scrollLock = true
     lodgifyActive = i
   }
   function unbook(i) {
-    console.log("unbook " + i);
     lodgifyActive = false
-    enableScroll()
+    scrollLock = false
   }
-  function disableScroll() {
-    if (browser) {
-      scrollTop = 
-        window.pageYOffset || window.document.documentElement.scrollTop;
-      scrollLeft = 
-        window.pageXOffset || window.document.documentElement.scrollLeft,
-        window.onscroll = function() {
-      }};
-    }
-
-  function enableScroll() {
-    if (browser) {
-      window.onscroll = function() {};
-    }
-  };
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight on:resize={handleResize}/>
+<svelte:window bind:innerWidth bind:innerHeight on:resize={handleResize} on:wheel|nonpassive={e => {if(scrollLock)e.preventDefault()}}/>
 
 {#if data.suitesPage[0].suitesIntro}
   <section id="intro">
@@ -175,7 +158,7 @@
         {/if}
         <div class="suite-book-container">
           <button class="btn primary suite-book" on:click={() => book(i)}>Book now</button>
-          <p class="suite-book-details">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p class="suite-book-details">You'll be able to select arrival and departure days and to see prices and availability. You'll be then redirect to complete your reservation.</p>
         </div>
       </div>
       {#if lodgifyActive === i}
@@ -272,6 +255,8 @@
     max-width: 800px;
   }
   .suite {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     gap: var(--margin);
     margin-bottom: var(--sectionMargin);
@@ -279,9 +264,14 @@
   }
   .suite:nth-of-type(odd),
   .suite:nth-of-type(odd)>.suite-images {
-    flex-direction: row-reverse;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+        -ms-flex-direction: row-reverse;
+            flex-direction: row-reverse;
   }
   .suite-images {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     width: calc(50% - var(--gutter));
     gap: calc(var(--gutter)/2);
@@ -308,7 +298,8 @@
   swiper-slide>picture>img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    -o-object-fit: cover;
+       object-fit: cover;
     display: block;
   }
   swiper-container.swiperEl {
@@ -350,10 +341,14 @@
     max-width: 515px;
   }
   .suite-info {
+    display: -ms-grid;
     display: grid;
+    -ms-grid-columns: 1fr var(--gutter) 1fr;
     grid-template-columns: repeat(2, 1fr);
     padding: 0;
-    column-gap: var(--gutter);
+    -webkit-column-gap: var(--gutter);
+       -moz-column-gap: var(--gutter);
+            column-gap: var(--gutter);
     margin: 0;
     max-width: 515px;
   }
@@ -385,14 +380,20 @@
       padding: 0;
     }
     .suite {
-      flex-direction: column;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: column;
+              flex-direction: column;
       gap: var(--margin);
       margin-bottom: var(--sectionMargin);
       padding: var(--margin) 0;
     }
     .suite:nth-of-type(odd),
     .suite:nth-of-type(odd)>.suite-images {
-      flex-direction: column;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: column;
+              flex-direction: column;
     }
     .suite-images {
       width: auto;
@@ -443,20 +444,27 @@
 
   /* GENERAL INFO */
   #general-info {
+    display: -ms-grid;
     display: grid;
     gap: var(--gutter);
+    -ms-grid-columns: 1fr var(--gutter) 1fr var(--gutter) 1fr;
     grid-template-columns: repeat(3, 1fr);
     margin-bottom: var(--sectionMargin);
   }
   #general-info-left {
+    -ms-grid-column-span: 2;
     grid-column: span 2;
+    display: -ms-grid;
     display: grid;
+    -ms-grid-columns: (1fr)[2];
     grid-template-columns: repeat(2, 1fr);
   }
   #general-info-right {
+    -ms-grid-column-span: 1;
     grid-column: span 1;
   }
   .general-info-title {
+    -ms-grid-column-span: 2;
     grid-column: span 2;
     font-size: 12px;
     line-height: 15px;
@@ -486,16 +494,21 @@
 
   @media only screen and (max-width: 900px) {
     #general-info {
+      -ms-grid-columns: (1fr)[2];
       grid-template-columns: repeat(2, 1fr);
     }
     #general-info-left {
+      -ms-grid-column-span: 1;
       grid-column: span 1;
+      -ms-grid-columns: (1fr)[1];
       grid-template-columns: repeat(1, 1fr);
     }
     #general-info-right {
+      -ms-grid-column-span: 1;
       grid-column: span 1;
     }
     .general-info-title {
+      -ms-grid-column-span: 1;
       grid-column: span 1;
     }
     .general-info-row {
@@ -513,11 +526,13 @@
   }
   @media only screen and (max-width: 700px) {
     #general-info {
+      -ms-grid-columns: 1fr;
       grid-template-columns: repeat(1, 1fr);
       gap: calc(var(--margin)*3);
     }
     #general-info-right {
       gap: calc(var(--margin)*3);
+      display: -ms-grid;
       display: grid;
     }
     .general-info-row-title,
