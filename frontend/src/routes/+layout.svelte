@@ -104,7 +104,7 @@
     currentUrl = window.location.host;
     console.log(currentUrl);
   }
-  if (currentUrl === "https://hodamilano.eu") {
+  if (currentUrl === "hodamilano.eu") {
     wip = true
   } else {
     wip = false
