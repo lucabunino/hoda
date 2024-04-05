@@ -575,6 +575,9 @@
     -o-transition: var(--transition);
     transition: var(--transition);
   }
+  #cleo-logo>svg {
+    overflow: visible;
+  }
   #cleo-logo.cleoPopup {
     -webkit-transform: translateY(-80px);
         -ms-transform: translateY(-80px);

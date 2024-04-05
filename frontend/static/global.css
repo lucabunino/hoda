@@ -1,16 +1,16 @@
 @font-face {
   font-family: 'arizona-flare-light';
-  src: url('./fonts/ABCArizonaFlare-Light-Trial.woff2') format("woff2");
-  src: url('./fonts/ABCArizonaFlare-Light-Trial.woff') format("woff");
+  src: url('./fonts/ABCArizonaFlare-Light.woff2') format("woff2");
+  src: url('./fonts/ABCArizonaFlare-Light.woff') format("woff");
   src: local('☺︎'),
-    url('./fonts/ABCArizonaFlare-Light-Trial.woff2') format("woff2");
-    url('./fonts/ABCArizonaFlare-Light-Trial.woff') format("woff");
+    url('./fonts/ABCArizonaFlare-Light.woff2') format("woff2");
+    url('./fonts/ABCArizonaFlare-Light.woff') format("woff");
   }
 @media screen and (max-device-width: 480px) {
   @font-face {
     font-family: 'arizona-flare-light';
-    src: url('./fonts/ABCArizonaFlare-Light-Trial.woff2') format("woff2");
-    src: url('./fonts/ABCArizonaFlare-Light-Trial.woff') format("woff");
+    src: url('./fonts/ABCArizonaFlare-Light.woff2') format("woff2");
+    src: url('./fonts/ABCArizonaFlare-Light.woff') format("woff");
 }}
 
 :root {
@@ -183,6 +183,9 @@ button.btn {
   }
   .mobileOnly {
     display: block !important;
+  }
+  #cleo-logo>svg {
+    overflow: visible;
   }
   .btn,
   .btn-mobile {
