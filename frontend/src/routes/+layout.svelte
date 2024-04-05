@@ -98,7 +98,18 @@
     lodgifyActive = false
     scrollLock = false
   }
-  let wip = true;
+  let domain = ""
+  let wip = false;
+  if (browser) {
+    domain = window.location.protocol;
+    console.log(domain);
+  }
+  if (domain === "https://hodamilano.eu") {
+    wip = true
+  } else {
+    wip = false
+  }
+
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={handleResize} on:scroll={scrolling} on:wheel|nonpassive={e => {if(scrollLock)e.preventDefault()}}/>
