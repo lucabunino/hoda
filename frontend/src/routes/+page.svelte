@@ -884,7 +884,7 @@
       display: flex;
       flex-direction: column;
       gap: var(--margin);
-      transform: scale(.8);
+      transform: scale(.9);
     }
   }
 </style>
