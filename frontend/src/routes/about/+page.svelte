@@ -145,7 +145,7 @@
   </section>
 {/if}
 {#if data.aboutPage[0].aboutCTAs}
-  <section id="cta" style="height: 50vh;">
+  <section class="hidden" id="cta" style="height: 50vh;">
     <p>CTAs</p>
     {#each data.aboutPage[0].aboutCTAs as aboutCTA, i (aboutCTA)}
       {aboutCTA.question.en}
@@ -153,7 +153,7 @@
   </section>
 {/if}
 {#if data.siteSettings[0]}
-  <section id="contacts" style="height: 50vh;">
+  <section class="hidden" id="contacts" style="height: 50vh;">
     Contacts
   </section>
 {/if}
@@ -199,12 +199,15 @@
   swiper-slide>picture>img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    -o-object-fit: cover;
+       object-fit: cover;
     display: block;
   }
   swiper-container::part(pagination) {
     top: var(--margin);
     bottom: unset;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     padding: 0 var(--margin);
     width: calc(100% - var(--margin)*2);

@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types';
   export let data: PageData;
-  console.log(data);
 
   import {urlFor} from '$lib/utils/image';
   import { onMount } from 'svelte';
@@ -15,6 +14,18 @@
   console.log(form);
   $: userKind = "unset";
   $: bg = "unset";
+  $: valueFName = "";
+  $: valueLName = "";
+  $: valueEmail = "";
+  $: valuePhone = "";
+  $: valueRequest = "";
+  $: valuePickup = "";
+  $: valueDestination = "";
+  $: valueDatetime = "";
+  $: valuePassengers = "";
+  $: valueRestaurant = "";
+  $: valueGuests = "";
+  $: valueItems = "";
   
   import { enhance } from '$app/forms';  
 
@@ -29,9 +40,6 @@
   $: margin = 16
   $: gutter = 8
   $: cleoPopupVisible = false
-  function cleoPopup() {
-    cleoPopupVisible = !cleoPopupVisible
-  }
 
   let ready = false;
   onMount(() => {
@@ -266,7 +274,11 @@
     <div id="cleo-logo" class:cleoPopup={cleoPopupVisible}>{@html data.homepage[0].homepageLogoCleo}</div>
     <p id="cleo-payoff" class:cleoPopup={cleoPopupVisible}>Make a wish</p>
     <p id="cleo-content" class:cleoPopup={cleoPopupVisible}>{data.homepage[0].homepageCleo.en}</p>
-    <button id="cleo-btn" class="btn blue-azure" class:cleoPopup={cleoPopupVisible} on:click={cleoPopup}>Ask anything</button>
+    {#if !cleoPopupVisible}
+      <button id="cleo-btn" class="btn blue-azure" class:cleoPopup={cleoPopupVisible} on:click={() => cleoPopupVisible = !cleoPopupVisible}>Ask anything</button>
+    {:else}
+      <button id="cleo-btn" class="btn back" on:click={() => {cleoPopupVisible = !cleoPopupVisible; userKind="unset"}}>Back</button>
+    {/if}
     {#if cleoPopupVisible}
       <div id="cleo-popup" in:fade={{duration: 1000, delay: 200, easing: quartInOut}} out:fade={{duration: 1000, delay: 0, easing: quartInOut}}>
         <form
@@ -275,45 +287,124 @@
         method="POST"
         use:enhance
         >
-          {#if userKind === "unset"}
+          <div class="form-step" class:active={userKind === "unset"}>
             <button type="button" class="btn cleo dropShadow azure" id="hoda" name="hoda" on:click={() => userKind="hoda"}>HOD’A guest</button>
             <button type="button" class="btn cleo dropShadow blue" id="regular" name="regular" on:click={() => userKind="regular"}>Regular user</button>
-          {/if}
-          {#if userKind === "hoda"}
+          </div>
+          <div class="form-step" class:active={userKind === "hoda"}>
             <div class="formBackground dropShadow azure">
               <p>Nice to meet you again</p>
-              <input type="text" id="fname" name="fname" value={form?.fname ?? ''} placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'} required>
-              <input type="text" id="lname" name="lname" value={form?.lname ?? ''} placeholder={lang == "en" ? `Last name (required)` : 'Cognome (obbligatorio)'} required>
-              <select id="suite" name="suite" form="cleo-form" required>
-                <option value="HOM">HO’M</option>
-                <option value="HOL">HO’L</option>
-                <option value="HOC">HO’C</option>
-              </select>
-              <button type="button" class="btn cleo dropShadow confirm" id="confirm" name="confirm" on:click={() => userKind="selected"}>Confirm</button>
+              <input bind:value={valueFName} type="text" id="fnameHoda" name="fnameHoda" placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'}>
+              <input bind:value={valueLName} type="text" id="lname" name="lname" placeholder={lang == "en" ? `Last name (required)` : 'Cognome (obbligatorio)'}>
+              <div style="display: flex;    align-items: baseline;">
+                <p style="margin-left: 10px; margin-right: var(--margin);">I'm in suite: </p>
+                <select id="suite" name="suite" form="cleo-form" class="dropShadow">
+                  <option value="HOM">HO’M</option>
+                  <option value="HOL">HO’L</option>
+                  <option value="HOC">HO’C</option>
+                </select>
+              </div>
+              <button type="button" class="btn cleo dropShadow next" id="next" name="next"
+              class:locked={valueFName === "" || valueLName === ""}
+              on:click={() => {userKind="selected"; bg="azure"}}>Next</button>
             </div>
-          {:else if userKind === "regular"}
+          </div>
+          <div class="form-step" class:active={userKind === "regular"}>
             <div class="formBackground dropShadow blue">
-              <!-- ADDD BG -->
               <p>Fill in your contacts</p>
-              <input type="text" id="fname" name="fname" value={form?.fname ?? ''} placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'} required>
-              <input type="text" id="lname" name="lname" value={form?.lname ?? ''} placeholder={lang == "en" ? `Last name (required)` : 'Cognome (obbligatorio)'} required>
-              <input type="email" id="email" name="email" value={form?.email ?? ''} placeholder={lang == "en" ? `E-mail (required)` : 'E-mail (obbligatorio)'} required>
-              <input type="phone" id="phone" name="phone" value={form?.phone ?? ''} placeholder={lang == "en" ? `Phone number (required)` : 'Numero di telefono (obbligatorio)'} required>
-              <input type="company" id="company" name="company" value={form?.company ?? ''} placeholder={lang == "en" ? `Company name (required)` : 'Nome azienda (obbligatorio)'} required>
-              <button type="button" class="btn cleo dropShadow confirm" id="confirm" name="confirm" on:click={() => userKind="selected"}>Confirm</button>
+              <input type="text" bind:value={valueFName} id="fnameRegular" name="fnameRegular" placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'}>
+              <input type="text" bind:value={valueLName} id="lname" name="lname" placeholder={lang == "en" ? `Last name (required)` : 'Cognome (obbligatorio)'}>
+              <input type="text" bind:value={valueEmail} id="email" name="email" placeholder={lang == "en" ? `E-mail (required)` : 'E-mail (obbligatorio)'} >
+              <input type="text" bind:value={valuePhone} id="phone" name="phone" placeholder={lang == "en" ? `Phone number (required)` : 'Numero di telefono (obbligatorio)'}>
+              <input type="text" id="company" name="company" placeholder={lang == "en" ? `Company name` : 'Nome azienda'}>
+              <button type="button" class="btn cleo dropShadow next" id="next" name="next"
+              class:locked={valueFName === "" || valueLName === "" || valueEmail === "" || valuePhone === ""}
+              on:click={() => {userKind="selected"; bg="blue"}}>Next</button>
             </div>
-          {:else if userKind === "selected"}
+          </div>
+          <div class="form-step" class:active={userKind === "selected"}>
             <div class="formBackground dropShadow {bg}">
-              <p>Fill in your contacts</p>
-              <input type="text" id="fname" name="fname" value={form?.fname ?? ''} placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'} required>
-              <input type="text" id="lname" name="lname" value={form?.lname ?? ''} placeholder={lang == "en" ? `Last name (required)` : 'Cognome (obbligatorio)'} required>
-              <input type="email" id="email" name="email" value={form?.email ?? ''} placeholder={lang == "en" ? `E-mail (required)` : 'E-mail (obbligatorio)'} required>
-              <input type="phone" id="phone" name="phone" value={form?.phone ?? ''} placeholder={lang == "en" ? `Phone number (required)` : 'Numero di telefono (obbligatorio)'} required>
-              <input type="company" id="company" name="company" value={form?.company ?? ''} placeholder={lang == "en" ? `Company name (required)` : 'Nome azienda (obbligatorio)'} required>
-              <button type="button" class="btn cleo dropShadow confirm" id="confirm" name="confirm" on:click={() => userKind="selected"}>Confirm</button>
+              <p>Write your request</p>
+              <textarea bind:value={valueRequest} class="dropShadow" rows="4" id="message" name="message" placeholder={lang == "en" ? `I'd like to...` : 'Vorrei...'}></textarea>
+              <button id="submit" type="submit" class="btn submit dropShadow"  class:locked={valueRequest === ""} on:click={() => {cleoPopupVisible = !cleoPopupVisible; userKind="unset"}}>Submit</button>
+              <p style="margin-top: .5em; margin-bottom: .5em;">Or choose from suggested services</p>
+              <div style="display: flex; flex-wrap: wrap; gap: var(--gutter); justify-content:center; margin-bottom: 1em;">
+                <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="car" name="car" on:click={() => userKind="car"}>I need a car</button>
+                <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="table" name="table" on:click={() => userKind="table"}>Book a table</button>
+                <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="laundry" name="laundry" on:click={() => userKind="laundry"}>Laundry service</button>
+                <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="food" name="food" on:click={() => userKind="food"}>Food delivery</button>
+                <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="tour" name="tour" on:click={() => userKind="tour"}>Private tour</button>
+                <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="spa" name="spa" on:click={() => userKind="spa"}>SPA Treatments</button>
+              </div>
             </div>
-          {/if}
-          <button id="submit" type="submit" class="btn">Submit</button>
+          </div>
+          <div class="form-step" class:active={userKind === "car"}>
+            <div class="formBackground dropShadow {bg}">
+              <p>Give us some details</p>
+              <div style="display: flex; flex-wrap: wrap; gap: var(--gutter); justify-content:flex-start; margin-bottom: 1em;">
+                <input style="width: 100%;" type="text" bind:value={valuePickup} id="pickup" name="pickup" placeholder={lang == "en" ? `Pick up address (required)` : '___'}>
+                <input style="width: 100%;" type="text" bind:value={valueDestination} id="destination" name="destination" placeholder={lang == "en" ? `Destination address` : '___'}>
+                <p class="label">Pick up date, time and passengers: </p>
+                <input style="width: 60%" type="datetime-local" bind:value={valueDatetime} id="datetime" name="datetime">
+                <input style="width: calc(40% - var(--gutter) - 40px)" type="number" min="1" max="10" bind:value={valuePassengers} id="passengers" name="passengers" placeholder={lang == "en" ? `1` : '___'}>
+              </div>
+              <textarea bind:value={valueRequest} class="dropShadow" rows="4" id="message" name="message" placeholder={lang == "en" ? `Additional requests` : 'Altre richieste'}></textarea>
+              <button id="submit" type="submit" class="btn submit dropShadow"  class:locked={valuePickup === "" || valueDestination === "" || valueDatetime === "" || valuePassengers === ""} on:click={() => {cleoPopupVisible = !cleoPopupVisible; userKind="unset"}}>Submit</button>
+            </div>
+          </div>
+          <div class="form-step" class:active={userKind === "table"}>
+            <div class="formBackground dropShadow {bg}">
+              <p>Give us some details</p>
+              <div style="display: flex; flex-wrap: wrap; gap: var(--gutter); justify-content:flex-start; margin-bottom: 1em;">
+                <input style="width: 100%;" type="text" bind:value={valueRestaurant} id="restaurant" name="restaurant" placeholder={lang == "en" ? `Restaurant (required)` : '___'}>
+                <p class="label">Date, hour and guests: </p>
+                <input style="width: 60%" type="datetime-local" bind:value={valueDatetime} id="datetime" name="datetime">
+                <input style="width: calc(40% - var(--gutter) - 40px)" type="number" min="1" max="10" bind:value={valueGuests} id="guests" name="guests" placeholder={lang == "en" ? `Guests` : '___'}>
+              </div>
+              <textarea bind:value={valueRequest} class="dropShadow" rows="4" id="message" name="message" placeholder={lang == "en" ? `Additional requests` : 'Altre richieste'}></textarea>
+              <button id="submit" type="submit" class="btn submit dropShadow"  class:locked={valueRestaurant === "" || valueDatetime === "" || valueGuests === ""} on:click={() => {cleoPopupVisible = !cleoPopupVisible; userKind="unset"}}>Submit</button>
+            </div>
+          </div>
+          <div class="form-step" class:active={userKind === "laundry"}>
+            <div class="formBackground dropShadow {bg}">
+              <p>Give us some details</p>
+              <div style="display: flex; flex-wrap: wrap; gap: var(--gutter); justify-content:flex-start; margin-bottom: 1em;">
+                <p class="label">Pickup date and time: </p>
+                <input style="width: 100%" type="datetime-local" bind:value={valueDatetime} id="datetime" name="datetime">
+                <input style="width: 100%;" type="text" bind:value={valueItems} id="items" name="items" placeholder={lang == "en" ? `Items (required, separate with comma)` : '___'}>
+              </div>
+              <textarea bind:value={valueRequest} class="dropShadow" rows="4" id="message" name="message" placeholder={lang == "en" ? `Additional requests` : 'Altre richieste'}></textarea>
+              <button id="submit" type="submit" class="btn submit dropShadow"  class:locked={valueDatetime === "" || valueItems === ""} on:click={() => {cleoPopupVisible = !cleoPopupVisible; userKind="unset"}}>Submit</button>
+            </div>
+          </div>
+          <div class="form-step" class:active={userKind === "food"}>
+            <div class="formBackground dropShadow {bg}">
+              <p>Give us some details</p>
+              <div style="display: flex;    align-items: baseline;">
+                <p style="margin-left: 10px; margin-right: var(--margin);">I'd like to eat: </p>
+                <select id="food" name="food" form="cleo-form" class="dropShadow">
+                  <option value="Pizza">Pizza</option>
+                  <option value="Pasta">Pasta</option>
+                  <option value="Hamburger">Hamburger</option>
+                  <option value="Salad">Salad</option>
+                  <option value="Sandwich">Sandwich</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <input style="width: auto;" type="text" bind:value={valueRestaurant} id="restaurant" name="restaurant" placeholder={lang == "en" ? `Restaurant (required)` : '___'}>
+              <input style="width: auto" type="datetime-local" bind:value={valueDatetime} id="datetime" name="datetime">
+              <input style="width: auto;" type="text" bind:value={valueItems} id="items" name="items" placeholder={lang == "en" ? `Items (required, separate with comma)` : '___'}>
+              <textarea bind:value={valueRequest} class="dropShadow" rows="4" id="message" name="message" placeholder={lang == "en" ? `Additional requests` : 'Altre richieste'}></textarea>
+              <button id="submit" type="submit" class="btn submit dropShadow"  class:locked={valueRestaurant === "" || valueDatetime === "" || valueItems === ""} on:click={() => {cleoPopupVisible = !cleoPopupVisible; userKind="unset"}}>Submit</button>
+            </div>
+          </div>
+          <div class="form-step" class:active={userKind === "spa" || userKind === "tour"}>
+            <div class="formBackground dropShadow {bg}">
+              <p>{#if userKind === "spa"}What treatment would you like to have?{:else if userKind === "tour"}What whould you like to see?{/if}</p>
+              <textarea bind:value={valueRequest} rows="11" id="message" name="message" placeholder={lang == "en" ? `I'd like to...` : 'Vorrei...'}></textarea>
+              <button id="submit" type="submit" class="btn submit dropShadow"  class:locked={valueRequest === ""} on:click={() => {cleoPopupVisible = !cleoPopupVisible; userKind="unset"}}>Submit</button>
+            </div>
+          </div>
         </form>
       </div>
     {/if}
@@ -352,7 +443,8 @@
   #hero>picture>img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    -o-object-fit: cover;
+       object-fit: cover;
   }
   #intro {
     padding: var(--gutter) var(--margin);
@@ -371,13 +463,23 @@
   }
   #suites>div {
     padding: var(--margin);
+    display: -ms-grid;
     display: grid;
+    -ms-grid-columns: 1fr var(--gutter) 1fr var(--gutter) 1fr;
     grid-template-columns: repeat(3, 1fr);
-    column-gap: var(--gutter);
+    -webkit-column-gap: var(--gutter);
+       -moz-column-gap: var(--gutter);
+            column-gap: var(--gutter);
     row-gap: var(--margin);
+    scrollbar-width: none;  /* Firefox */
+  }
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  #suites>div::-webkit-scrollbar {
+    display: none;
   }
   #suites>div>div {
     width: calc((100vw - var(--margin)*2 - var(--gutter)*2)/3);
+    -ms-grid-column-span: 1;
     grid-column: span 1;
   }
   swiper-container {
@@ -396,12 +498,15 @@
   swiper-slide>picture>img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    -o-object-fit: cover;
+       object-fit: cover;
     display: block;
   }
   swiper-container::part(pagination) {
     top: var(--margin);
     bottom: unset;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     padding: 0 var(--margin);
     width: calc(100% - var(--margin)*2);
@@ -426,10 +531,14 @@
     margin: var(--gutter) 0 var(--margin);
   }
   .suite-info {
+    display: -ms-grid;
     display: grid;
+    -ms-grid-columns: 1fr var(--gutter) 1fr;
     grid-template-columns: repeat(2, 1fr);
     padding: 0 0 calc(var(--margin)*2);
-    column-gap: var(--gutter);
+    -webkit-column-gap: var(--gutter);
+       -moz-column-gap: var(--gutter);
+            column-gap: var(--gutter);
     margin: 0;
   }
   .suite-info>li {
@@ -449,8 +558,11 @@
 
   /* CLEO */
   #cleo {
-    align-content: center;
-    justify-content: center;
+    -ms-flex-line-pack: center;
+        align-content: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     text-align: center;
     height: auto;
   }
@@ -458,27 +570,37 @@
     width: 10vw;
     margin: auto;
     padding: 20vh 0 var(--margin);
+    -webkit-transition: var(--transition);
+    -o-transition: var(--transition);
     transition: var(--transition);
   }
   #cleo-logo.cleoPopup {
-    transform: translateY(-80px);
+    -webkit-transform: translateY(-80px);
+        -ms-transform: translateY(-80px);
+            transform: translateY(-80px);
   }
   #cleo-payoff {
     width: auto;
     margin: auto;
     padding: 0 0 40vh;
+    -webkit-transition: var(--transition);
+    -o-transition: var(--transition);
     transition: var(--transition);
   }
   #cleo-payoff.cleoPopup {
-    transform: translateY(-80px);
+    -webkit-transform: translateY(-80px);
+        -ms-transform: translateY(-80px);
+            transform: translateY(-80px);
     opacity: 0;
   }
   #cleo-content {
     max-width: 400px;
     margin: auto;
-    padding: 0 0 var(--margin);
+    padding: 0 var(--margin) var(--margin);
     position: relative;
     z-index: 1;
+    -webkit-transition: var(--transition);
+    -o-transition: var(--transition);
     transition: var(--transition);
   }
   #cleo-content.cleoPopup {
@@ -489,17 +611,39 @@
     z-index: 2;
     position: relative;
   }
+  #cleo-btn.back {
+    text-decoration: underline;
+    background: none;
+    border: none;
+    color: #000;
+  }
   .blue-azure {
+    background: -webkit-gradient(linear, left top, right top, from(#91B0B6), color-stop(#FFF), to(#D8FFF4));
+    background: -o-linear-gradient(left, #91B0B6, #FFF, #D8FFF4);
     background: linear-gradient(0.25turn, #91B0B6, #FFF, #D8FFF4);
   }
   .blue-azure:hover {
     color: #444;
   }
   .blue {
+    background: -webkit-gradient(linear, left top, right top, from(#91B0B6), to(#FFF));
+    background: -o-linear-gradient(left, #91B0B6, #FFF);
     background: linear-gradient(0.25turn, #91B0B6, #FFF);
   }
+  .blueInverse {
+    background: -webkit-gradient(linear, left top, right top, from(#FFF), to(#91B0B6));
+    background: -o-linear-gradient(left, #FFF, #91B0B6);
+    background: linear-gradient(0.25turn, #FFF, #91B0B6);
+  }
   .azure {
+    background: -webkit-gradient(linear, left top, right top, from(#D8FFF4), to(#FFF));
+    background: -o-linear-gradient(left, #D8FFF4, #FFF);
     background: linear-gradient(0.25turn, #D8FFF4, #FFF);
+  }
+  .azureInverse {
+    background: -webkit-gradient(linear, left top, right top, from(#FFF), to(#D8FFF4));
+    background: -o-linear-gradient(left, #FFF, #D8FFF4);
+    background: linear-gradient(0.25turn, #FFF, #D8FFF4);
   }
   .cleo {
     padding: 12px 30px 17px;
@@ -511,47 +655,131 @@
     color: #444;
   }
   .dropShadow {
-    filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
+    -webkit-filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
+            filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
   }
-  .confirm {
-    background-color: #FFF;
+  .form-step {
+    display: none;
+  }
+  .form-step.active {
+    display: contents;
+  }
+  .option {
     border-radius: 99px;
-    height: 33px;
+    height: 37px;
     padding: 0px 30px 4px;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+  }
+  select {
+    padding: 0px 50px 4px 30px;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    border-radius: 99px;
+    font-size: 22px;
+    line-height: 26px;
+    height: 37px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat, repeat;
+    background-position: right 30px top 50%, 0 0;
+    background-size: .6em auto, 100%;
+    border: none;
+  }
+  select::-ms-expand {
+    display: none;
+  }
+  .next, .submit {
+    background-color: #000;
+    color: #FFF;
+    border-radius: 99px;
+    height: 37px;
+    padding: 0px 30px 4px;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
     width: fit-content;
     margin: auto;
     margin-top: 1.3em;
     margin-bottom: .5em;
+    position: absolute;
+    bottom: .5em;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+            transform: translateX(-50%);
+  }
+  .next:hover {
+    color: #FFF;
+    background-color: #444;
+  }
+  .submit {
+    bottom: unset;
+    position: relative;
+    width: 100%;
+    margin-top: 0;
+    background-color: #000;
+    color: #FFF;
+    border-radius: 5px;
+  }
+  .locked {
+    pointer-events: none;
+    background-color: #FFF;
+    color: var(--gray);
   }
   .formBackground {
     display: block;
     padding: var(--margin);
-    min-height: 40vh;
-    width: 40vw;
+    min-height: 400px;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
     row-gap: var(--gutter);
     border-radius: 5px;
+    font-size: 22px;
+    line-height: 26px;
   }
-  .formBackground>input {
+  input {
     color: #A0A0A0;
     padding: 0px 10px 4px;
     display: block;
-    font-size: 22px;
-    line-height: 26px;
     height: 33px;
     border-radius: 5px;
     border: none;
     width: -webkit-fill-available;
-    filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
+    -webkit-filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
+            filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
   }
   .formBackground>p {
-    font-size: 22px;
-    line-height: 26px;
     margin-top: .5em;
     margin-bottom: 1.3em;
   }
-
+  textarea {
+    border: none;
+    padding: var(--gutter);
+    border-radius: 5px;
+  }
+  select:focus, textarea:focus, input:focus{
+    outline: none;
+    color: #000;
+  }
+  .label {
+    margin-left: 10px;
+    margin-right: var(--margin);
+    font-size: 15px;
+    line-height: 18px;
+    margin-top: var(--gutter);
+    -ms-flex-preferred-size: 100%;
+        flex-basis: 100%;
+    text-align: left;
+  }
 
   #cleo-spline {
     width: 100%;
@@ -559,13 +787,19 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+        -ms-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
+    -webkit-transition: var(--transition);
+    -o-transition: var(--transition);
     transition: var(--transition);
     z-index: 1;
     display: block;
   }
   #cleo-spline.cleoPopup {
-    transform: translateX(-50%) translateY(var(--cleoPopupTranslate)) scale(.3);
+    -webkit-transform: translateX(-50%) translateY(var(--cleoPopupTranslate)) scale(.3);
+        -ms-transform: translateX(-50%) translateY(var(--cleoPopupTranslate)) scale(.3);
+            transform: translateX(-50%) translateY(var(--cleoPopupTranslate)) scale(.3);
   }
   #cleo-spline>#logo-cover {
     position: absolute;
@@ -578,10 +812,14 @@
   }
   #cleo-popup {
     position: absolute;
-    top: 50%;
+    top: 47%;
     left: 50%;
-    transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+        -ms-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
     z-index: 3;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     width: auto;
     height: auto;
@@ -589,6 +827,7 @@
   }
   @media only screen and (max-width: 1200px) {
     #suites>div {
+      -ms-grid-columns: (1fr)[3];
       grid-template-columns: repeat(3, 1fr);
       overflow-x: scroll;
     }
@@ -600,17 +839,34 @@
     #suites>div>div {
       width: calc((100vw - var(--margin)*2 - var(--gutter)*2)/1.6);
     }
+    #cleo-content.cleoPopup {
+      padding-bottom: 100px;
+    }
+    #cleo-logo {
+      width: 25vw;
+    }
   }
   @media only screen and (max-width: 600px) {
     #suites>div {
+      -ms-grid-columns: (1fr)[1];
       grid-template-columns: repeat(1, 1fr);
     }
     #suites>div>h3 {
+      -ms-grid-column-span: 1;
       grid-column: span 1;
     }
     #suites>div>div {
       width: calc((100vw - var(--margin)*2));
       margin-bottom: var(--sectionMargin);
+    }
+    #cleo-popup {
+      width: calc(100% - var(--margin)*2);
+    }
+    #cleo-form {
+      width: -webkit-fill-available;
+      display: flex;
+      flex-direction: column;
+      gap: var(--margin);
     }
   }
 </style>

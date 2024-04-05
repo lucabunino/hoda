@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types';
   export let data: PageData;
-  console.log(data);
   
   import { onMount, afterUpdate, tick } from 'svelte';
   import { beforeNavigate, afterNavigate } from '$app/navigation';
@@ -89,39 +88,19 @@
   let lodgifyActive = ""
   let scrollTop = null;
   let scrollLeft = null;
-  $: timer = 3000;
+  let scrollLock = false;
   function book(i) {
-    timer = 20000;
-    console.log("book " + i);
-    disableScroll()
+    scrollLock = true
     lodgifyActive = i
   }
   function unbook(i) {
-    timer = 3000;
     bookNowButtons = false
-    console.log("unbook " + i);
     lodgifyActive = false
-    enableScroll()
+    scrollLock = false
   }
-  function disableScroll() {
-    if (browser) {
-      scrollTop = 
-        window.pageYOffset || window.document.documentElement.scrollTop;
-      scrollLeft = 
-        window.pageXOffset || window.document.documentElement.scrollLeft,
-        window.onscroll = function() {
-        window.scrollTo(scrollLeft, scrollTop);
-      }};
-    }
-
-  function enableScroll() {
-    if (browser) {
-      window.onscroll = function() {};
-    }
-  };
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={handleResize} on:scroll={scrolling}/>
+<svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={handleResize} on:scroll={scrolling} on:wheel|nonpassive={e => {if(scrollLock)e.preventDefault()}}/>
 
 <header bind:clientHeight={logoHeight} class={headerPosition} class:true={mobileMenu} class:closed={$page.url.pathname !== "/"}>
   <div class="headerBg"
@@ -154,12 +133,14 @@
       <li class="hidden"><a class="menu-item menu-item-mobile" href="/shop" aria-current={$page.url.pathname === '/shop'}>Shop</a></li>
     </ul>
     <ul>
-      {#if !bookNowButtons}
+      {#if !bookNowButtons && innerWidth > 900}
         <li in:fade={{duration: 0, easing: quartInOut}}>
-          <p class="menu-item menu-item-mobile btn" href="/about" on:click={() => bookNowButtons = true}>Book now</p>
+          <p class="menu-item menu-item-mobile btn" href="/about" on:mouseenter={() => bookNowButtons = true}>Book now</p>
         </li>
       {:else}
-        <div id="bookNowContainer" in:fade={{duration: 0, easing: quartInOut}} on:mouseleave={() => setTimeout(() => bookNowButtons = false)}>
+      <div style="display: flex;align-items: baseline;margin-top: 15px;">
+        <p class="mobileOnly" style="display: inline-block; margin-right: var(--margin)">Book now</p>
+        <div id="bookNowContainer" in:fade={{duration: 0, easing: quartInOut}} on:mouseleave={() => bookNowButtons = false}>
           {#each data.suitesIds as suite, i (suite)}
             <li>
               <p class="menu-item btn" on:click={() => book(i)}>{suite.title}</p>
@@ -191,8 +172,9 @@
             {/if}
           {/each}
         </div>
+      </div>
       {/if}
-      <li><a id="languageSwitch" class="menu-item btn-mobile" href="/it">En</a></li>
+      <li class="hidden"><a id="languageSwitch" class="menu-item btn-mobile" href="/it">En</a></li>
     </ul>
   </nav>
 </header>
@@ -207,6 +189,7 @@
 
 {#if ready}
 <div id="newsletter"
+class="hidden"
 transition:slide={{duration: 1000, easing: quartInOut}}
 on:mouseenter={openNewsletter}
 on:mouseleave={closeNewsletter}
@@ -259,7 +242,7 @@ class:true={mobileNewsletter}>
     <p>Return policy shop</p>
     <p>Terms and conditions</p>
   </div>
-  <div>
+  <div class="hidden">
     <p>Cookie policy</p>
     <p>Privacy policy</p>
   </div>
@@ -270,21 +253,30 @@ class:true={mobileNewsletter}>
     position: fixed;
     top: 0;
     width: 100%;
+    -webkit-transition: var(--transition);
+    -o-transition: var(--transition);
     transition: var(--transition);
     padding: var(--margin) 0;
     z-index: 10;
   }
   header.up {
-    transform: translateY(-101%);
+    -webkit-transform: translateY(-101%);
+        -ms-transform: translateY(-101%);
+            transform: translateY(-101%);
   }
   header.closed {
     padding: var(--margin) 0;
   }
   #logo {
     margin: 0;
+    display: -ms-grid;
     display: grid;
+    -webkit-transition: var(--transition);
+    -o-transition: var(--transition);
     transition: var(--transition);
-    transition-duration: 1500ms;
+    -webkit-transition-duration: 1500ms;
+         -o-transition-duration: 1500ms;
+            transition-duration: 1500ms;
     margin: auto;
     width: calc(100% - var(--margin)*2);
     z-index: 10;
@@ -295,17 +287,29 @@ class:true={mobileNewsletter}>
   }
   #logo.noTransition,
   nav.noTransition {
+    -webkit-transition: none;
+    -o-transition: none;
     transition: none;
   }
   nav {
     position: absolute;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
+    -webkit-box-align: baseline;
+        -ms-flex-align: baseline;
+            align-items: baseline;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
     height: 37px;
     width: 100%;
+    -webkit-transition: var(--transition);
+    -o-transition: var(--transition);
     transition: var(--transition);
-    transition-duration: 1500ms;
+    -webkit-transition-duration: 1500ms;
+         -o-transition-duration: 1500ms;
+            transition-duration: 1500ms;
     top: calc((100vw - var(--margin)*2)*.266 + var(--margin)*2);
   }
   nav.closed {
@@ -318,17 +322,23 @@ class:true={mobileNewsletter}>
     position: absolute;
     top: 0;
     left: 0;
+    -webkit-transition: all cubic-bezier(0.770, 0.000, 0.175, 1.000) 100ms 1000ms;
+    -o-transition: all cubic-bezier(0.770, 0.000, 0.175, 1.000) 100ms 1000ms;
     transition: all cubic-bezier(0.770, 0.000, 0.175, 1.000) 100ms 1000ms;
     border-bottom: solid 1px var(--white);
   }
   .headerBgHidden {
     opacity: 0;
-    transition-delay: 0ms;
+    -webkit-transition-delay: 0ms;
+         -o-transition-delay: 0ms;
+            transition-delay: 0ms;
   }
   .headerBgBorder {
     border-bottom: solid 1px var(--gray);
   }
   ul {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     padding: var(--gutter) var(--margin);
     margin: 0;
@@ -341,8 +351,16 @@ class:true={mobileNewsletter}>
     text-decoration: underline;
   }
   #bookNowContainer {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     gap: var(--gutter);
+  }
+  @media only screen and (max-width: 900px) {
+    #bookNowContainer {
+      margin: 5px 0;
+      padding: var(--margin) 0;
+    }
   }
 
 
@@ -354,24 +372,32 @@ class:true={mobileNewsletter}>
     bottom: 0;
     padding: var(--gutter) var(--margin);
     background-color: var(--lightGray);
+    display: -ms-grid;
     display: grid;
     gap: var(--gutter);
+    -ms-grid-columns: 1fr var(--gutter) 1fr var(--gutter) 1fr var(--gutter) 1fr var(--gutter) 1fr var(--gutter) 1fr;
     grid-template-columns: repeat(6, 1fr);
     z-index: 10;
   }
   #newsletter>p+p {
+    -ms-grid-column-span: 2;
     grid-column: span 2;
   }
   #mc_embed_shell, #mc_embed_signup {
     display: contents;
   }
   form {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -ms-grid-column-span: 3;
     grid-column: span 3;
   }
   form>div {
+    display: -ms-grid;
     display: grid;
     gap: var(--gutter);
+    -ms-grid-columns: 1fr var(--gutter) 1fr var(--gutter) 1fr;
     grid-template-columns: repeat(3, 1fr);
     width: 100%;
   }
@@ -392,6 +418,22 @@ class:true={mobileNewsletter}>
   form>div>input[type="submit"]:hover{
     color: var(--darkGray);
   }
+  ::-webkit-input-placeholder {
+    color: var(--darkGray);
+    opacity: 1; /* Firefox */
+  }
+  ::-moz-placeholder {
+    color: var(--darkGray);
+    opacity: 1; /* Firefox */
+  }
+  :-ms-input-placeholder {
+    color: var(--darkGray);
+    opacity: 1; /* Firefox */
+  }
+  ::-ms-input-placeholder {
+    color: var(--darkGray);
+    opacity: 1; /* Firefox */
+  }
   ::placeholder {
     color: var(--darkGray);
     opacity: 1; /* Firefox */
@@ -401,7 +443,9 @@ class:true={mobileNewsletter}>
   }
   footer {
     padding: var(--gutter) var(--margin) calc(var(--margin)*2);
+    display: -ms-grid;
     display: grid;
+    -ms-grid-columns: 1fr var(--gutter) 1fr var(--gutter) 1fr var(--gutter) 1fr var(--gutter) 1fr var(--gutter) 1fr;
     grid-template-columns: repeat(6, 1fr);
     gap: var(--gutter);
   }
@@ -411,11 +455,17 @@ class:true={mobileNewsletter}>
   }
   @media only screen and (max-width: 900px) {
     header.up {
-      transform: translateY(-101%);
-      transition-duration: 800ms;
+      -webkit-transform: translateY(-101%);
+          -ms-transform: translateY(-101%);
+              transform: translateY(-101%);
+      -webkit-transition-duration: 800ms;
+           -o-transition-duration: 800ms;
+              transition-duration: 800ms;
     }
     header.up.true {
-      transform: translateY(0);
+      -webkit-transform: translateY(0);
+          -ms-transform: translateY(0);
+              transform: translateY(0);
     }
     header,
     header.closed {
@@ -435,7 +485,9 @@ class:true={mobileNewsletter}>
     #logo {
       margin-left: var(--margin);
       width: 60vw;
-      transition-duration: 500ms;
+      -webkit-transition-duration: 500ms;
+           -o-transition-duration: 500ms;
+              transition-duration: 500ms;
     }
     #logo.true {
       width: 140px;
@@ -445,44 +497,76 @@ class:true={mobileNewsletter}>
     }
     #logo.noTransition,
     nav.noTransition {
+      -webkit-transition: none;
+      -o-transition: none;
       transition: none;
     }
     #logo.delay1s {
-      transition-delay: 1s;
+      -webkit-transition-delay: 1s;
+           -o-transition-delay: 1s;
+              transition-delay: 1s;
     }
     nav,
     nav.closed {
       position: fixed;
       top: 0;
       left: 0;
-      transform: translateY(-100%);
+      -webkit-transform: translateY(-100%);
+          -ms-transform: translateY(-100%);
+              transform: translateY(-100%);
+      display: -webkit-box;
+      display: -ms-flexbox;
       display: flex;
-      flex-direction: column;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: column;
+              flex-direction: column;
       height: auto;
       padding-bottom: var(--gutter);
-      justify-content: flex-start;
-      transition-duration: 0ms;
-      transition-delay: 0ms;
+      -webkit-box-pack: start;
+          -ms-flex-pack: start;
+              justify-content: flex-start;
+      -webkit-transition-duration: 0ms;
+           -o-transition-duration: 0ms;
+              transition-duration: 0ms;
+      -webkit-transition-delay: 0ms;
+           -o-transition-delay: 0ms;
+              transition-delay: 0ms;
       opacity: 1;
     }
     nav.true {
       opacity: 1;
-      transform: translateY(0);
-      transition-delay: 0ms;
+      -webkit-transform: translateY(0);
+          -ms-transform: translateY(0);
+              transform: translateY(0);
+      -webkit-transition-delay: 0ms;
+           -o-transition-delay: 0ms;
+              transition-delay: 0ms;
     }
     .headerBg {
+      -webkit-transition: var(--transition);
+      -o-transition: var(--transition);
       transition: var(--transition);
-      transition-duration: 0ms;
-      transition-delay: 0ms;
+      -webkit-transition-duration: 0ms;
+           -o-transition-duration: 0ms;
+              transition-duration: 0ms;
+      -webkit-transition-delay: 0ms;
+           -o-transition-delay: 0ms;
+              transition-delay: 0ms;
       border-bottom: solid 1px var(--gray);
     }
     .headerBg.true {
       height: var(--navHeight);
-      transition-delay: 0ms;
+      -webkit-transition-delay: 0ms;
+           -o-transition-delay: 0ms;
+              transition-delay: 0ms;
       opacity: 1;
     }
     ul {
-      flex-direction: column;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: column;
+              flex-direction: column;
       padding: 0 var(--margin);
       margin-top: 100px;
       gap: 0;
@@ -512,10 +596,17 @@ class:true={mobileNewsletter}>
       background-color: var(--gray);
     }
     #newsletter {
+      display: -webkit-box;
+      display: -ms-flexbox;
       display: flex;
-      flex-direction: column;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: column;
+              flex-direction: column;
       gap: 0;
       bottom: -1.8em;
+      -webkit-transition: var(--transition);
+      -o-transition: var(--transition);
       transition: var(--transition);
       padding: var(--margin);
     }
@@ -526,20 +617,28 @@ class:true={mobileNewsletter}>
       padding-top: var(--margin);
     }
     #newsletter>form>div {
+      display: -ms-grid;
       display: grid;
       gap: var(--gutter);
+      -ms-grid-columns: 1fr var(--gutter) 1fr;
       grid-template-columns: repeat(2, 1fr);
     }
     footer {
+      -ms-grid-columns: (1fr)[2];
       grid-template-columns: repeat(2, 1fr);
     }
   }
   @media only screen and (max-width: 400px) {
     #newsletter>form>div {
+      display: -webkit-box;
+      display: -ms-flexbox;
       display: flex;
-      justify-content: space-between;
+      -webkit-box-pack: justify;
+          -ms-flex-pack: justify;
+              justify-content: space-between;
     }
     footer {
+      -ms-grid-columns: (1fr)[1];
       grid-template-columns: repeat(1, 1fr);
     }
   }
