@@ -135,16 +135,21 @@
     <ul>
       {#if !bookNowButtons && innerWidth > 900}
         <li in:fade={{duration: 0, easing: quartInOut}}>
-          <p class="menu-item menu-item-mobile btn" href="/about" on:mouseenter={() => bookNowButtons = true}>Book now</p>
+          <p class="menu-item menu-item-mobile btn" href="/about" on:click={() => bookNowButtons = true}>Book now</p>
         </li>
       {:else}
-      <div style="display: flex;align-items: baseline;margin-top: 15px;">
+      <div id="bookNowContainer-container">
         <p class="mobileOnly" style="display: inline-block; margin-right: var(--margin)">Book now</p>
-        <div id="bookNowContainer" in:fade={{duration: 0, easing: quartInOut}} on:mouseleave={() => bookNowButtons = false}>
+        <div id="bookNowContainer" in:fade={{duration: 0, easing: quartInOut}} on:mouseleave={() => {setTimeout(() => {bookNowButtons = false}, 2000);}}>
           {#each data.suitesIds as suite, i (suite)}
             <li>
               <p class="menu-item btn" on:click={() => book(i)}>{suite.title}</p>
             </li>
+          {/each}
+        </div>
+      </div>
+      {/if}
+      {#each data.suitesIds as suite, i (suite)}
             {#if lodgifyActive === i}
               <div id="lodgify-book-now-background" on:click={() => unbook(i)}></div>
                 <div
@@ -171,9 +176,6 @@
               <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script>
             {/if}
           {/each}
-        </div>
-      </div>
-      {/if}
       <li class="hidden"><a id="languageSwitch" class="menu-item btn-mobile" href="/it">En</a></li>
     </ul>
   </nav>
@@ -225,10 +227,10 @@ class:true={mobileNewsletter}>
   </div>
   <div>
     <p>Follow us:</p>
-    {#if data.siteSettings[0].instagram}
+    {#if data.siteSettings[0].instagramLink}
       <p><a target="_blank" href="{data.siteSettings[0].instagramLink}">{data.siteSettings[0].instagram}</a></p>
     {/if}
-    {#if data.siteSettings[0].pinterest}
+    {#if data.siteSettings[0].pinterestLink}
       <p><a target="_blank" href="{data.siteSettings[0].pinterestLink}">{data.siteSettings[0].pinterest}</a></p>
     {/if}
   </div>
@@ -356,10 +358,17 @@ class:true={mobileNewsletter}>
     display: flex;
     gap: var(--gutter);
   }
+  #bookNowContainer-container {
+    display: flex;
+    align-items: baseline;
+  }
   @media only screen and (max-width: 900px) {
     #bookNowContainer {
       margin: 5px 0;
       padding: var(--margin) 0;
+    }
+    #bookNowContainer-container {
+      margin-top: 15px;
     }
   }
 

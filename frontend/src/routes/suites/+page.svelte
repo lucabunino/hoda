@@ -190,9 +190,9 @@
   {/each}
 {/if}
 <section id="general-info">
-  <div id="general-info-left">
+  <div id="general-info-left" class:noRight={!data.suitesPage[0].suitesGeneralInfoRightTitle}>
     {#if data.suitesPage[0].suitesGeneralInfoLeftTitle}
-      <h4 class="general-info-title">{data.suitesPage[0].suitesGeneralInfoLeftTitle.en}</h4>
+      <h4 class="general-info-title" class:noRight={!data.suitesPage[0].suitesGeneralInfoRightTitle}>{data.suitesPage[0].suitesGeneralInfoLeftTitle.en}</h4>
     {/if}
     {#if data.suitesPage[0].suitesGeneralInfoLeft}
       {#each data.suitesPage[0].suitesGeneralInfoLeft as suitesLeft, i (suitesLeft)}
@@ -459,6 +459,12 @@
     -ms-grid-columns: (1fr)[2];
     grid-template-columns: repeat(2, 1fr);
   }
+  #general-info-left.noRight {
+    -ms-grid-column-span: 3;
+    grid-column: span 3;
+    -ms-grid-columns: (1fr)[3];
+    grid-template-columns: repeat(3, 1fr);
+  }
   #general-info-right {
     -ms-grid-column-span: 1;
     grid-column: span 1;
@@ -472,6 +478,10 @@
     border-top: solid 1px var(--lightGray);
     margin-bottom: var(--margin);
     padding-top: var(--gutter);
+  }
+  .general-info-title.noRight {
+    -ms-grid-column-span: 3;
+    grid-column: span 3;
   }
   .general-info-row {
     margin-bottom: calc(var(--margin)*3);
@@ -503,6 +513,10 @@
       -ms-grid-columns: (1fr)[1];
       grid-template-columns: repeat(1, 1fr);
     }
+    #general-info-left.noRight {
+      -ms-grid-columns: (1fr)[2];
+      grid-template-columns: repeat(2, 1fr);
+    }
     #general-info-right {
       -ms-grid-column-span: 1;
       grid-column: span 1;
@@ -510,6 +524,10 @@
     .general-info-title {
       -ms-grid-column-span: 1;
       grid-column: span 1;
+    }
+    .general-info-title.noRight {
+      -ms-grid-column-span: 2;
+      grid-column: span 2;
     }
     .general-info-row {
       margin-bottom: calc(var(--margin)*4);
@@ -538,6 +556,14 @@
     .general-info-row-title,
     .general-info-row-content {
       width: 100%;
+    }
+    #general-info-left.noRight {
+      -ms-grid-columns: (1fr)[1];
+      grid-template-columns: repeat(1, 1fr);
+    }
+    .general-info-title.noRight {
+      -ms-grid-column-span: 1;
+      grid-column: span 1;
     }
   }
 </style>
