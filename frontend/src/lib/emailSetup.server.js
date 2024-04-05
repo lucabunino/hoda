@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import { EMAIL, EMAIL_PASSWORD } from "$env/static/private";
 
 let transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+  host: "authsmtp.securemail.pro",
   port: 587,
   secure: false,
   auth: {

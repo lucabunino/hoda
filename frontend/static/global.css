@@ -161,6 +161,12 @@ button.btn {
   cursor: pointer;
   text-align: center;
 }
+.css-d2bpmy {
+  display: none !important;
+}
+.css-1mwn02k {
+  margin-top: 1em !important;
+}
 
 
 @media only screen and (max-width: 900px) {

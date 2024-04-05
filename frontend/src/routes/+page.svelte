@@ -228,7 +228,7 @@
           {#if suite.info}
             <ul class="suite-info">
             {#each suite.info as info, i (info)}
-              <li>{info}</li> 
+              <li>{info}</li>
             {/each}
             </ul>
           {/if}
@@ -575,9 +575,6 @@
     -o-transition: var(--transition);
     transition: var(--transition);
   }
-  #cleo-logo>svg {
-    overflow: visible;
-  }
   #cleo-logo.cleoPopup {
     -webkit-transform: translateY(-80px);
         -ms-transform: translateY(-80px);
@@ -851,6 +848,10 @@
     }
   }
   @media only screen and (max-width: 600px) {
+    h3 {
+      font-size: 26px;
+      line-height: 32px;
+    }
     #suites>div {
       -ms-grid-columns: (1fr)[1];
       grid-template-columns: repeat(1, 1fr);

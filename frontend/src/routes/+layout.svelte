@@ -149,6 +149,30 @@
         </div>
       </div>
       {/if}
+<style>
+:root {
+  --ldg-psb-background: #ffffff;
+  --ldg-psb-border-radius: 0.42em;
+  --ldg-psb-box-shadow: 0px 24px 54px 0px rgba(0, 0, 0, 0.1);
+  --ldg-psb-padding: 16px;
+  --ldg-psb-input-background: #ffffff;
+  --ldg-psb-button-border-radius: 3.58em;
+  --ldg-psb-color-primary: #000000;
+  --ldg-psb-color-primary-lighter:#808080;
+  --ldg-psb-color-primary-darker: #000000;
+  --ldg-psb-color-primary-contrast: #ffffff;
+  --ldg-semantic-color-primary:  #000000;
+  --ldg-semantic-color-primary-lighter: #808080;
+  --ldg-semantic-color-primary-darker: #000000;
+  --ldg-semantic-color-primary-contrast: #ffffff;
+}
+#lodgify-search-bar { 
+  position: relative;
+  z-index: 999999;
+  width:100%;
+}
+</style>
+<script src="https://app.lodgify.com/portable-search-bar/stable/renderPortableSearchBar.js"></script>
       {#each data.suitesIds as suite, i (suite)}
             {#if lodgifyActive === i}
               <div id="lodgify-book-now-background" on:click={() => unbook(i)}></div>
@@ -181,6 +205,23 @@
   </nav>
 </header>
 
+<!-- <div
+  id="lodgify-search-bar"
+  data-website-id="507783"
+  data-language-code="en"
+  data-search-page-url="https://hodamilano.eu/en/all-properties"
+  
+  data-dates-check-in-label="Arrival"
+  data-dates-check-out-label="Departure"
+  data-guests-counter-label="Guests"
+  data-guests-input-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} guest"
+  data-guests-input-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} guests"
+  data-location-input-label="Location"
+  data-search-button-label="Search"
+  
+  data-new-tab="true"
+  data-version="stable"
+></div> -->
 
 {#key data.pathname}
   <div style="min-height: 100vh;" in:fade={{duration: 1000, delay: 1000, easing: quartInOut}} out:pageTransition={{duration: 1000, easing: quartInOut}}>

@@ -157,6 +157,13 @@
     Contacts
   </section>
 {/if}
+<section id="contacts-mock" class="s-y_bCXRrkrYfP">
+  <h3>CONTACTS</h3>
+  <p>Do you have an idea to share with us?<br>
+    Write at <a href="mailto:together@d-aria.eu" target="_blank" class="">together@d-aria.eu</a></p>
+  <p>Do you want to stay with us?<br>
+    Write at <a href="mailto:welcome@hodamilano.eu" target="_blank" class="">welcome@hodamilano.eu</a></p>
+</section>
 
 <style>
   :root {
@@ -183,6 +190,7 @@
   /* IMAGES */
   #images {
     position: relative;
+    padding-bottom: var(--gutter);
   }
   swiper-container {
     width: 100%;
@@ -227,5 +235,33 @@
   swiper-container::part(button-next) {
     right: 0;
     cursor: e-resize;
+  }
+
+  /* CONTACTS MOCK */
+  #contacts-mock {
+    padding-top: 0;
+    margin-bottom: var(--sectionMargin);
+  }
+  #contacts-mock>p,
+  #contacts-mock>h3 {
+    font-size: 30px;
+    line-height: 36px;
+    max-width: 800px;
+    margin-bottom: calc(var(--margin)*1.2);
+  }
+  a {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+  a:hover {
+    color: var(--darkGray);
+  }
+  @media only screen and (max-width: 600px) {
+    #contacts-mock>p,
+    #contacts-mock>h3 {
+      font-size: 26px;
+      line-height: 32px;
+    }
   }
 </style>

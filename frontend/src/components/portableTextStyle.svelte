@@ -51,8 +51,9 @@
   h4 {}
   h5 {}
   @media only screen and (max-width: 600px) {
-    p {
-      color: green;
+    h2 {
+      font-size: 26px;
+      line-height: 32px;
     }
   }
 </style>
