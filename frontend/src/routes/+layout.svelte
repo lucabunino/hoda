@@ -98,13 +98,13 @@
     lodgifyActive = false
     scrollLock = false
   }
-  let domain = ""
+  let currentUrl = ""
   let wip = false;
   if (browser) {
-    domain = window.location.protocol;
-    console.log(domain);
+    currentUrl = window.location.host;
+    console.log(currentUrl);
   }
-  if (domain === "https://hodamilano.eu") {
+  if (currentUrl === "https://hodamilano.eu") {
     wip = true
   } else {
     wip = false
