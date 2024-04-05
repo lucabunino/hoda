@@ -283,6 +283,7 @@
       <div id="cleo-popup" in:fade={{duration: 1000, delay: 200, easing: quartInOut}} out:fade={{duration: 1000, delay: 0, easing: quartInOut}}>
         <form
         id="cleo-form"
+        style="width: -webkit-fill-available;"
         action="?/create"
         method="POST"
         use:enhance
