@@ -822,7 +822,6 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    width: auto;
     height: auto;
     margin: auto;
   }
