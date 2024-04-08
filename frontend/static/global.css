@@ -36,7 +36,8 @@ html {
   line-height: 18px;
 }
 body {
-  /* scroll-behavior: smooth; */
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 h1,h2,h3,h4,h5 {
   font-weight: 400;
@@ -77,6 +78,7 @@ p {
   line-height: 18px;
   display: inline;
   cursor: pointer;
+  color: inherit;
 }
 button.btn {
   line-height: initial;

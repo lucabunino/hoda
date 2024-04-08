@@ -54,17 +54,28 @@
         }
       },
     };
-    ready = true
-
     swiperElements.forEach((swiperEl, index) => {
       Object.assign(swiperEl, params);
       swiperEl.initialize();
     });
-
     const swiperThumbs = document.querySelectorAll('.swiperThumbs');
     swiperThumbs.forEach((swiperTh, index) => {
       swiperTh.initialize();
     });
+    const id = window.location.hash.replace(/^#/, '');
+    const element = id && document.getElementById(id);
+    if (id && element) {
+      setTimeout(() => {
+        element.scrollIntoView();
+        const header = document.getElementById("header")
+        setTimeout(() => {
+          header?.classList.add("up")
+        }, 200);
+        ready = true;
+      }, 1100);
+    } else {
+      ready = true;
+    }
 	});
   let prevWidth = innerWidth;
   function handleResize() {
@@ -96,99 +107,97 @@
     <h3>{data.suitesPage[0].suitesIntro.en}</h3>
   </section>
 {/if}
-{#if data.suites}
-  {#each data.suites as suite, i (suite)}
-  <section id="{suite.title}" class="suite" class:transparent={ready != true} style={innerWidth > 900 ? `height: ${innerHeight - 34 - margin*2}px` : `height: auto`}>
-      <div class="suite-images">
-        <swiper-container
-        init=false
-        direction={'vertical'}
-        class={`desktopOnly swiperThumbs swiperThumbs${i}`}
-        slides-per-view=auto
-        free-mode=true
-        watch-slides-progress=true
-        mousewheel=true
-        space-between=3
-        loop=false
-        >
-          {#each suite.slider as slide, i (slide)}
-            <swiper-slide>
-              <picture>
-                <img
-                src={urlFor(slide).url()}
-                alt="Interiors of {suite.title}"
-                />
-              </picture>
-            </swiper-slide>
-          {/each}
-        </swiper-container>
-        
-        <swiper-container
-        init=false
-        class={`swiperEl swiperEl${i}`}
-        speed=500
-        thumbs-swiper={`.swiperThumbs${i}`}
-        slidesPerView=1
-        navigation=true
-        simulateTouch=true
-        >
-          {#each suite.slider as slide, i (slide)}
-            <swiper-slide>
-              <picture>
-                <img
-                src={urlFor(slide).url()}
-                alt="Interiors of {suite.title}"
-                />
-              </picture>
-            </swiper-slide>
-          {/each}
-        </swiper-container>
-      </div>
-      <div class="suite-content">
-        <h2 class="suite-title arizona xl">{suite.title}</h2>
-        {#if suite.description}
-          <p class="suite-description">{suite.description}</p>
-        {/if}
-        {#if suite.info}
-          <ul class="suite-info">
-          {#each suite.info as info, i (info)}
-            <li>{info}</li>
-          {/each}
-          </ul>
-        {/if}
-        <div class="suite-book-container">
-          <button class="btn primary suite-book" on:click={() => book(i)}>Book now</button>
-          <p class="suite-book-details">You'll be able to select arrival and departure days and to see prices and availability. You'll be then redirect to complete your reservation.</p>
-        </div>
-      </div>
-      {#if lodgifyActive === i}
-        <div id="lodgify-book-now-background" on:click={() => unbook(i)}></div>
-        <div
-        id="lodgify-book-now-box"
-        class="lodgify-book-now-box lodgify-{i}"
-        data-rental-id={suite.rentalId}
-        data-website-id="507783"
-        data-slug="sara-barbara"
-        data-language-code="en"
-        data-new-tab="true"
-        data-check-in-label="Arrival"
-        data-check-out-label="Departure"
-        data-guests-label="Guests"
-        data-guests-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospite"
-        data-guests-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospiti"
-        data-location-input-label="Location"
-        data-total-price-label="Total price:"
-        data-select-dates-to-see-price-label="Select dates to see total price"
-        data-minimum-price-per-night-first-label="From"
-        data-minimum-price-per-night-second-label="per night"
-        data-book-button-label="Book Now"
-        data-version="stable"
-        ></div>
-        <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script>
+{#each data.suites as suite, i (suite)}
+<section id="{(suite.title.replace('’',''))}" class="suite" class:transparent={ready != true} style={innerWidth > 900 ? `height: ${innerHeight - 34 - margin*2}px` : `height: auto`}>
+    <div class="suite-images">
+      <swiper-container
+      init=false
+      direction={'vertical'}
+      class={`desktopOnly swiperThumbs swiperThumbs${i}`}
+      slides-per-view=auto
+      free-mode=true
+      watch-slides-progress=true
+      mousewheel=true
+      space-between=3
+      loop=false
+      >
+        {#each suite.slider as slide, i (slide)}
+          <swiper-slide>
+            <picture>
+              <img
+              src={urlFor(slide).url()}
+              alt="Interiors of {suite.title}"
+              />
+            </picture>
+          </swiper-slide>
+        {/each}
+      </swiper-container>
+      
+      <swiper-container
+      init=false
+      class={`swiperEl swiperEl${i}`}
+      speed=500
+      thumbs-swiper={`.swiperThumbs${i}`}
+      slidesPerView=1
+      navigation=true
+      simulateTouch=true
+      >
+        {#each suite.slider as slide, i (slide)}
+          <swiper-slide>
+            <picture>
+              <img
+              src={urlFor(slide).url()}
+              alt="Interiors of {suite.title}"
+              />
+            </picture>
+          </swiper-slide>
+        {/each}
+      </swiper-container>
+    </div>
+    <div class="suite-content">
+      <h2 class="suite-title arizona xl">{suite.title}</h2>
+      {#if suite.description}
+        <p class="suite-description">{suite.description}</p>
       {/if}
-  </section>
-  {/each}
-{/if}
+      {#if suite.info}
+        <ul class="suite-info">
+        {#each suite.info as info, i (info)}
+          <li>{info}</li>
+        {/each}
+        </ul>
+      {/if}
+      <div class="suite-book-container">
+        <button class="btn primary suite-book" on:click={() => book(i)}>Book now</button>
+        <p class="suite-book-details">You'll be able to select arrival and departure days and to see prices and availability. You'll be then redirect to complete your reservation.</p>
+      </div>
+    </div>
+    {#if lodgifyActive === i}
+      <div id="lodgify-book-now-background" on:click={() => unbook(i)}></div>
+      <div
+      id="lodgify-book-now-box"
+      class="lodgify-book-now-box lodgify-{i}"
+      data-rental-id={suite.rentalId}
+      data-website-id="507783"
+      data-slug="sara-barbara"
+      data-language-code="en"
+      data-new-tab="true"
+      data-check-in-label="Arrival"
+      data-check-out-label="Departure"
+      data-guests-label="Guests"
+      data-guests-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospite"
+      data-guests-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospiti"
+      data-location-input-label="Location"
+      data-total-price-label="Total price:"
+      data-select-dates-to-see-price-label="Select dates to see total price"
+      data-minimum-price-per-night-first-label="From"
+      data-minimum-price-per-night-second-label="per night"
+      data-book-button-label="Book Now"
+      data-version="stable"
+      ></div>
+      <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script>
+    {/if}
+</section>
+{/each}
 <section id="general-info">
   <div id="general-info-left" class:noRight={!data.suitesPage[0].suitesGeneralInfoRightTitle}>
     {#if data.suitesPage[0].suitesGeneralInfoLeftTitle}

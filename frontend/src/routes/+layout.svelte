@@ -120,7 +120,7 @@
 </div>
 {:else}
 
-<header bind:clientHeight={logoHeight} class={headerPosition} class:true={mobileMenu} class:closed={$page.url.pathname !== "/"}>
+<header id="header" bind:clientHeight={logoHeight} class={headerPosition} class:true={mobileMenu} class:closed={$page.url.pathname !== "/"}>
   <div class="headerBg"
   style={`--navHeight: ${navHeight}px`}
   class:true={mobileMenu}
@@ -258,12 +258,20 @@ class:true={mobileNewsletter}>
 
 <footer>
   <div>
-    <p>©2024 HOD’A</p>
+    <p>©{new Date().getFullYear()} d’ARIA Srl</p>
+    <p>10779060960</p>
+    {#if data.siteSettings[0].maps}
+      <p>{data.siteSettings[0].headquarters}</p>
+    {/if}
+  </div>
+  <div>
+    <p>We are located in:</p>
     {#if data.siteSettings[0].maps}
       <a class="maps" target="_blank" href="{data.siteSettings[0].mapsLink}">{data.siteSettings[0].maps}</a>
     {/if}
   </div>
   <div>
+    <p>Contact us:</p>
     <p>T. <a class="" target="_blank" href="tel:{data.siteSettings[0].phone.replace(/\s/g, '')}">{data.siteSettings[0].phone}</a></p>
     {#if data.siteSettings[0].mail}
       <p>M. <a target="_blank" href="mailto:{data.siteSettings[0].mail}">{data.siteSettings[0].mail}</a></p>

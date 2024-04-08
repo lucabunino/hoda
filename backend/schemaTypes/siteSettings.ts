@@ -26,6 +26,12 @@ export default {
       type: 'string',
     },
     {
+      name: 'headquarters',
+      title: 'Sede legale',
+      type: 'string',
+      fieldset: 'contacts',
+    },
+    {
       name: 'maps',
       title: 'Indirizzo',
       type: 'string',

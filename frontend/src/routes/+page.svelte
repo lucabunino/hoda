@@ -197,7 +197,6 @@
     <h3>Stay with us</h3>
     <div>
       {#each data.suites as suite, i (suite)}
-        <!-- <div style={innerWidth > 900 ? `width: ${Math.round((innerWidth - margin * 2 - gutter * 2) / 3)}px` : `width: ${Math.round((innerWidth - margin * 2 - gutter) / 2)}px`}> -->
         <div>
           <swiper-container
               init="false"
@@ -211,9 +210,6 @@
                 clickable: true
               }}
           >
-          <!-- autoplay={{
-            delay: 6000
-          }} -->
             {#each suite.slider as slide, i (slide)}
               <swiper-slide :key={i}>
                 <picture>
@@ -234,7 +230,7 @@
             </ul>
           {/if}
           <button class="btn" on:click={() => book(i)}>Book now</button>     
-          <a class="suite-more" href="/suites#{suite.title}">More info</a>
+          <a data-sveltekit-noscroll class="suite-more" href="/suites/#{(suite.title.replace('’',''))}">More info</a>
         </div>
         {#if lodgifyActive === i}
           <div id="lodgify-book-now-background" on:click={() => unbook(i)}></div>
@@ -268,7 +264,7 @@
 {#if data.homepage[0].homepageCleo}
   <section id="cleo">
     <div id="cleo-spline" class:cleoPopup={cleoPopupVisible}>
-      <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.68/build/spline-viewer.js"></script>
+      <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.93/build/spline-viewer.js"></script>
       <spline-viewer class="desktopOnly" url="https://prod.spline.design/UEEj4bhUtCEMpMjB/scene.splinecode"></spline-viewer>
       <spline-viewer class="mobileOnly" url="https://prod.spline.design/ImmL4rt5FrQ2k-I9/scene.splinecode"></spline-viewer>
       <div id="logo-cover"></div>
