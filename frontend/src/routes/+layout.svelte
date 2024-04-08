@@ -113,6 +113,9 @@
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={handleResize} on:scroll={scrolling} on:wheel|nonpassive={e => {if(scrollLock)e.preventDefault()}}/>
+<svelte:head>
+  <title>HOD’A is your temporary nest in Milan</title>
+</svelte:head>
 
 {#if wip}
 <div style="position: fixed; display:grid; align-items:center; justify-items:center; background-color: #FFF, width: 100dvw; width: 100vw; height: 100dvh; height: 100vh;">

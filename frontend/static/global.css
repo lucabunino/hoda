@@ -36,7 +36,7 @@ html {
   line-height: 18px;
 }
 body {
-  overflow-x: hidden;
+  overflow-x: hd;
   scroll-behavior: smooth;
 }
 h1,h2,h3,h4,h5 {
