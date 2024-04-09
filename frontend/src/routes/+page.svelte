@@ -126,38 +126,24 @@
   let lodgifyActive = ""
   let scrollTop = null;
   let scrollLeft = null;
+  let scrollLock = false;
   function book(i) {
-    disableScroll()
+    scrollLock = true
     lodgifyActive = i
   }
   function unbook(i) {
     if (event.pointerType === "mouse") {
       lodgifyActive = false
-      enableScroll()
+      scrollLock = false
     }
   }
   function unbookMobile(i) {
     lodgifyActive = false
     scrollLock = false
   }
-  function disableScroll() {
-    if (browser) {
-      scrollTop = 
-        window.pageYOffset || window.document.documentElement.scrollTop;
-      scrollLeft = 
-        window.pageXOffset || window.document.documentElement.scrollLeft,
-        window.onscroll = function() {
-        window.scrollTo(scrollLeft, scrollTop);
-      }};
-    }
-  function enableScroll() {
-    if (browser) {
-      window.onscroll = function() {};
-    }
-  };
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight bind:scrollX/>
+<svelte:window bind:innerWidth bind:innerHeight bind:scrollX on:wheel|nonpassive={e => {if(scrollLock)e.preventDefault()}}/>
 
 {#if data.homepage[0].homepageHeroDesktop}
   <section id="hero">
