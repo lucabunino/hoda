@@ -133,7 +133,7 @@
   function unbook(i) {
     if (event.pointerType === "mouse") {
       lodgifyActive = false
-      scrollLock = false
+      enableScroll()
     }
   }
   function unbookMobile(i) {
