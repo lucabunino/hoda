@@ -9,6 +9,9 @@ export default {
       options: { columns: 2 },
     },
   ],
+  groups: [
+    {name: 'SEO',},
+  ],
   fields: [
     {
       name: 'title',
@@ -89,9 +92,22 @@ export default {
       fieldset: 'contacts',
     },
     {
-      name: 'description',
+      name: 'SEOTitle',
+      title: 'Titolo tab',
+      type: 'localeString',
+      group: 'SEO',
+    },
+    {
+      name: 'SEODescription',
       title: 'Descrizione',
       type: 'localeText',
+      group: 'SEO',
+    },
+    {
+      name: 'SEOImage',
+      title: 'Immagine share social',
+      type: 'image',
+      group: 'SEO',
     },
   ]
 }

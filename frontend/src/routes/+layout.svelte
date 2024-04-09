@@ -8,6 +8,7 @@
   import { fade, slide, fly } from 'svelte/transition';
   import { quartInOut } from 'svelte/easing';
   import { browser } from '$app/environment';
+  import {urlFor} from '$lib/utils/image';
   
   $: innerWidth = 1280
 	$: innerHeight = 800
@@ -114,14 +115,20 @@
 
 <svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={handleResize} on:scroll={scrolling} on:wheel|nonpassive={e => {if(scrollLock)e.preventDefault()}}/>
 <svelte:head>
-  <title>HOD’A is your temporary nest in Milan</title>
+  <title>{data.siteSettings[0].SEOTitle}</title>
+  <meta name="description" content="{data.siteSettings[0].SEODescription.en}">
+
+  <meta property="og:title" content="{data.siteSettings[0].SEOTitle.en}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{currentUrl}" />
+  <meta property="og:image" content="{urlFor(data.siteSettings[0].SEOImage).url()}">
 </svelte:head>
 
-{#if wip}
+<!-- {#if wip}
 <div style="position: fixed; display:grid; align-items:center; justify-items:center; background-color: #FFF, width: 100dvw; width: 100vw; height: 100dvh; height: 100vh;">
   <h1>Coming soon</h1>
 </div>
-{:else}
+{:else} -->
 
 <header id="header" bind:clientHeight={logoHeight} class={headerPosition} class:true={mobileMenu} class:closed={$page.url.pathname !== "/"}>
   <div class="headerBg"
@@ -304,7 +311,6 @@ class:true={mobileNewsletter}>
     <p>Privacy policy</p>
   </div>
 </footer>
-{/if}
 
 <style lang="css">
   header {
@@ -427,10 +433,6 @@ class:true={mobileNewsletter}>
       margin-top: 15px;
     }
   }
-
-
-
-
 
   #newsletter {
     position: sticky;
