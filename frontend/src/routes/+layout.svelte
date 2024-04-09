@@ -115,7 +115,7 @@
 
 <svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={handleResize} on:scroll={scrolling} on:wheel|nonpassive={e => {if(scrollLock)e.preventDefault()}}/>
 <svelte:head>
-  <title>{data.siteSettings[0].SEOTitle}</title>
+  <title>{data.siteSettings[0].SEOTitle.en}</title>
   <meta name="description" content="{data.siteSettings[0].SEODescription.en}">
 
   <meta property="og:title" content="{data.siteSettings[0].SEOTitle.en}" />
