@@ -269,7 +269,7 @@ class:true={mobileNewsletter}>
 <footer>
   <div>
     <p>©{new Date().getFullYear()} d’ARIA Srl</p>
-    <p>10779060960</p>
+    <p>{data.siteSettings[0].piva}</p>
     {#if data.siteSettings[0].maps}
       <p>{data.siteSettings[0].headquarters}</p>
     {/if}

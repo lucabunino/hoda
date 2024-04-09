@@ -127,14 +127,18 @@
   let scrollTop = null;
   let scrollLeft = null;
   function book(i) {
-    console.log("book " + i);
     disableScroll()
     lodgifyActive = i
   }
   function unbook(i) {
-    console.log("unbook " + i);
+    if (event.pointerType === "mouse") {
+      lodgifyActive = false
+      scrollLock = false
+    }
+  }
+  function unbookMobile(i) {
     lodgifyActive = false
-    enableScroll()
+    scrollLock = false
   }
   function disableScroll() {
     if (browser) {
@@ -233,7 +237,7 @@
           <a data-sveltekit-noscroll class="suite-more" href="/suites/#{(suite.title.replace('’',''))}">More info</a>
         </div>
         {#if lodgifyActive === i}
-          <div id="lodgify-book-now-background" on:click={() => unbook(i)}></div>
+          <div id="lodgify-book-now-background" on:click={() => unbook(i)} on:touchend={() => unbookMobile(i)}></div>
           <div
           id="lodgify-book-now-box"
           class="lodgify-book-now-box lodgify-{i}"
@@ -253,9 +257,9 @@
           data-minimum-price-per-night-first-label="From"
           data-minimum-price-per-night-second-label="per night"
           data-book-button-label="Book Now"
-          data-version="stable"
+          data-version="1.18.2"
           ></div>
-          <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script>
+          <script src="https://app.lodgify.com/book-now-box/1.18.2/renderBookNowBox.js"></script>
         {/if}
       {/each}
     </div>

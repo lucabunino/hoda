@@ -29,6 +29,12 @@ export default {
       type: 'string',
     },
     {
+      name: 'piva',
+      title: 'Partita IVA',
+      type: 'string',
+      fieldset: 'contacts',
+    },
+    {
       name: 'headquarters',
       title: 'Sede legale',
       type: 'string',
@@ -87,7 +93,7 @@ export default {
     },
     {
       name: 'phone',
-      title: 'Phone Number',
+      title: 'Numero di telefono',
       type: 'string',
       fieldset: 'contacts',
     },
