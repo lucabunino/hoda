@@ -57,16 +57,16 @@ export const actions = {
       if (request !== "") {
         messageHtml = `<p>Request: ${message}<p>`
         html = `
-        <h1>${intro}</h1>
-        <h2>Written request</h2>
+        <h4>${intro}</h4>
+        <p>Written request</p>
         <p>${from}</p>
         ${messageHtml}
         `
       }
       if (pickup !== "") {
         html = `
-        <h1>${intro}</h1>
-        <h2>Car</h2>
+        <h4>${intro}</h4>
+        <p>Car</p>
         <p>${from}</p>
         <p>Pickup/destination: ${pickup}, ${destination}</p>
         <p>When: ${datetime}</p>
@@ -76,8 +76,8 @@ export const actions = {
       }
       if (restaurant !== "") {
         html = `
-          <h1>${intro}</h1>
-          <h2>Table</h2>
+          <h4>${intro}</h4>
+          <p>Table</p>
           <p>${from}</p>
           <p>Restaurant: ${restaurant}</p>
           <p>When: ${datetime}</p>
@@ -87,8 +87,8 @@ export const actions = {
       }
       if (restaurant === "" && items !== "") {
         html = `
-          <h1>${intro}</h1>
-          <h2>Laundry</h2>
+          <h4>${intro}</h4>
+          <p>Laundry</p>
           <p>${from}</p>
           <p>When: ${datetime}</p>
           <p>Items: ${items}</p>
@@ -97,8 +97,8 @@ export const actions = {
       }
       if (restaurant !== "" && datetime !== "" && guests === "") {
         html = `
-          <h1>${intro}</h1>
-          <h2>Food</h2>
+          <h4>${intro}</h4>
+          <p>Food</p>
           <p>${from}</p>
           <p>Kind: ${food}</p>
           <p>Restaurant: ${restaurant}</p>
@@ -135,11 +135,11 @@ export const actions = {
           from: EMAIL,
           to: email,
           subject: "CLEO request",
-          text: "We've received your request and we're working at it. You'll get a response as soon as possible.",
-          html: "<p>We've received your request and we're working at it. You'll get a response as soon as possible.</p>",
+          text: "Dear " + fnameRegular + ", we’ve successfully received your request and will get back to you as soon as possible. Thank you for contacting me! CLeo",
+          html: "<p>Dear " + fnameRegular + ",</p><p>We’ve successfully received your request and will get back to you as soon as possible.</p><br /><p>Thank you for contacting me!</p><p>Cleo</p>",
         };
       }
-
+      
       const sendEmailConfirm = async (confirm) => {
         await new Promise((resolve, reject) => {
           transporter.sendMail(confirm, (err, info) => {

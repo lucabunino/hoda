@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PageData } from './$types';
   export let data: PageData;
+  let svgLogoCleo = data.homepage[0].homepageLogoCleo.replace('<svg', '<svg overflow="visible"');
 
   import {urlFor} from '$lib/utils/image';
   import { onMount } from 'svelte';
@@ -96,7 +97,7 @@
           width: 0;
           opacity: 1;
           background-color: var(--white);
-          animation: bulletAnimation 2500ms forwards;
+          animation: bulletAnimation 1000ms forwards;
         }
         @keyframes bulletAnimation {
           from {
@@ -259,7 +260,9 @@
       <spline-viewer class="mobileOnly" url="https://prod.spline.design/ImmL4rt5FrQ2k-I9/scene.splinecode"></spline-viewer>
       <div id="logo-cover"></div>
     </div>
-    <div id="cleo-logo" class:cleoPopup={cleoPopupVisible}>{@html data.homepage[0].homepageLogoCleo}</div>
+    <div id="cleo-logo" class:cleoPopup={cleoPopupVisible}>
+      {@html svgLogoCleo}
+    </div>
     <p id="cleo-payoff" class:cleoPopup={cleoPopupVisible}>Make a wish</p>
     <p id="cleo-content" class:cleoPopup={cleoPopupVisible}>{data.homepage[0].homepageCleo.en}</p>
     {#if !cleoPopupVisible}
@@ -295,7 +298,7 @@
               </div>
               <button type="button" class="btn cleo dropShadow next" id="next" name="next"
               class:locked={valueFNameHoda === "" || valueLName === ""}
-              on:click={() => {userKind="selected"; bg="azure"}}>Next</button>
+              on:click={() => {userKind="selectedHoda"; bg="azure"}}>Next</button>
             </div>
           </div>
           <div class="form-step" class:active={userKind === "regular"}>
@@ -308,10 +311,10 @@
               <input type="text" id="company" name="company" placeholder={lang == "en" ? `Company name` : 'Nome azienda'}>
               <button type="button" class="btn cleo dropShadow next" id="next" name="next"
               class:locked={valueFNameRegular === "" || valueLName === "" || valueEmail === "" || valuePhone === ""}
-              on:click={() => {userKind="selected"; bg="blue"}}>Next</button>
+              on:click={() => {userKind="selectedRegular"; bg="blue"}}>Next</button>
             </div>
           </div>
-          <div class="form-step" class:active={userKind === "selected"}>
+          <div class="form-step" class:active={userKind === "selectedHoda"}>
             <div class="formBackground dropShadow {bg}">
               <p>Write your request</p>
               <textarea bind:value={valueRequest} class="dropShadow" rows="4" id="message" name="message" placeholder={lang == "en" ? `I'd like to...` : 'Vorrei...'}></textarea>
@@ -325,6 +328,13 @@
                 <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="tour" name="tour" on:click={() => userKind="tour"}>Private tour</button>
                 <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="spa" name="spa" on:click={() => userKind="spa"}>SPA Treatments</button>
               </div>
+            </div>
+          </div>
+          <div class="form-step" class:active={userKind === "selectedRegular"}>
+            <div class="formBackground dropShadow {bg}">
+              <p>Write your request</p>
+              <textarea bind:value={valueRequest} class="dropShadow" rows="8" id="message" name="message" placeholder={lang == "en" ? `I'd like to...` : 'Vorrei...'}></textarea>
+              <button id="submit" type="submit" class="btn submit dropShadow"  class:locked={valueRequest === ""} on:click={() => {cleoPopupVisible = !cleoPopupVisible; userKind="unset"}}>Submit</button>
             </div>
           </div>
           <div class="form-step" class:active={userKind === "car"}>
@@ -761,6 +771,7 @@
     border: none;
     padding: var(--gutter);
     border-radius: 5px;
+    resize: vertical;
   }
   select:focus, textarea:focus, input:focus{
     outline: none;
