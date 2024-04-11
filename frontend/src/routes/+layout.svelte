@@ -187,13 +187,12 @@ class:closed={$page.url.pathname !== "/"}
       {@html data.siteSettings[0].logo}
     </a>
   {/if}
-  <button id="menuSwitch" class="btn mobileOnly" class:true={mobileMenu} on:click={openMenu}>
-    {#if mobileMenu}
-      Close
-    {:else}
-      Menu
-    {/if}
-  </button>
+  <!-- <button class="btn mobileOnly" class:true={mobileMenu} on:click={openMenu}>Test</button> -->
+  <div id="menuSwitch" class="mobileOnly" class:true={mobileMenu} on:click={openMenu}>
+    <div class="line top" class:cross={mobileMenu}></div>
+    <div class="line middle" style="transform: translateY(-50%) scaleX({mobileMenu ? 0 : 1})"></div>
+    <div class="line bottom" class:cross={mobileMenu}></div>
+  </div>
   <nav
   bind:clientHeight={navHeight}
   class:noTransition={noTransition == true}
@@ -587,13 +586,44 @@ class:true={mobileNewsletter}>
     #menuSwitch {
       position: fixed;
       right: var(--margin);
-      top: var(--margin);
+      top: calc(var(--margin)*1.2);
       z-index: 1;
-      width: 65px;
+      width: 34px;
+      height: 18px;
     }
-    #menuSwitch.true {
-      background-color: var(--black);
-      color: var(--white);
+    .line {
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background-color: black;
+      -webkit-transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 1s;
+      -o-transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 1s;
+      transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 1s;;
+    }
+    .line.top {
+      top: 0;
+      -webkit-transform-origin: bottom left;
+          -ms-transform-origin: bottom left;
+              transform-origin: bottom left;
+    }
+    .line.middle {
+      top: 50%;
+    }
+    .line.bottom {
+      bottom: 0;
+      -webkit-transform-origin: top left;
+          -ms-transform-origin: top left;
+              transform-origin: top left;
+    }
+    .line.top.cross {
+      -webkit-transform: rotate(45deg) translateY(-6px);
+          -ms-transform: rotate(45deg) translateY(-6px);
+              transform: rotate(45deg) translateY(-6px);
+    }
+    .line.bottom.cross {
+      -webkit-transform: rotate(-45deg) translateY(6px);
+          -ms-transform: rotate(-45deg) translateY(6px);
+              transform: rotate(-45deg) translateY(6px);
     }
     #logo {
       margin-left: var(--margin);
