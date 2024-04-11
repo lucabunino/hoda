@@ -846,6 +846,9 @@
     }
   }
   @media only screen and (max-width: 900px) {
+    #cleo-spline {
+      top: 45%;
+    }
     #suites>div>div {
       width: calc((100vw - var(--margin)*2 - var(--gutter)*2)/1.6);
     }
@@ -854,6 +857,7 @@
     }
     #cleo-logo {
       width: 25vw;
+      padding: 10vh 0 var(--margin);
     }
   }
   @media only screen and (max-width: 600px) {

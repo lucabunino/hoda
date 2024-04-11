@@ -24,9 +24,6 @@
       effect = "slide"
     }
     const params = {
-      autoplay: {
-        delay: "6000",
-      },
       on: {
         tap() {
           this.autoplay.stop();
@@ -47,6 +44,9 @@
       loop:'true',
       breakpoints: {
         900: {
+          autoplay: {
+            delay: "6000",
+          },
           slidesPerView:1,
           simulateTouch:'false',
           rewind:'true',

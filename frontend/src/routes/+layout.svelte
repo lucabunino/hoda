@@ -9,50 +9,40 @@
   import { quartInOut } from 'svelte/easing';
   import { browser } from '$app/environment';
   import {urlFor} from '$lib/utils/image';
-  
+
+  $: ready = false
   $: innerWidth = 1280
 	$: innerHeight = 800
   $: scrollY = ""
   $: logoHeight = "";
   $: navHeight = "";
   $: mobileMenu = false;
-  
-  let headerPosition = "down";
-  let prevScrollY = 0;
-  function scrolling() {
-    const deltaScroll = scrollY - prevScrollY;
-    if ($page.url.pathname === "/") {
-      if (scrollY > innerHeight*.7 && deltaScroll > 0) {
-        headerPosition = "up";
-      } else if (deltaScroll < -10 || scrollY < 100) {
-        headerPosition = "down";
-      }
-    } else {
-      if (scrollY > 150 && deltaScroll > 0) {
-        headerPosition = "up";
-      } else if (deltaScroll < -10 || scrollY < 100) {
-        headerPosition = "down";
-      }
-    }
-    prevScrollY = scrollY
-  }
-
+  $: logoMaxWidth = ""
+  $: logoWidthDifference = ""
+  $: logoWidth = ""
+  $: navMaxTop = ""
+  $: navTopDifference = ""
+  $: navTop = ""
+  $: margin = ""
+  $: headerPosition = "down";
+  $: prevScrollY = 0;
   $: noTransition = false;
   $: resizeTimeout = "";
-  function handleResize() {
-    noTransition = true; // Set noTransition to true on resize
-    clearTimeout(resizeTimeout); // Clear any existing timeout
-    resizeTimeout = setTimeout(() => {
-      noTransition = false; // Set noTransition back to false after a delay
-    }, 200); // Adjust the delay time as needed
-  }
-  $: ready = false
+  $: delay1s = false;
+
+
   onMount(() => {
     if (innerHeight !== null) {
+      if (innerWidth > 900) {
+        margin = 16
+      } else {
+        margin = 12
+      }
+      logoMaxWidth = (innerWidth - 2*margin);
+      navMaxTop = (innerWidth - margin*2)*.266 + margin*2
       ready = true
     }
 	});
-  $: delay1s = false;
   beforeNavigate(() => {
     delay1s = true
     setTimeout(() => {
@@ -62,6 +52,53 @@
   afterNavigate(() => {
     mobileMenu = false
 	});
+  
+  function scrolling() {
+    if ($navigating) {
+      console.log("navigating");
+    } else {
+      if (data.pathname === "/") {
+        applyNoTransition();
+        logoWidthDifference = (scrollY - 50)/(innerHeight);
+        navTopDifference = (scrollY - 50)/(innerHeight*.9);
+        logoWidth = logoMaxWidth - logoMaxWidth*logoWidthDifference;
+        if (logoWidth < 140) {
+          logoWidth = 140
+        }
+        navTop = navMaxTop - navMaxTop*navTopDifference;
+        if (navTop < margin) {
+          navTop = margin
+        }
+      };
+      calcHeaderPosition()
+    }
+  }
+
+  function calcHeaderPosition() {
+    const deltaScroll = scrollY - prevScrollY;
+    if (data.pathname === "/") {
+      if (scrollY > innerHeight && deltaScroll > 0) {
+        headerPosition = "up";
+      } else if (deltaScroll < -10 || scrollY < 50) {
+        headerPosition = "down";
+      }
+    } else {
+      if (scrollY > 150 && deltaScroll > 10) {
+        headerPosition = "up";
+        console.log("its me");
+      } else if (deltaScroll < -10 || scrollY < 50) {
+        headerPosition = "down";
+      }
+    }
+    prevScrollY = scrollY
+  }
+  function applyNoTransition() {
+    noTransition = true; // Set noTransition to true on resize
+    clearTimeout(resizeTimeout); // Clear any existing timeout
+    resizeTimeout = setTimeout(() => {
+      noTransition = false; // Set noTransition back to false after a delay
+    }, 200); // Adjust the delay time as needed
+  }
   function pageTransition(node, { delay, duration, offset=window.scrollY}) {
 		return {
 			delay,
@@ -87,8 +124,6 @@
 	}
   let bookNowButtons = false;
   let lodgifyActive = ""
-  let scrollTop = null;
-  let scrollLeft = null;
   let scrollLock = false;
   function book(i) {
     scrollLock = true
@@ -99,29 +134,27 @@
     lodgifyActive = false
     scrollLock = false
   }
-  let currentUrl = ""
-  let wip = false;
-  if (browser) {
-    currentUrl = window.location.host;
-    console.log(currentUrl);
-  }
-  if (currentUrl === "hodamilano.eu") {
-    wip = true
-  } else {
-    wip = false
-  }
-
+  // let currentUrl = ""
+  // let wip = false;
+  // if (browser) {
+  //   currentUrl = window.location.host;
+  // }
+  // if (currentUrl === "hodamilano.eu") {
+  //   wip = true
+  // } else {
+  //   wip = false
+  // }
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={handleResize} on:scroll={scrolling} on:wheel|nonpassive={e => {if(scrollLock)e.preventDefault()}}/>
+<svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={applyNoTransition} on:scroll={scrolling} on:wheel|nonpassive={e => {if(scrollLock)e.preventDefault()}}/>
 <svelte:head>
   <title>{data.siteSettings[0].SEOTitle.en}</title>
-  <meta name="description" content="{data.siteSettings[0].SEODescription.en}">
-
+  <meta name="description" content="{data.siteSettings[0].SEODescription.en}" />
+  
   <meta property="og:title" content="{data.siteSettings[0].SEOTitle.en}" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="{currentUrl}" />
-  <meta property="og:image" content="{urlFor(data.siteSettings[0].SEOImage).url()}">
+  <meta property="og:url" content="https://hodamilano.eu/" />
+  <meta property="og:image" content="{urlFor(data.siteSettings[0].SEOImage).url()}" />
 </svelte:head>
 
 <!-- {#if wip}
@@ -130,15 +163,27 @@
 </div>
 {:else} -->
 
-<header id="header" bind:clientHeight={logoHeight} class={headerPosition} class:true={mobileMenu} class:closed={$page.url.pathname !== "/"}>
+<header id="header"
+bind:clientHeight={logoHeight}
+class={headerPosition}
+class:true={mobileMenu}
+class:closed={$page.url.pathname !== "/"}
+>
   <div class="headerBg"
   style={`--navHeight: ${navHeight}px`}
   class:true={mobileMenu}
+  class:noTransition={noTransition == true}
   class:headerBgHidden={$page.url.pathname === "/" && scrollY < innerHeight - logoHeight}
   class:headerBgBorder={$page.url.pathname !== "/" || scrollY > innerHeight - logoHeight}>
   </div>
   {#if data.siteSettings[0].logo}
-    <a id="logo" class:noTransition={noTransition == true} class:delay1s={delay1s == true} class:true={mobileMenu} class:closed={$page.url.pathname !== "/" || scrollY >= 100} href="/" aria-current={$page.url.pathname === '/'}>
+    <a id="logo"
+    style={scrollY > 50 && data.pathname === "/" ? `width: ${logoWidth}px` : ''}
+    class:noTransition={noTransition == true}
+    class:delay1s={delay1s == true}
+    class:true={mobileMenu}
+    class:closed={$page.url.pathname !== "/" || scrollY > 50}
+    href="/" aria-current={$page.url.pathname === '/'}>
       {@html data.siteSettings[0].logo}
     </a>
   {/if}
@@ -152,7 +197,9 @@
   <nav
   bind:clientHeight={navHeight}
   class:noTransition={noTransition == true}
-  class={mobileMenu} class:closed={$page.url.pathname !== "/" || scrollY >= 100 && innerWidth > 900}
+  class={mobileMenu}
+  class:closed={$page.url.pathname !== "/" || scrollY > 50 && innerWidth > 900}
+  style={scrollY > 50 && data.pathname === "/" ? `top: ${navTop}px` : ''}
   >
     <ul>
       <li><a class="menu-item menu-item-mobile" href="/about" aria-current={$page.url.pathname === '/about'}>About</a></li>
@@ -349,11 +396,10 @@ class:true={mobileNewsletter}>
   #logo.closed {
     width: 140px;
   }
-  #logo.noTransition,
-  nav.noTransition {
-    -webkit-transition: none;
-    -o-transition: none;
-    transition: none;
+  .noTransition {
+    -webkit-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
   }
   nav {
     position: absolute;
