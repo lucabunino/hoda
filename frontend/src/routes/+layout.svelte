@@ -40,7 +40,7 @@
       }
       logoMaxWidth = (innerWidth - 2*margin);
       navMaxTop = (innerWidth - margin*2)*.266 + margin*2
-      ready = true
+      ready = true;
     }
 	});
   beforeNavigate(() => {
