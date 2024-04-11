@@ -178,8 +178,8 @@ class:closed={$page.url.pathname !== "/"}
   </div>
   {#if data.siteSettings[0].logo}
     <a id="logo"
-    style={scrollY > 50 && data.pathname === "/" ? `width: ${logoWidth}px` : ''}
-    class:noTransition={noTransition == true}
+    style={scrollY > 50 && data.pathname === "/" && innerWidth ? `width: ${logoWidth}px` : ''}
+    class:noTransition={noTransition == true && innerWidth > 900}
     class:delay1s={delay1s == true}
     class:true={mobileMenu}
     class:closed={$page.url.pathname !== "/" || scrollY > 50}
@@ -597,22 +597,16 @@ class:true={mobileNewsletter}>
     }
     #logo {
       margin-left: var(--margin);
-      width: 60vw;
+      width: 60vw !important;
       -webkit-transition-duration: 500ms;
            -o-transition-duration: 500ms;
               transition-duration: 500ms;
     }
     #logo.true {
-      width: 140px;
+      width: 140px !important;
     }
     #logo.closed {
-      width: 140px;
-    }
-    #logo.noTransition,
-    nav.noTransition {
-      -webkit-transition: none;
-      -o-transition: none;
-      transition: none;
+      width: 140px !important;
     }
     #logo.delay1s {
       -webkit-transition-delay: 1s;
@@ -622,7 +616,7 @@ class:true={mobileNewsletter}>
     nav,
     nav.closed {
       position: fixed;
-      top: 0;
+      top: 0 !important;
       left: 0;
       -webkit-transform: translateY(-100%);
           -ms-transform: translateY(-100%);

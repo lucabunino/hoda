@@ -91,16 +91,22 @@
   let scrollLeft = null;
   let scrollLock = false;
   function book(i) {
+    if (innerWidth > 900) {
+      scrollLock = true
+      lodgifyActive = i
+    }
+  }
+  function unbook() {
+    if (innerWidth > 900) {
+      scrollLock = false
+      lodgifyActive = false
+    }
+  }
+  function bookMobile(i) {
     scrollLock = true
     lodgifyActive = i
   }
-  function unbook(i) {
-    if (event.pointerType === "mouse") {
-      lodgifyActive = false
-      scrollLock = false
-    }
-  }
-  function unbookMobile(i) {
+  function unbookMobile() {
     lodgifyActive = false
     scrollLock = false
   }
@@ -173,12 +179,12 @@
         </ul>
       {/if}
       <div class="suite-book-container">
-        <button class="btn primary suite-book" on:click={() => book(i)}>Book now</button>
+        <button class="btn primary suite-book" on:click={(e) => book(i)} on:touchstart={(e) => bookMobile(i)}>Book now</button>
         <p class="suite-book-details">You'll be able to select arrival and departure days and to see prices and availability. You'll be then redirected to complete your reservation.</p>
       </div>
     </div>
     {#if lodgifyActive === i}
-      <div id="lodgify-book-now-background" on:click={() => unbook(i)} on:touchend={() => unbookMobile(i)}></div>
+      <div id="lodgify-book-now-background" on:click={(e) => unbook(e)} on:touchend={() => unbookMobile(i)}></div>
       <div
       id="lodgify-book-now-box"
       class="lodgify-book-now-box lodgify-{i}"
