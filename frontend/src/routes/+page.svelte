@@ -129,16 +129,22 @@
   let scrollLeft = null;
   let scrollLock = false;
   function book(i) {
+    if (innerWidth > 900) {
+      scrollLock = true
+      lodgifyActive = i
+    }
+  }
+  function unbook() {
+    if (innerWidth > 900) {
+      scrollLock = false
+      lodgifyActive = false
+    }
+  }
+  function bookMobile(i) {
     scrollLock = true
     lodgifyActive = i
   }
-  function unbook(i) {
-    if (event.pointerType === "mouse") {
-      lodgifyActive = false
-      scrollLock = false
-    }
-  }
-  function unbookMobile(i) {
+  function unbookMobile() {
     lodgifyActive = false
     scrollLock = false
   }
@@ -220,11 +226,11 @@
             {/each}
             </ul>
           {/if}
-          <button class="btn" on:click={() => book(i)}>Book now</button>     
+          <button class="btn" on:click={() => book(i)} on:touchstart={() => bookMobile(i)}>Book now</button>     
           <a data-sveltekit-noscroll class="suite-more" href="/suites/#{(suite.title.replace('’',''))}">More info</a>
         </div>
         {#if lodgifyActive === i}
-          <div id="lodgify-book-now-background" on:click={() => unbook(i)} on:touchend={() => unbookMobile(i)}></div>
+          <div id="lodgify-book-now-background" on:click={() => unbook()} on:touchend={() => unbookMobile()}></div>
           <div
           id="lodgify-book-now-box"
           class="lodgify-book-now-box lodgify-{i}"
@@ -846,6 +852,9 @@
     }
   }
   @media only screen and (max-width: 900px) {
+    #cleo-spline {
+      top: 45%;
+    }
     #suites>div>div {
       width: calc((100vw - var(--margin)*2 - var(--gutter)*2)/1.6);
     }
@@ -854,6 +863,7 @@
     }
     #cleo-logo {
       width: 25vw;
+      padding: 10vh 0 var(--margin);
     }
   }
   @media only screen and (max-width: 600px) {
