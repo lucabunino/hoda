@@ -475,7 +475,7 @@
     -webkit-column-gap: var(--gutter);
        -moz-column-gap: var(--gutter);
             column-gap: var(--gutter);
-    row-gap: var(--margin);
+    row-gap: var(--gutter);
     scrollbar-width: none;  /* Firefox */
   }
   /* Hide scrollbar for Chrome, Safari and Opera */
