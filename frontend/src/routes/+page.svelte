@@ -286,65 +286,65 @@
         use:enhance
         >
           <div class="form-step" class:active={userKind === "unset"}>
-            <button type="button" class="btn cleo dropShadow azure" id="hoda" name="hoda" on:click={() => userKind="hoda"}>HOD’A guest</button>
-            <button type="button" class="btn cleo dropShadow blue" id="regular" name="regular" on:click={() => userKind="regular"}>Regular user</button>
+            <button type="button" class="btn cleo shadow azure" id="hoda" name="hoda" on:click={() => userKind="hoda"}>HOD’A guest</button>
+            <button type="button" class="btn cleo shadow blue" id="regular" name="regular" on:click={() => userKind="regular"}>Regular user</button>
           </div>
           <div class="form-step" class:active={userKind === "hoda"}>
-            <div class="formBackground dropShadow azure">
+            <div class="formBackground shadow azure">
               <p>Nice to meet you again</p>
               <input bind:value={valueFNameHoda} type="text" id="fnameHoda" name="fnameHoda" placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'}>
               <input bind:value={valueLName} type="text" id="lname" name="lname" placeholder={lang == "en" ? `Last name (required)` : 'Cognome (obbligatorio)'}>
               <div style="display: flex;    align-items: baseline;">
-                <p style="margin-left: 10px; margin-right: var(--margin);">I'm in suite: </p>
-                <select id="suite" name="suite" form="cleo-form" class="dropShadow">
+                <p style="margin-left: 2px; margin-right: var(--margin);">I'm in suite: </p>
+                <select id="suite" name="suite" form="cleo-form" class="btn dropShadow">
                   <option value="HOM">HO’M</option>
                   <option value="HOL">HO’L</option>
                   <option value="HOC">HO’C</option>
                 </select>
               </div>
-              <button type="button" class="btn cleo dropShadow next" id="next" name="next"
+              <button type="button" class="btn dropShadow next" id="next" name="next"
               class:locked={valueFNameHoda === "" || valueLName === ""}
               on:click={() => {userKind="selectedHoda"; bg="azure"}}>Next</button>
             </div>
           </div>
           <div class="form-step" class:active={userKind === "regular"}>
-            <div class="formBackground dropShadow blue">
+            <div class="formBackground shadow blue">
               <p>Fill in your contacts</p>
               <input type="text" bind:value={valueFNameRegular} id="fnameRegular" name="fnameRegular" placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'}>
               <input type="text" bind:value={valueLName} id="lname" name="lname" placeholder={lang == "en" ? `Last name (required)` : 'Cognome (obbligatorio)'}>
               <input type="text" bind:value={valueEmail} id="email" name="email" placeholder={lang == "en" ? `E-mail (required)` : 'E-mail (obbligatorio)'} >
               <input type="text" bind:value={valuePhone} id="phone" name="phone" placeholder={lang == "en" ? `Phone number (required)` : 'Numero di telefono (obbligatorio)'}>
               <input type="text" id="company" name="company" placeholder={lang == "en" ? `Company name` : 'Nome azienda'}>
-              <button type="button" class="btn cleo dropShadow next" id="next" name="next"
+              <button type="button" class="btn dropShadow next" id="next" name="next"
               class:locked={valueFNameRegular === "" || valueLName === "" || valueEmail === "" || valuePhone === ""}
               on:click={() => {userKind="selectedRegular"; bg="blue"}}>Next</button>
             </div>
           </div>
           <div class="form-step" class:active={userKind === "selectedHoda"}>
-            <div class="formBackground dropShadow {bg}">
+            <div class="formBackground shadow {bg}">
               <p>Write your request</p>
-              <textarea bind:value={valueRequest} class="dropShadow" rows="4" id="message" name="message" placeholder={lang == "en" ? `I'd like to...` : 'Vorrei...'}></textarea>
+              <textarea bind:value={valueRequest} class="" rows="4" id="message" name="message" placeholder={lang == "en" ? `I'd like to...` : 'Vorrei...'}></textarea>
               <button id="submit" type="submit" class="btn submit dropShadow"  class:locked={valueRequest === ""} on:click={() => {cleoPopupVisible = !cleoPopupVisible; userKind="unset"}}>Submit</button>
               <p style="margin-top: .5em; margin-bottom: .5em;">Or choose from suggested services</p>
               <div style="display: flex; flex-wrap: wrap; gap: var(--gutter); justify-content:center; margin-bottom: 1em;">
-                <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="car" name="car" on:click={() => userKind="car"}>I need a car</button>
-                <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="table" name="table" on:click={() => userKind="table"}>Book a table</button>
-                <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="laundry" name="laundry" on:click={() => userKind="laundry"}>Laundry service</button>
-                <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="food" name="food" on:click={() => userKind="food"}>Food delivery</button>
-                <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="tour" name="tour" on:click={() => userKind="tour"}>Private tour</button>
-                <button type="button" class="btn cleo dropShadow {bg}Inverse option" id="spa" name="spa" on:click={() => userKind="spa"}>SPA Treatments</button>
+                <button type="button" class="btn dropShadow {bg}Inverse option" id="car" name="car" on:click={() => userKind="car"}>I need a car</button>
+                <button type="button" class="btn dropShadow {bg}Inverse option" id="table" name="table" on:click={() => userKind="table"}>Book a table</button>
+                <button type="button" class="btn dropShadow {bg}Inverse option" id="laundry" name="laundry" on:click={() => userKind="laundry"}>Laundry service</button>
+                <button type="button" class="btn dropShadow {bg}Inverse option" id="food" name="food" on:click={() => userKind="food"}>Food delivery</button>
+                <button type="button" class="btn dropShadow {bg}Inverse option" id="tour" name="tour" on:click={() => userKind="tour"}>Private tour</button>
+                <button type="button" class="btn dropShadow {bg}Inverse option" id="spa" name="spa" on:click={() => userKind="spa"}>SPA Treatments</button>
               </div>
             </div>
           </div>
           <div class="form-step" class:active={userKind === "selectedRegular"}>
-            <div class="formBackground dropShadow {bg}">
+            <div class="formBackground shadow {bg}">
               <p>Write your request</p>
               <textarea bind:value={valueRequest} class="dropShadow" rows="8" id="message" name="message" placeholder={lang == "en" ? `I'd like to...` : 'Vorrei...'}></textarea>
               <button id="submit" type="submit" class="btn submit dropShadow"  class:locked={valueRequest === ""} on:click={() => {cleoPopupVisible = !cleoPopupVisible; userKind="unset"}}>Submit</button>
             </div>
           </div>
           <div class="form-step" class:active={userKind === "car"}>
-            <div class="formBackground dropShadow {bg}">
+            <div class="formBackground shadow {bg}">
               <p>Give us some details</p>
               <div style="display: flex; flex-wrap: wrap; gap: var(--gutter); justify-content:flex-start; margin-bottom: 1em;">
                 <input style="width: 100%;" type="text" bind:value={valuePickup} id="pickup" name="pickup" placeholder={lang == "en" ? `Pick up address (required)` : '___'}>
@@ -358,7 +358,7 @@
             </div>
           </div>
           <div class="form-step" class:active={userKind === "table"}>
-            <div class="formBackground dropShadow {bg}">
+            <div class="formBackground shadow {bg}">
               <p>Give us some details</p>
               <div style="display: flex; flex-wrap: wrap; gap: var(--gutter); justify-content:flex-start; margin-bottom: 1em;">
                 <input style="width: 100%;" type="text" bind:value={valueRestaurant} id="restaurant" name="restaurant" placeholder={lang == "en" ? `Restaurant (required)` : '___'}>
@@ -371,7 +371,7 @@
             </div>
           </div>
           <div class="form-step" class:active={userKind === "laundry"}>
-            <div class="formBackground dropShadow {bg}">
+            <div class="formBackground shadow {bg}">
               <p>Give us some details</p>
               <div style="display: flex; flex-wrap: wrap; gap: var(--gutter); justify-content:flex-start; margin-bottom: 1em;">
                 <p class="label">Pickup date and time: </p>
@@ -383,7 +383,7 @@
             </div>
           </div>
           <div class="form-step" class:active={userKind === "food"}>
-            <div class="formBackground dropShadow {bg}">
+            <div class="formBackground shadow {bg}">
               <p>Give us some details</p>
               <div style="display: flex;    align-items: baseline;">
                 <p style="margin-left: 10px; margin-right: var(--margin);">I'd like to eat: </p>
@@ -404,7 +404,7 @@
             </div>
           </div>
           <div class="form-step" class:active={userKind === "spa" || userKind === "tour"}>
-            <div class="formBackground dropShadow {bg}">
+            <div class="formBackground shadow {bg}">
               <p>{#if userKind === "spa"}What treatment would you like to have?{:else if userKind === "tour"}What whould you like to see?{/if}</p>
               <textarea bind:value={valueRequest} rows="11" id="message" name="message" placeholder={lang == "en" ? `I'd like to...` : 'Vorrei...'}></textarea>
               <button id="submit" type="submit" class="btn submit dropShadow"  class:locked={valueRequest === ""} on:click={() => {cleoPopupVisible = !cleoPopupVisible; userKind="unset"}}>Submit</button>
@@ -642,7 +642,7 @@
     /* background: -webkit-gradient(linear, left top, right top, from(#FFF), to(#91B0B6));
     background: -o-linear-gradient(left, #FFF, #91B0B6);
     background: linear-gradient(0.25turn, #FFF, #91B0B6); */
-    background-color: #FFF;
+    /* background-color: #FFF; */
   }
   .azure {
     /* background: -webkit-gradient(linear, left top, right top, from(#D8FFF4), to(#FFF));
@@ -654,51 +654,58 @@
     /* background: -webkit-gradient(linear, left top, right top, from(#FFF), to(#D8FFF4));
     background: -o-linear-gradient(left, #FFF, #D8FFF4);
     background: linear-gradient(0.25turn, #FFF, #D8FFF4); */
-    background-color: #FFF;
+    /* background-color: #FFF; */
   }
   .cleo {
-    padding: 12px 30px 17px;
+    padding: 10px 24px 15px;
     border-radius: 5px;
-    font-size: 22px;
-    line-height: 26px;
+    font-size: 15px;
+    line-height: 18px;
   }
   .cleo:hover {
     color: #FFF;
     background-color: #000;
   }
   .dropShadow {
+    /* -webkit-filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
+            filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05)); */
+  }
+  .shadow {
     -webkit-filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
             filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
   }
   .form-step {
     display: none;
+    font-size: 15px;
+    line-height: 18px;
   }
   .form-step.active {
     display: contents;
   }
   .option {
-    border-radius: 99px;
+    /* border-radius: 99px;
     height: 37px;
     padding: 0px 30px 4px;
     width: -webkit-fit-content;
     width: -moz-fit-content;
-    width: fit-content;
+    width: fit-content; */
+    height: 29.5px;
   }
   select {
-    padding: 0px 50px 4px 30px;
+    /* padding: 0px 50px 4px 30px; */
+    padding-right: 30px;
     width: -webkit-fit-content;
     width: -moz-fit-content;
     width: fit-content;
+    height: 29.5px;
     border-radius: 99px;
-    font-size: 22px;
-    line-height: 26px;
-    height: 37px;
+    /* height: 37px; */
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
     background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
     background-repeat: no-repeat, repeat;
-    background-position: right 30px top 50%, 0 0;
+    background-position: right 15px top 50%, 0 0;
     background-size: .6em auto, 100%;
     border: none;
   }
@@ -709,7 +716,8 @@
     background-color: #000;
     color: #FFF;
     border-radius: 99px;
-    height: 37px;
+    /* height: 37px; */
+    height: 29.5px;
     padding: 0px 30px 4px;
     width: -webkit-fit-content;
     width: -moz-fit-content;
@@ -745,7 +753,7 @@
   .formBackground {
     display: block;
     padding: var(--margin);
-    min-height: 400px;
+    min-height: 250px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -753,28 +761,29 @@
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    row-gap: var(--gutter);
+    row-gap: var(--margin);
     border-radius: 5px;
-    font-size: 22px;
-    line-height: 26px;
+    font-size: 15px;
+    line-height: 18px;
   }
   input {
     color: #A0A0A0;
-    padding: 0px 10px 4px;
+    /* padding: 0px 10px 4px; */
     display: block;
-    height: 33px;
-    border-radius: 5px;
+    /* height: 33px; */
+    /* border-radius: 5px; */
     border: none;
+    border-bottom: 1px solid var(--lightGray);
     width: -webkit-fill-available;
-    -webkit-filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
-            filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
+    /* -webkit-filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05));
+            filter: drop-shadow(1px 1px 4px rgba(0, 0, 0, .05)); */
   }
   .formBackground>p {
     margin-top: .5em;
     margin-bottom: 1.3em;
   }
   textarea {
-    border: none;
+    border: solid 1px var(--lightGray);
     padding: var(--gutter);
     border-radius: 5px;
     resize: vertical;
@@ -784,7 +793,7 @@
     color: #000;
   }
   .label {
-    margin-left: 10px;
+    margin-left: 2px;
     margin-right: var(--margin);
     font-size: 15px;
     line-height: 18px;
@@ -825,7 +834,7 @@
   }
   #cleo-popup {
     position: absolute;
-    width: 500px;
+    width: 400px;
     top: 47%;
     left: 50%;
     -webkit-transform: translateX(-50%) translateY(-50%);
@@ -839,7 +848,7 @@
     margin: auto;
   }
   #cleo-form {
-    transform: scale(.8);
+    /* transform: scale(.8); */
   }
   @media only screen and (max-width: 1200px) {
     #suites>div {
