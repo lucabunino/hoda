@@ -29,6 +29,7 @@
   $: noTransition = false;
   $: resizeTimeout = "";
   $: delay1s = false;
+  $: mobileNewsletter = false
 
 
   onMount(() => {
@@ -44,12 +45,14 @@
     }
     ready = true;
 	});
+
   beforeNavigate(() => {
     delay1s = true
     setTimeout(() => {
       delay1s = false
     }, 1000);
 	});
+
   afterNavigate(() => {
     mobileMenu = false
 	});
@@ -93,6 +96,7 @@
     }
     prevScrollY = scrollY
   }
+
   function applyNoTransition() {
     noTransition = true; // Set noTransition to true on resize
     clearTimeout(resizeTimeout); // Clear any existing timeout
@@ -100,6 +104,7 @@
       noTransition = false; // Set noTransition back to false after a delay
     }, 200); // Adjust the delay time as needed
   }
+
   function pageTransition(node, { delay, duration, offset=window.scrollY}) {
 		return {
 			delay,
@@ -113,28 +118,7 @@
 			}
 		};
 	}
-  function openMenu() {
-    mobileMenu = !mobileMenu
-	}
-  $: mobileNewsletter = false
-  function openNewsletter() {
-    mobileNewsletter = true
-	}
-  function closeNewsletter() {
-    mobileNewsletter = false
-	}
-  let bookNowButtons = false;
-  let lodgifyActive = ""
-  let scrollLock = false;
-  function book(i) {
-    scrollLock = true
-    lodgifyActive = i
-  }
-  function unbook(i) {
-    bookNowButtons = false
-    lodgifyActive = false
-    scrollLock = false
-  }
+  
   // let currentUrl = ""
   // let wip = false;
   // if (browser) {
@@ -191,7 +175,7 @@ class:closed={$page.url.pathname !== "/"}
     </a>
   {/if}
 
-  <div id="menuSwitch" class="mobileOnly" class:true={mobileMenu} on:click={openMenu}>
+  <div id="menuSwitch" class="mobileOnly" class:true={mobileMenu} on:click={() => { mobileMenu = !mobileMenu }}>
     <div class="line top" class:cross={mobileMenu}></div>
     <div class="line middle" style="transform: translateY(-50%) scaleX({mobileMenu ? 0 : 1})"></div>
     <div class="line bottom" class:cross={mobileMenu}></div>
@@ -211,7 +195,7 @@ class:closed={$page.url.pathname !== "/"}
     </ul>
     <ul>
       <li in:fade={{duration: 0, easing: quartInOut}}>
-        <a class="menu-item menu-item-mobile btn" href="https://www.booking.hodamilano.eu/en/all-properties" target="_blank" on:click={() => bookNowButtons = true}>Book now</a>
+        <a class="menu-item menu-item-mobile btn" href="https://www.booking.hodamilano.eu/en/all-properties" target="_blank">Book now</a>
       </li>
       <li class="hidden"><a id="languageSwitch" class="menu-item btn-mobile" href="/it">En</a></li>
     </ul>
@@ -232,8 +216,8 @@ class:closed={$page.url.pathname !== "/"}
 <div id="newsletter"
 class="hidden"
 transition:slide={{duration: 1000, easing: quartInOut}}
-on:mouseenter={openNewsletter}
-on:mouseleave={closeNewsletter}
+on:mouseenter={() => { mobileNewsletter = true }}
+on:mouseleave={() => { mobileNewsletter = false }}
 class:true={mobileNewsletter}>
   <p>Join the newsletter</p>
   <p>Sign-up to enjoy 10% off your first order.</p>
