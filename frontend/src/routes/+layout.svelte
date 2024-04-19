@@ -50,6 +50,7 @@
     delay1s = true
     setTimeout(() => {
       delay1s = false
+      calcHeaderPosition()
     }, 1000);
 	});
 
