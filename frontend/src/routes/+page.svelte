@@ -43,9 +43,7 @@
   $: gutter = 8
   $: cleoPopupVisible = false
 
-  let ready = false;
   onMount(() => {
-    ready = true
     const swiperElements = document.querySelectorAll('.swiperEl');
     const params = {
       autoplay: {
@@ -386,8 +384,8 @@
             <div class="formBackground shadow {bg}">
               <p>Give us some details</p>
               <div style="display: flex;    align-items: baseline;">
-                <p style="margin-left: 10px; margin-right: var(--margin);">I'd like to eat: </p>
-                <select id="food" name="food" form="cleo-form" class="dropShadow">
+                <p style="margin-left: 2px; margin-right: var(--margin);">I'd like to eat: </p>
+                <select id="food" name="food" form="cleo-form" class="dropShadow btn">
                   <option value="Pizza">Pizza</option>
                   <option value="Pasta">Pasta</option>
                   <option value="Hamburger">Hamburger</option>
@@ -475,7 +473,7 @@
     -webkit-column-gap: var(--gutter);
        -moz-column-gap: var(--gutter);
             column-gap: var(--gutter);
-    row-gap: var(--gutter);
+    row-gap: var(--margin);
     scrollbar-width: none;  /* Firefox */
   }
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -761,7 +759,7 @@
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    row-gap: var(--margin);
+    row-gap: var(--gutter);
     border-radius: 5px;
     font-size: 15px;
     line-height: 18px;

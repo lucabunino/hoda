@@ -40,8 +40,9 @@
       }
       logoMaxWidth = (innerWidth - 2*margin);
       navMaxTop = (innerWidth - margin*2)*.266 + margin*2
-      ready = true;
+      calcHeaderPosition()
     }
+    ready = true;
 	});
   beforeNavigate(() => {
     delay1s = true
@@ -163,6 +164,7 @@
 </div>
 {:else} -->
 
+{#if ready}
 <header id="header"
 bind:clientHeight={logoHeight}
 class={headerPosition}
@@ -176,6 +178,7 @@ class:closed={$page.url.pathname !== "/"}
   class:headerBgHidden={$page.url.pathname === "/" && scrollY < innerHeight - logoHeight}
   class:headerBgBorder={$page.url.pathname !== "/" || scrollY > innerHeight - logoHeight}>
   </div>
+
   {#if data.siteSettings[0].logo}
     <a id="logo"
     style={scrollY > 50 && data.pathname === "/" && innerWidth ? `width: ${logoWidth}px` : ''}
@@ -187,7 +190,7 @@ class:closed={$page.url.pathname !== "/"}
       {@html data.siteSettings[0].logo}
     </a>
   {/if}
-  <!-- <button class="btn mobileOnly" class:true={mobileMenu} on:click={openMenu}>Test</button> -->
+
   <div id="menuSwitch" class="mobileOnly" class:true={mobileMenu} on:click={openMenu}>
     <div class="line top" class:cross={mobileMenu}></div>
     <div class="line middle" style="transform: translateY(-50%) scaleX({mobileMenu ? 0 : 1})"></div>
@@ -210,83 +213,19 @@ class:closed={$page.url.pathname !== "/"}
       <li in:fade={{duration: 0, easing: quartInOut}}>
         <a class="menu-item menu-item-mobile btn" href="https://www.booking.hodamilano.eu/en/all-properties" target="_blank" on:click={() => bookNowButtons = true}>Book now</a>
       </li>
-      <!-- {#if !bookNowButtons && innerWidth > 900}
-        <li in:fade={{duration: 0, easing: quartInOut}}>
-          <p class="menu-item menu-item-mobile btn" href="/about" on:click={() => bookNowButtons = true}>Book now</p>
-        </li>
-      {:else}
-      <div id="bookNowContainer-container">
-        <p class="mobileOnly" style="display: inline-block; margin-right: var(--margin)">Book now</p>
-        <div id="bookNowContainer" in:fade={{duration: 0, easing: quartInOut}} on:mouseleave={() => {setTimeout(() => {bookNowButtons = false}, 2000);}}>
-          {#each data.suitesIds as suite, i (suite)}
-            <li>
-              <p class="menu-item btn" on:click={() => book(i)}>{suite.title}</p>
-            </li>
-          {/each}
-        </div>
-      </div>
-      {/if}
-      <style>
-      :root {
-        --ldg-psb-background: #ffffff;
-        --ldg-psb-border-radius: 0.42em;
-        --ldg-psb-box-shadow: 0px 24px 54px 0px rgba(0, 0, 0, 0.1);
-        --ldg-psb-padding: 16px;
-        --ldg-psb-input-background: #ffffff;
-        --ldg-psb-button-border-radius: 3.58em;
-        --ldg-psb-color-primary: #000000;
-        --ldg-psb-color-primary-lighter:#808080;
-        --ldg-psb-color-primary-darker: #000000;
-        --ldg-psb-color-primary-contrast: #ffffff;
-        --ldg-semantic-color-primary:  #000000;
-        --ldg-semantic-color-primary-lighter: #808080;
-        --ldg-semantic-color-primary-darker: #000000;
-        --ldg-semantic-color-primary-contrast: #ffffff;
-      }
-      #lodgify-search-bar { 
-        position: relative;
-        z-index: 999999;
-        width:100%;
-      }
-      </style>
-      <script src="https://app.lodgify.com/portable-search-bar/stable/renderPortableSearchBar.js"></script>
-      {#each data.suitesIds as suite, i (suite)}
-        {#if lodgifyActive === i}
-          <div id="lodgify-book-now-background" on:click={() => unbook(i)}></div>
-            <div
-            id="lodgify-book-now-box"
-            class="lodgify-book-now-box lodgify-{i}"
-            data-rental-id={suite.rentalId}
-            data-website-id="507783"
-            data-slug="sara-barbara"
-            data-language-code="en"
-            data-new-tab="true"
-            data-check-in-label="Arrival"
-            data-check-out-label="Departure"
-            data-guests-label="Guests"
-            data-guests-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospite"
-            data-guests-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospiti"
-            data-location-input-label="Location"
-            data-total-price-label="Total price:"
-            data-select-dates-to-see-price-label="Select dates to see total price"
-            data-minimum-price-per-night-first-label="From"
-            data-minimum-price-per-night-second-label="per night"
-            data-book-button-label="Book Now"
-            data-version="stable"
-            ></div>
-          <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script>
-        {/if}
-      {/each} -->
       <li class="hidden"><a id="languageSwitch" class="menu-item btn-mobile" href="/it">En</a></li>
     </ul>
   </nav>
 </header>
+{/if}
 
+{#if ready}
 {#key data.pathname}
   <div style="min-height: 100vh;" in:fade={{duration: 1000, delay: 1000, easing: quartInOut}} out:pageTransition={{duration: 1000, easing: quartInOut}}>
     <slot></slot>
   </div>
 {/key}
+{/if}
 
 
 {#if ready}
@@ -311,7 +250,7 @@ class:true={mobileNewsletter}>
 </div>
 {/if}
 
-
+{#if ready}
 <footer>
   <div>
     <p>©{new Date().getFullYear()} d’ARIA Srl</p>
@@ -357,6 +296,7 @@ class:true={mobileNewsletter}>
     <p>Privacy policy</p>
   </div>
 </footer>
+{/if}
 
 <style lang="css">
   header {
