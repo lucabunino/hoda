@@ -11,7 +11,6 @@ export const load:any = (async ({ url }) => {
   // await loadTranslations(initLocale, pathname); // keep this just before the `return`
   if (siteSettings) {
 		return {
-      suitesIds,
 			siteSettings,
       pathname
 		};
