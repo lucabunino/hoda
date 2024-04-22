@@ -68,18 +68,9 @@ export async function getAboutPage(): Promise<SuitesPage[]> {
 
 export async function getSuites(): Promise<Suites[]> {
 	return await client.fetch(
-		groq`*[_type == "suite"]{
+		groq`*[_type == "suite" && language == "it"]{
 			...,
-			} | order(year desc)`
-	);
-}
-
-export async function getSuitesIds(): Promise<Suites[]> {
-	return await client.fetch(
-		groq`*[_type == "suite"]{
-			title,
-			rentalId,
-			} | order(year desc)`
+			} | order(order asc)`
 	);
 }
 
