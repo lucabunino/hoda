@@ -7,7 +7,6 @@
   import { page, navigating } from '$app/stores';
   import { fade, slide, fly } from 'svelte/transition';
   import { quartInOut } from 'svelte/easing';
-  import { browser } from '$app/environment';
   import {urlFor} from '$lib/utils/image';
 
   $: ready = false
@@ -62,7 +61,7 @@
     if ($navigating) {
       console.log("navigating");
     } else {
-      if (data.pathname === "/") {
+      if (data.pathname === "/" || data.pathname === "/it") {
         applyNoTransition();
         logoWidthDifference = (scrollY - 50)/(innerHeight);
         navTopDifference = (scrollY - 50)/(innerHeight*.9);
@@ -81,7 +80,7 @@
 
   function calcHeaderPosition() {
     const deltaScroll = scrollY - prevScrollY;
-    if (data.pathname === "/") {
+    if (data.pathname === "/" || data.pathname === "/it") {
       if (scrollY > innerHeight && deltaScroll > 0) {
         headerPosition = "up";
       } else if (deltaScroll < -10 || scrollY < 50) {
@@ -154,23 +153,23 @@
 bind:clientHeight={logoHeight}
 class={headerPosition}
 class:true={mobileMenu}
-class:closed={$page.url.pathname !== "/"}
+class:closed={$page.url.pathname !== "/" && data.pathname !== "/it"}
 >
   <div class="headerBg"
   style={`--navHeight: ${navHeight}px`}
   class:true={mobileMenu}
   class:noTransition={noTransition == true}
-  class:headerBgHidden={$page.url.pathname === "/" && scrollY < innerHeight - logoHeight}
-  class:headerBgBorder={$page.url.pathname !== "/" || scrollY > innerHeight - logoHeight}>
+  class:headerBgHidden={$page.url.pathname === "/" && scrollY < innerHeight - logoHeight || data.pathname === "/it" && scrollY < innerHeight - logoHeight}
+  class:headerBgBorder={$page.url.pathname !== "/" && data.pathname !== "/it" || scrollY > innerHeight - logoHeight}>
   </div>
 
   {#if data.siteSettings[0].logo}
     <a id="logo"
-    style={scrollY > 50 && data.pathname === "/" && innerWidth ? `width: ${logoWidth}px` : ''}
+    style={scrollY > 50 && data.pathname === "/" && innerWidth || scrollY > 50 && data.pathname === "/it" && innerWidth ? `width: ${logoWidth}px` : ''}
     class:noTransition={noTransition == true && innerWidth > 900}
     class:delay1s={delay1s == true}
     class:true={mobileMenu}
-    class:closed={$page.url.pathname !== "/" || scrollY > 50}
+    class:closed={$page.url.pathname !== "/" && $page.url.pathname !== "/it" || scrollY > 50}
     href="/" aria-current={$page.url.pathname === '/'}>
       {@html data.siteSettings[0].logo}
     </a>
@@ -185,8 +184,8 @@ class:closed={$page.url.pathname !== "/"}
   bind:clientHeight={navHeight}
   class:noTransition={noTransition == true}
   class={mobileMenu}
-  class:closed={$page.url.pathname !== "/" || scrollY > 50 && innerWidth > 900}
-  style={scrollY > 50 && data.pathname === "/" ? `top: ${navTop}px` : ''}
+  class:closed={$page.url.pathname !== "/" && $page.url.pathname !== "/it" || scrollY > 50 && innerWidth > 900}
+  style={scrollY > 50 && data.pathname === "/" || scrollY > 50 && data.pathname === "/it" ? `top: ${navTop}px` : ''}
   >
     <ul>
       <li><a class="menu-item menu-item-mobile" href="/about" aria-current={$page.url.pathname === '/about'}>About</a></li>
@@ -198,7 +197,7 @@ class:closed={$page.url.pathname !== "/"}
       <li in:fade={{duration: 0, easing: quartInOut}}>
         <a class="menu-item menu-item-mobile btn" href="https://www.booking.hodamilano.eu/en/all-properties" target="_blank">Book now</a>
       </li>
-      <li class="hidden"><a id="languageSwitch" class="menu-item btn-mobile" href="/it">En</a></li>
+      <li class=""><a id="languageSwitch" class="menu-item btn-mobile" href="/it">En</a></li>
     </ul>
   </nav>
 </header>

@@ -170,7 +170,7 @@
 {#if data.homepage[0].homepageIntro}
   <section id="intro">
     <PortableText
-    value={data.homepage[0].homepageIntro.en}
+    value={data.homepage[0].homepageIntro.it}
     components={{
       block: {
         normal: PortableTextStyle,
@@ -267,7 +267,7 @@
       {@html svgLogoCleo}
     </div>
     <p id="cleo-payoff" class:cleoPopup={cleoPopupVisible}>Make a wish</p>
-    <p id="cleo-content" class:cleoPopup={cleoPopupVisible}>{data.homepage[0].homepageCleo.en}</p>
+    <p id="cleo-content" class:cleoPopup={cleoPopupVisible}>{data.homepage[0].homepageCleo.it}</p>
     {#if !cleoPopupVisible}
       <button id="cleo-btn" class="btn blue-azure" class:cleoPopup={cleoPopupVisible} on:click={() => cleoPopupVisible = !cleoPopupVisible}>Ask anything</button>
     {:else}

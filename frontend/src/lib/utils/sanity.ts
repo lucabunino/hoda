@@ -66,47 +66,18 @@ export async function getAboutPage(): Promise<SuitesPage[]> {
 	);
 }
 
-export async function getSuites(): Promise<Suites[]> {
+export async function getSuitesEn(): Promise<Suites[]> {
 	return await client.fetch(
-		groq`*[_type == "suite"]{
+		groq`*[_type == "suite" && language == "en"]{
 			...,
-			} | order(year desc)`
+			} | order(order asc)`
 	);
 }
 
-export async function getSuitesIds(): Promise<Suites[]> {
+export async function getSuitesIt(): Promise<Suites[]> {
 	return await client.fetch(
-		groq`*[_type == "suite"]{
-			title,
-			rentalId,
-			} | order(year desc)`
-	);
-}
-
-export async function getMenu(): Promise<Menu[]> {
-	return await client.fetch(
-		groq`*[_type == "menu"] {
-			title,
-			from,
-			to,
-			menuContents[] {
-				meal,
-				mealContent[] {
-					course,
-					dishes[] {
-						dishReference->{
-							title,
-							description,
-							price,
-							allergens[]->{
-								number,
-								title,
-								description
-							}
-						}
-					}
-				}
-			}
-		} | order(year desc)`
+		groq`*[_type == "suite" && language == "it"]{
+			...,
+			} | order(order asc)`
 	);
 }
