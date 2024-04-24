@@ -4,10 +4,16 @@
   
   import { onMount } from 'svelte';
   import { beforeNavigate, afterNavigate } from '$app/navigation';
-  import { page, navigating } from '$app/stores';
+  import { navigating, page } from '$app/stores';
   import { fade, slide } from 'svelte/transition';
   import { quartInOut } from 'svelte/easing';
   import {urlFor} from '$lib/utils/image';
+  import Menu from '$lib/components/menu.svelte';
+  import Footer from '$lib/components/footer.svelte';
+  import { languageTag } from "$lib/paraglide/runtime.js";
+
+  import { ParaglideJS } from '@inlang/paraglide-sveltekit'
+	import { i18n } from '$lib/i18n.js'
 
   $: ready = false
   $: innerWidth = 1280
@@ -32,6 +38,7 @@
 
 
   onMount(() => {
+
     if (innerHeight !== null) {
       if (innerWidth > 900) {
         margin = 16
@@ -54,7 +61,7 @@
 	});
 
   afterNavigate(() => {
-    mobileMenu = false
+    mobileMenu = false;
 	});
   
   function scrolling() {
@@ -118,35 +125,19 @@
 			}
 		};
 	}
-  
-  // let currentUrl = ""
-  // let wip = false;
-  // if (browser) {
-  //   currentUrl = window.location.host;
-  // }
-  // if (currentUrl === "hodamilano.eu") {
-  //   wip = true
-  // } else {
-  //   wip = false
-  // }
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={applyNoTransition} on:scroll={scrolling}/>
+
 <svelte:head>
-  <title>{data.siteSettings[0].SEOTitle.en}</title>
-  <meta name="description" content="{data.siteSettings[0].SEODescription.en}" />
+  <title>{data.siteSettings[0].SEOTitle[languageTag()]}</title>
+  <meta name="description" content="{data.siteSettings[0].SEODescription[languageTag()]}" />
   
-  <meta property="og:title" content="{data.siteSettings[0].SEOTitle.en}" />
+  <meta property="og:title" content="{data.siteSettings[0].SEOTitle[languageTag()]}" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://hodamilano.eu/" />
   <meta property="og:image" content="{urlFor(data.siteSettings[0].SEOImage).url()}" />
 </svelte:head>
-
-<!-- {#if wip}
-<div style="position: fixed; display:grid; align-items:center; justify-items:center; background-color: #FFF, width: 100dvw; width: 100vw; height: 100dvh; height: 100vh;">
-  <h1>Coming soon</h1>
-</div>
-{:else} -->
 
 {#if ready}
 <header id="header"
@@ -170,7 +161,7 @@ class:closed={$page.url.pathname !== "/" && data.pathname !== "/it"}
     class:delay1s={delay1s == true}
     class:true={mobileMenu}
     class:closed={$page.url.pathname !== "/" && $page.url.pathname !== "/it" || scrollY > 50}
-    href="/" aria-current={$page.url.pathname === '/'}>
+    href={languageTag() === "en" ? "/" : "/" + languageTag()} aria-current={$page.url.pathname === '/' || $page.url.pathname === '/it'}>
       {@html data.siteSettings[0].logo}
     </a>
   {/if}
@@ -187,18 +178,9 @@ class:closed={$page.url.pathname !== "/" && data.pathname !== "/it"}
   class:closed={$page.url.pathname !== "/" && $page.url.pathname !== "/it" || scrollY > 50 && innerWidth > 900}
   style={scrollY > 50 && data.pathname === "/" || scrollY > 50 && data.pathname === "/it" ? `top: ${navTop}px` : ''}
   >
-    <ul>
-      <li><a class="menu-item menu-item-mobile" href="/about" aria-current={$page.url.pathname === '/about'}>About</a></li>
-      <li><a class="menu-item menu-item-mobile" href="/suites" aria-current={$page.url.pathname === '/suites'}>Suites</a></li>
-      <li class="hidden"><a class="menu-item menu-item-mobile" href="/neighborhood" aria-current={$page.url.pathname === '/neighborhood'}>Neighborhood</a></li>
-      <li class="hidden"><a class="menu-item menu-item-mobile" href="/shop" aria-current={$page.url.pathname === '/shop'}>Shop</a></li>
-    </ul>
-    <ul>
-      <li in:fade={{duration: 0, easing: quartInOut}}>
-        <a class="menu-item menu-item-mobile btn" href="https://www.booking.hodamilano.eu/en/all-properties" target="_blank">Book now</a>
-      </li>
-      <li class=""><a id="languageSwitch" class="menu-item btn-mobile" href="/it">En</a></li>
-    </ul>
+    <ParaglideJS {i18n}>
+      <Menu />
+    </ParaglideJS>
   </nav>
 </header>
 {/if}
@@ -206,7 +188,9 @@ class:closed={$page.url.pathname !== "/" && data.pathname !== "/it"}
 {#if ready}
 {#key data.pathname}
   <div style="min-height: 100vh;" in:fade={{duration: 1000, delay: 1000, easing: quartInOut}} out:pageTransition={{duration: 1000, easing: quartInOut}}>
-    <slot></slot>
+    <ParaglideJS {i18n}>
+      <slot />
+    </ParaglideJS>
   </div>
 {/key}
 {/if}
@@ -235,51 +219,9 @@ class:true={mobileNewsletter}>
 {/if}
 
 {#if ready}
-<footer>
-  <div>
-    <p>©{new Date().getFullYear()} d’ARIA Srl</p>
-    <p>{data.siteSettings[0].piva}</p>
-    {#if data.siteSettings[0].maps}
-      <p>{data.siteSettings[0].headquarters}</p>
-    {/if}
-  </div>
-  <div>
-    <p>We are located in:</p>
-    {#if data.siteSettings[0].maps}
-      <a class="maps" target="_blank" href="{data.siteSettings[0].mapsLink}">{data.siteSettings[0].maps}</a>
-    {/if}
-  </div>
-  <div>
-    <p>Contact us:</p>
-    <p>T. <a class="" target="_blank" href="tel:{data.siteSettings[0].phone.replace(/\s/g, '')}">{data.siteSettings[0].phone}</a></p>
-    {#if data.siteSettings[0].mail}
-      <p>M. <a target="_blank" href="mailto:{data.siteSettings[0].mail}">{data.siteSettings[0].mail}</a></p>
-    {/if}
-  </div>
-  <div>
-    <p>Follow us:</p>
-    {#if data.siteSettings[0].instagramLink}
-      <p><a target="_blank" href="{data.siteSettings[0].instagramLink}">{data.siteSettings[0].instagram}</a></p>
-    {/if}
-    {#if data.siteSettings[0].pinterestLink}
-      <p><a target="_blank" href="{data.siteSettings[0].pinterestLink}">{data.siteSettings[0].pinterest}</a></p>
-    {/if}
-  </div>
-  <div>
-    <p><a target="" href="/about">About</a></p>
-    <p><a target="" href="/suites">Suites</a></p>
-    <p class="hidden"><a target="" href="/neighbourhood">Neighbourhood</a></p>
-  </div>
-  <div class="hidden">
-    <p><a target="_blank" href="/shop">Shop</a></p>
-    <p>Return policy shop</p>
-    <p>Terms and conditions</p>
-  </div>
-  <div class="hidden">
-    <p>Cookie policy</p>
-    <p>Privacy policy</p>
-  </div>
-</footer>
+  <ParaglideJS {i18n}>
+    <Footer siteSettings={data.siteSettings[0]}/>
+  </ParaglideJS>
 {/if}
 
 <style lang="css">
@@ -477,18 +419,6 @@ class:true={mobileNewsletter}>
   ::-ms-input-placeholder { /* Edge 12 -18 */
     color: #000;
   }
-  footer {
-    padding: var(--gutter) var(--margin) calc(var(--margin)*2);
-    display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: 1fr var(--gutter) 1fr var(--gutter) 1fr var(--gutter) 1fr var(--gutter) 1fr var(--gutter) 1fr;
-    grid-template-columns: repeat(6, 1fr);
-    gap: var(--gutter);
-  }
-  footer>div>a:hover,
-  footer>div>p>a:hover {
-    color: var(--darkGray);
-  }
   @media only screen and (max-width: 900px) {
     header.up {
       -webkit-transform: translateY(-101%);
@@ -684,10 +614,6 @@ class:true={mobileNewsletter}>
       -ms-grid-columns: 1fr var(--gutter) 1fr;
       grid-template-columns: repeat(2, 1fr);
     }
-    footer {
-      -ms-grid-columns: (1fr)[2];
-      grid-template-columns: repeat(2, 1fr);
-    }
   }
   @media only screen and (max-width: 400px) {
     #newsletter>form>div {
@@ -697,10 +623,6 @@ class:true={mobileNewsletter}>
       -webkit-box-pack: justify;
           -ms-flex-pack: justify;
               justify-content: space-between;
-    }
-    footer {
-      -ms-grid-columns: (1fr)[1];
-      grid-template-columns: repeat(1, 1fr);
     }
   }
 </style>

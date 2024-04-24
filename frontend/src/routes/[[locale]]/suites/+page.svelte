@@ -1,11 +1,14 @@
 <script lang="ts">
   import type { PageData } from './$types';
   export let data: PageData;
+  import * as m from "$lib/paraglide/messages"
+  import { languageTag, onSetLanguageTag } from "$lib/paraglide/runtime.js";
 
-  import {urlFor} from '$lib/utils/image';
-  import { onMount } from 'svelte';
+  import { urlFor } from '$lib/utils/image';
+  import { afterUpdate, onDestroy, onMount } from 'svelte';
 
   import { register } from 'swiper/element/bundle';
+  import { afterNavigate } from '$app/navigation';
   register();
 
   $: innerWidth = 0
@@ -13,7 +16,25 @@
   $: margin = 16
 
   let ready = false;
+  
   onMount(() => {
+    mountSlider();
+    const id = window.location.hash.replace(/^#/, '');
+    const element = id && document.getElementById(id);
+    if (id && element) {
+      setTimeout(() => {
+        element.scrollIntoView();
+        const header = document.getElementById("header")
+        setTimeout(() => {
+          header?.classList.add("up")
+        }, 200);
+        ready = true;
+      }, 1100);
+    } else {
+      ready = true;
+    }
+	});
+  function mountSlider() {
     const swiperElements = document.querySelectorAll('.swiperEl');
     let effect = ""
     if (innerWidth > 900) {
@@ -60,21 +81,8 @@
     swiperThumbs.forEach((swiperTh, index) => {
       swiperTh.initialize();
     });
-    const id = window.location.hash.replace(/^#/, '');
-    const element = id && document.getElementById(id);
-    if (id && element) {
-      setTimeout(() => {
-        element.scrollIntoView();
-        const header = document.getElementById("header")
-        setTimeout(() => {
-          header?.classList.add("up")
-        }, 200);
-        ready = true;
-      }, 1100);
-    } else {
-      ready = true;
-    }
-	});
+  }
+
   let prevWidth = innerWidth;
   function handleResize() {
     console.log(prevWidth);
@@ -85,8 +93,6 @@
   }
 
   let lodgifyActive = ""
-  let scrollTop = null;
-  let scrollLeft = null;
   let scrollLock = false;
   function book(i) {
     if (innerWidth > 900) {
@@ -114,125 +120,127 @@
 
 {#if data.suitesPage[0].suitesIntro}
   <section id="intro">
-    <h3>{data.suitesPage[0].suitesIntro.it}</h3>
+    <h3>{data.suitesPage[0].suitesIntro[languageTag()]}</h3>
   </section>
 {/if}
 {#each data.suites as suite, i (suite)}
-<section id="{(suite.title.replace('’',''))}" class="suite" class:transparent={ready != true} style={innerWidth > 900 ? `height: ${innerHeight - 34 - margin*2}px` : `height: auto`}>
-    <div class="suite-images">
-      <swiper-container
-      init=false
-      direction={'vertical'}
-      class={`desktopOnly swiperThumbs swiperThumbs${i}`}
-      slides-per-view=auto
-      free-mode=true
-      watch-slides-progress=true
-      mousewheel=true
-      space-between=3
-      loop=false
-      >
-        {#each suite.slider as slide, i (slide)}
-          <swiper-slide>
-            <picture>
-              <img
-              src={urlFor(slide).url()}
-              alt="Interni di {suite.title}"
-              />
-            </picture>
-          </swiper-slide>
-        {/each}
-      </swiper-container>
-      
-      <swiper-container
-      init=false
-      class={`swiperEl swiperEl${i}`}
-      speed=500
-      thumbs-swiper={`.swiperThumbs${i}`}
-      slidesPerView=1
-      navigation=true
-      simulateTouch=true
-      >
-        {#each suite.slider as slide, i (slide)}
-          <swiper-slide>
-            <picture>
-              <img
-              src={urlFor(slide).url()}
-              alt="Interni di {suite.title}"
-              />
-            </picture>
-          </swiper-slide>
-        {/each}
-      </swiper-container>
-    </div>
-    <div class="suite-content">
-      <h2 class="suite-title arizona xl">{suite.title}</h2>
-      {#if suite.description}
-        <p class="suite-description">{suite.description}</p>
-      {/if}
-      {#if suite.info}
-        <ul class="suite-info">
-        {#each suite.info as info, i (info)}
-          <li>{info}</li>
-        {/each}
-        </ul>
-      {/if}
-      <div class="suite-book-container">
-        <button class="btn primary suite-book" on:click={(e) => book(i)} on:touchstart={(e) => bookMobile(i)}>Prenota ora</button>
-        <p class="suite-book-details">Potrai selezionare i giorni di arrivo e partenza e vedere prezzi e disponibilità. Verrai quindi reindirizzato per completare la prenotazione.</p>
+{#if suite.language === languageTag()}
+  <section id="{(suite.title.replace('’',''))}" class="suite" class:transparent={ready != true} style={innerWidth > 900 ? `height: ${innerHeight - 34 - margin*2}px` : `height: auto`}>
+      <div class="suite-images">
+        <swiper-container
+        init=false
+        direction={'vertical'}
+        class={`desktopOnly swiperThumbs swiperThumbs${i}`}
+        slides-per-view=auto
+        free-mode=true
+        watch-slides-progress=true
+        mousewheel=true
+        space-between=3
+        loop=false
+        >
+          {#each suite.slider as slide, i (slide)}
+            <swiper-slide>
+              <picture>
+                <img
+                src={urlFor(slide).url()}
+                alt="{m.alt()} {suite.title}"
+                />
+              </picture>
+            </swiper-slide>
+          {/each}
+        </swiper-container>
+        
+        <swiper-container
+        init=false
+        class={`swiperEl swiperEl${i}`}
+        speed=500
+        thumbs-swiper={`.swiperThumbs${i}`}
+        slidesPerView=1
+        navigation=true
+        simulateTouch=true
+        >
+          {#each suite.slider as slide, i (slide)}
+            <swiper-slide>
+              <picture>
+                <img
+                src={urlFor(slide).url()}
+                alt="{m.alt()} {suite.title}"
+                />
+              </picture>
+            </swiper-slide>
+          {/each}
+        </swiper-container>
       </div>
-    </div>
-    {#if lodgifyActive === i}
-      <div id="lodgify-book-now-background" on:click={(e) => unbook(e)} on:touchend={() => unbookMobile(i)}></div>
-      <div
-      id="lodgify-book-now-box"
-      class="lodgify-book-now-box lodgify-{i}"
-      data-rental-id={suite.rentalId}
-      data-website-id="507783"
-      data-slug="sara-barbara"
-      data-language-code="it"
-      data-new-tab="true"
-      data-check-in-label="Arrivo"
-      data-check-out-label="Partenza"
-      data-guests-label="Ospiti"
-      data-guests-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospite"
-      data-guests-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospiti"
-      data-location-input-label="Luogo"
-      data-total-price-label="Prezzo totale:"
-      data-select-dates-to-see-price-label="Seleziona le fate per vedere il prezzo"
-      data-minimum-price-per-night-first-label="Da"
-      data-minimum-price-per-night-second-label="a notte"
-      data-book-button-label="Prenota ora"
-      data-version="1.18.2"
-      ></div>
-      <script src="https://app.lodgify.com/book-now-box/1.18.2/renderBookNowBox.js"></script>
-    {/if}
-</section>
+      <div class="suite-content">
+        <h2 class="suite-title arizona xl">{suite.title}</h2>
+        {#if suite.description}
+          <p class="suite-description">{suite.description}</p>
+        {/if}
+        {#if suite.info}
+          <ul class="suite-info">
+          {#each suite.info as info, i (info)}
+            <li>{info}</li>
+          {/each}
+          </ul>
+        {/if}
+        <div class="suite-book-container">
+          <button class="btn primary suite-book" on:click={(e) => book(i)} on:touchstart={(e) => bookMobile(i)}>{m.booknow()}</button>
+          <p class="suite-book-details">{m.bookinfo()}</p>
+        </div>
+      </div>
+      {#if lodgifyActive === i}
+        <div id="lodgify-book-now-background" on:click={(e) => unbook(e)} on:touchend={() => unbookMobile(i)}></div>
+        <div
+        id="lodgify-book-now-box"
+        class="lodgify-book-now-box lodgify-{i}"
+        data-rental-id={suite.rentalId}
+        data-website-id="507783"
+        data-slug="sara-barbara"
+        data-language-code={languageTag()}
+        data-new-tab="true"
+        data-check-in-label={m.checkin()}
+        data-check-out-label={m.checkout()}
+        data-guests-label={m.guests()}
+        data-guests-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} {m.guestssingular()}"
+        data-guests-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} {m.guestsplural()}"
+        data-location-input-label={m.location()}
+        data-total-price-label={m.totalprice()}
+        data-select-dates-to-see-price-label={m.selectdatestoseeprice()}
+        data-minimum-price-per-night-first-label={m.minimumpricepernightfirst()}
+        data-minimum-price-per-night-second-label={m.minimumpricepernightsecond()}
+        data-book-button-label={m.booknow()}
+        data-version="1.18.2"
+        ></div>
+        <script src="https://app.lodgify.com/book-now-box/1.18.2/renderBookNowBox.js"></script>
+      {/if}
+  </section>
+{/if}
 {/each}
 <section id="general-info">
   <div id="general-info-left" class:noRight={!data.suitesPage[0].suitesGeneralInfoRightTitle}>
     {#if data.suitesPage[0].suitesGeneralInfoLeftTitle}
-      <h4 class="general-info-title" class:noRight={!data.suitesPage[0].suitesGeneralInfoRightTitle}>{data.suitesPage[0].suitesGeneralInfoLeftTitle.it}</h4>
+      <h4 class="general-info-title" class:noRight={!data.suitesPage[0].suitesGeneralInfoRightTitle}>{data.suitesPage[0].suitesGeneralInfoLeftTitle[languageTag()]}</h4>
     {/if}
     {#if data.suitesPage[0].suitesGeneralInfoLeft}
       {#each data.suitesPage[0].suitesGeneralInfoLeft as suitesLeft, i (suitesLeft)}
         <div class="general-info-row">
-          {#if suitesLeft.infoRowTitle}<h5 class="general-info-row-title">{suitesLeft.infoRowTitle.it}</h5>{/if}
-          {#if suitesLeft.infoRowText}<p class="general-info-row-content">{suitesLeft.infoRowText.it}</p>{/if}
-          {#if suitesLeft.infoRowSpecs}<p class="general-info-row-content">{suitesLeft.infoRowSpecs.it}</p>{/if}
+          {#if suitesLeft.infoRowTitle}<h5 class="general-info-row-title">{suitesLeft.infoRowTitle[languageTag()]}</h5>{/if}
+          {#if suitesLeft.infoRowText}<p class="general-info-row-content">{suitesLeft.infoRowText[languageTag()]}</p>{/if}
+          {#if suitesLeft.infoRowSpecs}<p class="general-info-row-content">{suitesLeft.infoRowSpecs[languageTag()]}</p>{/if}
         </div>
       {/each}
     {/if}
   </div>
   <div id="general-info-right">
     {#if data.suitesPage[0].suitesGeneralInfoRightTitle}
-      <h4 class="general-info-title">{data.suitesPage[0].suitesGeneralInfoRightTitle.it}</h4>
+      <h4 class="general-info-title">{data.suitesPage[0].suitesGeneralInfoRightTitle[languageTag()]}</h4>
     {/if}
     {#if data.suitesPage[0].suitesGeneralInfoRight}
       {#each data.suitesPage[0].suitesGeneralInfoRight as suitesRight, i (suitesRight)}
         <div class="general-info-row">
-          {#if suitesRight.infoRowTitle}<h5 class="general-info-title">{suitesRight.infoRowTitle.it}</h5>{/if}
-          {#if suitesRight.infoRowText}<p class="general-info-row-title">{suitesRight.infoRowText.it}</p>{/if}
-          {#if suitesRight.infoRowSpecs}<p class="general-info-row-content">{suitesRight.infoRowSpecs.it}</p>{/if}
+          {#if suitesRight.infoRowTitle}<h5 class="general-info-title">{suitesRight.infoRowTitle[languageTag()]}</h5>{/if}
+          {#if suitesRight.infoRowText}<p class="general-info-row-title">{suitesRight.infoRowText[languageTag()]}</p>{/if}
+          {#if suitesRight.infoRowSpecs}<p class="general-info-row-content">{suitesRight.infoRowSpecs[languageTag()]}</p>{/if}
         </div>
       {/each}
     {/if}

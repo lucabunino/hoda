@@ -3,21 +3,25 @@
   export let data: PageData;
   console.log(data);
   import {PortableText} from '@portabletext/svelte'
-  import PortableTextStyle from '../../components/portableTextStyleAbout.svelte';
+  import PortableTextStyle from '$lib/components/portableTextStyleAbout.svelte';
   import {urlFor} from '$lib/utils/image';
-  import { onMount } from 'svelte';
+  import { onMount, afterUpdate, tick } from 'svelte';
+  import * as m from "$lib/paraglide/messages"
+  import { languageTag } from "$lib/paraglide/runtime.js"
+  $: lang = languageTag()
 
   import { register } from 'swiper/element/bundle';
   register();
 
   $: innerWidth = 0
 	$: innerHeight = 0
-  $: margin = 16
-  $: gutter = 8
 
   let ready = false;
   onMount(() => {
-    ready = true
+    mountSlider();
+  });
+
+  function mountSlider() {
     let swiperEl = document.getElementById('swiperEl');
     const params = {
       autoplay: {
@@ -91,7 +95,7 @@
     swiperEl.addEventListener("mouseout", () => {
       swiperEl.swiper.autoplay.stop();
     });
-  });
+  }
 </script>
 
 <svelte:window bind:innerWidth bind:innerHeight/>
@@ -99,7 +103,7 @@
 {#if data.aboutPage[0].aboutIntro}
   <section id="intro">
     <PortableText
-    value={data.aboutPage[0].aboutIntro.en}
+    value={data.aboutPage[0].aboutIntro[languageTag()]}
     components={{
       block: {
         normal: PortableTextStyle,
@@ -115,40 +119,40 @@
     />
   </section>
 {/if}
-{#if data.aboutPage[0].aboutImages}
-  <section id="images">
-    <swiper-container
-      init=false
-      id={`swiperEl`}
-      speed=500
-      rewind={true}
-      effect='fade'
-      slidesPerView=1
-      navigation={true}
-      pagination={{
-        clickable: true
-      }}
-    >
-      {#each data.aboutPage[0].aboutImages as slide, i (slide)}
-        <swiper-slide
-        :key={i}
-        >
-          <picture>
-            <img
-            src={urlFor(slide).url()}
-            alt="Interiors of HOD’A"
-            />
-          </picture>
-        </swiper-slide>
-      {/each}
-    </swiper-container>
-  </section>
-{/if}
+
+<section id="images">
+  <swiper-container
+    init=false
+    id={`swiperEl`}
+    speed=500
+    rewind={true}
+    effect='fade'
+    slidesPerView=1
+    navigation={true}
+    pagination={{
+      clickable: true
+    }}
+  >
+    {#each data.aboutPage[0].aboutImages as slide, i (slide)}
+      <swiper-slide
+      :key={i}
+      >
+        <picture>
+          <img
+          src={urlFor(slide).url()}
+          alt="{m.alt()} HOD’A"
+          />
+        </picture>
+      </swiper-slide>
+    {/each}
+  </swiper-container>
+</section>
+
 {#if data.aboutPage[0].aboutCTAs}
   <section class="hidden" id="cta" style="height: 50vh;">
     <p>CTAs</p>
     {#each data.aboutPage[0].aboutCTAs as aboutCTA, i (aboutCTA)}
-      {aboutCTA.question.en}
+      {aboutCTA.question[languageTag()]}
     {/each}
   </section>
 {/if}
@@ -158,10 +162,10 @@
   </section>
 {/if}
 <section id="contacts-mock" class="s-y_bCXRrkrYfP">
-  <h3>CONTACTS</h3>
-  <p>Do you have an idea to share with us?<br>
-    Write at <a href="mailto:together@d-aria.eu" target="_blank" class="">together@d-aria.eu</a></p>
-  <p>Do you want to stay with us?<br>
+  <h3>{m.contacts()}</h3>
+  <p>{m.contactsquestion1()}<br>
+    {m.contactswriteat()} <a href="mailto:together@d-aria.eu" target="_blank" class="">together@d-aria.eu</a></p>
+  <p>{m.contactsquestion2()}<br>
     Write at <a href="mailto:welcome@hodamilano.eu" target="_blank" class="">welcome@hodamilano.eu</a></p>
 </section>
 
