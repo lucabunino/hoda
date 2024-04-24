@@ -55,6 +55,32 @@
     align-items: baseline;
   }
   @media only screen and (max-width: 900px) {
+    ul {
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: column;
+              flex-direction: column;
+      padding: 0 var(--margin);
+      margin-top: 100px;
+      gap: 0;
+    }
+    ul+ul {
+      margin-top: 0;
+    }
+    .menu-item-mobile {
+      font-family: 'arizona-flare-light', 'Times New Roman', Times, serif;
+      font-size: 42px;
+      line-height: 53px;
+      letter-spacing: -0.03em;
+      padding: 0;
+      background-color: transparent;
+    }
+    .menu-item-mobile:hover {
+      color: inherit;
+    }
+    ul>button.active {
+      text-decoration: underline;
+    }
     #bookNowContainer {
       margin: 5px 0;
       padding: var(--margin) 0;
