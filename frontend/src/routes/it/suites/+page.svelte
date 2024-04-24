@@ -4,7 +4,6 @@
 
   import {urlFor} from '$lib/utils/image';
   import { onMount } from 'svelte';
-  import { browser } from '$app/environment';
 
   import { register } from 'swiper/element/bundle';
   register();
@@ -12,7 +11,6 @@
   $: innerWidth = 0
 	$: innerHeight = 0
   $: margin = 16
-  $: gutter = 8
 
   let ready = false;
   onMount(() => {
@@ -138,7 +136,7 @@
             <picture>
               <img
               src={urlFor(slide).url()}
-              alt="Interiors of {suite.title}"
+              alt="Interni di {suite.title}"
               />
             </picture>
           </swiper-slide>
@@ -159,7 +157,7 @@
             <picture>
               <img
               src={urlFor(slide).url()}
-              alt="Interiors of {suite.title}"
+              alt="Interni di {suite.title}"
               />
             </picture>
           </swiper-slide>
@@ -179,8 +177,8 @@
         </ul>
       {/if}
       <div class="suite-book-container">
-        <button class="btn primary suite-book" on:click={(e) => book(i)} on:touchstart={(e) => bookMobile(i)}>Book now</button>
-        <p class="suite-book-details">You'll be able to select arrival and departure days and to see prices and availability. You'll be then redirected to complete your reservation.</p>
+        <button class="btn primary suite-book" on:click={(e) => book(i)} on:touchstart={(e) => bookMobile(i)}>Prenota ora</button>
+        <p class="suite-book-details">Potrai selezionare i giorni di arrivo e partenza e vedere prezzi e disponibilità. Verrai quindi reindirizzato per completare la prenotazione.</p>
       </div>
     </div>
     {#if lodgifyActive === i}
@@ -191,19 +189,19 @@
       data-rental-id={suite.rentalId}
       data-website-id="507783"
       data-slug="sara-barbara"
-      data-language-code="en"
+      data-language-code="it"
       data-new-tab="true"
-      data-check-in-label="Arrival"
-      data-check-out-label="Departure"
-      data-guests-label="Guests"
+      data-check-in-label="Arrivo"
+      data-check-out-label="Partenza"
+      data-guests-label="Ospiti"
       data-guests-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospite"
       data-guests-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospiti"
-      data-location-input-label="Location"
-      data-total-price-label="Total price:"
-      data-select-dates-to-see-price-label="Select dates to see total price"
-      data-minimum-price-per-night-first-label="From"
-      data-minimum-price-per-night-second-label="per night"
-      data-book-button-label="Book Now"
+      data-location-input-label="Luogo"
+      data-total-price-label="Prezzo totale:"
+      data-select-dates-to-see-price-label="Seleziona le fate per vedere il prezzo"
+      data-minimum-price-per-night-first-label="Da"
+      data-minimum-price-per-night-second-label="a notte"
+      data-book-button-label="Prenota ora"
       data-version="1.18.2"
       ></div>
       <script src="https://app.lodgify.com/book-now-box/1.18.2/renderBookNowBox.js"></script>

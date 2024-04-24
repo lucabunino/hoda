@@ -38,8 +38,6 @@
   $: scrollX = 0
   $: innerWidth = 0
 	$: innerHeight = 0
-  $: margin = 16
-  $: gutter = 8
   $: cleoPopupVisible = false
 
   onMount(() => {

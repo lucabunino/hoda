@@ -36,7 +36,7 @@ html {
   line-height: 18px;
 }
 body {
-  overflow-x: hd;
+  overflow-x: hidden;
   scroll-behavior: smooth;
 }
 h1,h2,h3,h4,h5 {
@@ -139,7 +139,7 @@ button.btn {
   width: 100dvw !important;
   height: 100dvh;
   background-color: #FFF;
-  opacity: .8;
+  opacity: .9;
   z-index: 2;
 }
 .lodgify-book-now-box {
@@ -171,6 +171,10 @@ button.btn {
 }
 .css-mu0s7e::after {
   content: "Guest(s)" !important;
+}
+.css-1r7u6rr:hover {
+  height: 34px !important;
+  padding: 0 !important;
 }
 
 

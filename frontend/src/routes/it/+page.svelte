@@ -38,8 +38,6 @@
   $: scrollX = 0
   $: innerWidth = 0
 	$: innerHeight = 0
-  $: margin = 16
-  $: gutter = 8
   $: cleoPopupVisible = false
 
   onMount(() => {
@@ -122,8 +120,6 @@
   });
 
   let lodgifyActive = ""
-  let scrollTop = null;
-  let scrollLeft = null;
   let scrollLock = false;
   function book(i) {
     if (innerWidth > 900) {
@@ -223,8 +219,8 @@
             {/each}
             </ul>
           {/if}
-          <button class="btn" on:click={() => book(i)} on:touchstart={() => bookMobile(i)}>Book now</button>     
-          <a data-sveltekit-noscroll class="suite-more" href="/suites/#{(suite.title.replace('’',''))}">More info</a>
+          <button class="btn" on:click={() => book(i)} on:touchstart={() => bookMobile(i)}>Prenota ora</button>     
+          <a data-sveltekit-noscroll class="suite-more" href="/it/suites/#{(suite.title.replace('’',''))}">Leggi di più</a>
         </div>
         {#if lodgifyActive === i}
           <div id="lodgify-book-now-background" on:click={() => unbook()} on:touchend={() => unbookMobile()}></div>
@@ -234,19 +230,19 @@
           data-rental-id={suite.rentalId}
           data-website-id="507783"
           data-slug="sara-barbara"
-          data-language-code="en"
+          data-language-code="it"
           data-new-tab="true"
-          data-check-in-label="Arrival"
-          data-check-out-label="Departure"
-          data-guests-label="Guests"
-          data-guests-singular-label={`{{NumberOfGuests}} guest`}
-          data-guests-plural-label={`{{NumberOfGuests}} guests`}
-          data-location-input-label="Location"
-          data-total-price-label="Total price:"
-          data-select-dates-to-see-price-label="Select dates to see total price"
-          data-minimum-price-per-night-first-label="From"
-          data-minimum-price-per-night-second-label="per night"
-          data-book-button-label="Book Now"
+          data-check-in-label="Arrivo"
+          data-check-out-label="Partenza"
+          data-guests-label="Ospiti"
+          data-guests-singular-label={`{{NumberOfGuests}} ospite`}
+          data-guests-plural-label={`{{NumberOfGuests}} ospiti`}
+          data-location-input-label="Luogo"
+          data-total-price-label="Prezzo totale:"
+          data-select-dates-to-see-price-label="Seleziona le fate per vedere il prezzo"
+          data-minimum-price-per-night-first-label="Da"
+          data-minimum-price-per-night-second-label="a notte"
+          data-book-button-label="Prenota ora"
           data-version="1.18.2"
           ></div>
           <script src="https://app.lodgify.com/book-now-box/1.18.2/renderBookNowBox.js"></script>

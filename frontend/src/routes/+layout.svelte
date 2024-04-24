@@ -2,10 +2,10 @@
   import type { PageData } from './$types';
   export let data: PageData;
   
-  import { onMount, afterUpdate, tick } from 'svelte';
+  import { onMount } from 'svelte';
   import { beforeNavigate, afterNavigate } from '$app/navigation';
   import { page, navigating } from '$app/stores';
-  import { fade, slide, fly } from 'svelte/transition';
+  import { fade, slide } from 'svelte/transition';
   import { quartInOut } from 'svelte/easing';
   import {urlFor} from '$lib/utils/image';
 
@@ -131,7 +131,7 @@
   // }
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={applyNoTransition} on:scroll={scrolling} on:wheel|nonpassive={e => {if(scrollLock)e.preventDefault()}}/>
+<svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={applyNoTransition} on:scroll={scrolling}/>
 <svelte:head>
   <title>{data.siteSettings[0].SEOTitle.en}</title>
   <meta name="description" content="{data.siteSettings[0].SEODescription.en}" />

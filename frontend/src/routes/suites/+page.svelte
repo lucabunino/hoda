@@ -87,8 +87,6 @@
   }
 
   let lodgifyActive = ""
-  let scrollTop = null;
-  let scrollLeft = null;
   let scrollLock = false;
   function book(i) {
     if (innerWidth > 900) {
@@ -203,7 +201,7 @@
       data-select-dates-to-see-price-label="Select dates to see total price"
       data-minimum-price-per-night-first-label="From"
       data-minimum-price-per-night-second-label="per night"
-      data-book-button-label="Book Now"
+      data-book-button-label="Book now"
       data-version="1.18.2"
       ></div>
       <script src="https://app.lodgify.com/book-now-box/1.18.2/renderBookNowBox.js"></script>
