@@ -3,8 +3,8 @@ import { EMAIL, EMAIL_PASSWORD } from "$env/static/private";
 
 let transporter = nodemailer.createTransport({
   host: "authsmtp.securemail.pro",
-  port: 587,
-  secure: false,
+  port: 465,
+  secure: true,
   auth: {
     user: EMAIL,
     pass: EMAIL_PASSWORD,

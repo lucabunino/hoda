@@ -13,7 +13,6 @@
   import { quartInOut } from 'svelte/easing';
 
   export let form;
-  console.log(form);
   
   $: userKind = "unset";
   $: bg = "unset";

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { PageData } from './$types';
   export let data: PageData;
-  console.log(data);
+  
   import {PortableText} from '@portabletext/svelte'
   import PortableTextStyle from '$lib/components/portableTextStyleAbout.svelte';
   import {urlFor} from '$lib/utils/image';

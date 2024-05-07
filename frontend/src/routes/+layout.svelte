@@ -11,6 +11,7 @@
   import Menu from '$lib/components/menu.svelte';
   import Footer from '$lib/components/footer.svelte';
   import { languageTag } from "$lib/paraglide/runtime.js";
+  $: lang = languageTag()
 
   import { ParaglideJS } from '@inlang/paraglide-sveltekit'
 	import { i18n } from '$lib/i18n.js'
@@ -62,6 +63,7 @@
 
   afterNavigate(() => {
     mobileMenu = false;
+    lang = languageTag()
 	});
   
   function scrolling() {
@@ -96,7 +98,6 @@
     } else {
       if (scrollY > 150 && deltaScroll > 10) {
         headerPosition = "up";
-        console.log("its me");
       } else if (deltaScroll < -10 || scrollY < 50) {
         headerPosition = "down";
       }
@@ -130,10 +131,10 @@
 <svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={applyNoTransition} on:scroll={scrolling}/>
 
 <svelte:head>
-  <title>{data.siteSettings[0].SEOTitle[languageTag()]}</title>
-  <meta name="description" content="{data.siteSettings[0].SEODescription[languageTag()]}" />
+  <title>{data.siteSettings[0].SEOTitle[lang]}</title>
+  <meta name="description" content="{data.siteSettings[0].SEODescription[lang]}" />
   
-  <meta property="og:title" content="{data.siteSettings[0].SEOTitle[languageTag()]}" />
+  <meta property="og:title" content="{data.siteSettings[0].SEOTitle[lang]}" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://hodamilano.eu/" />
   <meta property="og:image" content="{urlFor(data.siteSettings[0].SEOImage).url()}" />

@@ -5,20 +5,20 @@
   import { languageTag, onSetLanguageTag } from "$lib/paraglide/runtime.js";
 
   import { urlFor } from '$lib/utils/image';
-  import { afterUpdate, onDestroy, onMount } from 'svelte';
+  import { afterUpdate, beforeUpdate, onDestroy, onMount } from 'svelte';
+  import { navigating, page } from '$app/stores';
 
   import { register } from 'swiper/element/bundle';
-  import { afterNavigate } from '$app/navigation';
+  import { afterNavigate, beforeNavigate } from '$app/navigation';
+  
   register();
 
   $: innerWidth = 0
 	$: innerHeight = 0
   $: margin = 16
-
-  let ready = false;
+  $: ready = false
   
   onMount(() => {
-    mountSlider();
     const id = window.location.hash.replace(/^#/, '');
     const element = id && document.getElementById(id);
     if (id && element) {
@@ -28,12 +28,18 @@
         setTimeout(() => {
           header?.classList.add("up")
         }, 200);
-        ready = true;
       }, 1100);
-    } else {
-      ready = true;
     }
 	});
+
+  afterNavigate(() => {
+    setTimeout(() => {
+      mountSlider();
+      mountTh();
+      ready = true;
+    }, 1000);
+	});
+
   function mountSlider() {
     const swiperElements = document.querySelectorAll('.swiperEl');
     let effect = ""
@@ -77,6 +83,9 @@
       Object.assign(swiperEl, params);
       swiperEl.initialize();
     });
+  }
+
+  function mountTh() {
     const swiperThumbs = document.querySelectorAll('.swiperThumbs');
     swiperThumbs.forEach((swiperTh, index) => {
       swiperTh.initialize();
@@ -118,14 +127,14 @@
 
 <svelte:window bind:innerWidth bind:innerHeight on:resize={handleResize} on:wheel|nonpassive={e => {if(scrollLock)e.preventDefault()}}/>
 
-{#if data.suitesPage[0].suitesIntro}
+{#if data.suitesPage[0].suitesIntro && ready}
   <section id="intro">
     <h3>{data.suitesPage[0].suitesIntro[languageTag()]}</h3>
   </section>
 {/if}
 {#each data.suites as suite, i (suite)}
 {#if suite.language === languageTag()}
-  <section id="{(suite.title.replace('’',''))}" class="suite" class:transparent={ready != true} style={innerWidth > 900 ? `height: ${innerHeight - 34 - margin*2}px` : `height: auto`}>
+  <section id="{(suite.title.replace('’',''))}" class="suite" style={innerWidth > 900 ? `height: ${innerHeight - 34 - margin*2}px` : `height: auto`}>
       <div class="suite-images">
         <swiper-container
         init=false
@@ -149,7 +158,7 @@
             </swiper-slide>
           {/each}
         </swiper-container>
-        
+             
         <swiper-container
         init=false
         class={`swiperEl swiperEl${i}`}
@@ -171,6 +180,7 @@
           {/each}
         </swiper-container>
       </div>
+      {#if ready}
       <div class="suite-content">
         <h2 class="suite-title arizona xl">{suite.title}</h2>
         {#if suite.description}
@@ -212,6 +222,7 @@
         data-version="1.18.2"
         ></div>
         <script src="https://app.lodgify.com/book-now-box/1.18.2/renderBookNowBox.js"></script>
+      {/if}
       {/if}
   </section>
 {/if}
@@ -356,7 +367,7 @@
   }
   .suite-content {
     position: relative;
-    width: 100%;
+    width: 50%;
   }
   .suite-title {
     padding: var(--margin) 0;
@@ -466,6 +477,11 @@
       font-size: 14px;
       line-height: 17px;
       max-width: unset;
+    }
+  }
+  @media only screen and (min-width: 901px) {
+    swiper-slide {
+      width: 100% !important;
     }
   }
 

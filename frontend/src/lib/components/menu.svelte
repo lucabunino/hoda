@@ -5,6 +5,15 @@
   import { page } from '$app/stores';
   import { fade } from 'svelte/transition';
   import { quartInOut } from 'svelte/easing';
+  import { onMount } from 'svelte';
+  onMount(() => {
+    const switchs = document.querySelectorAll('.switch')
+    switchs.forEach((s, index) => {
+      if (s.firstChild.getAttribute('href') === $page.url.pathname) {
+        s.style.display = 'none';
+      }
+    });
+  });
 </script>
 <ul>
   <li><a class="menu-item menu-item-mobile" href="/about" aria-current={$page.url.pathname === '/about'}>About</a></li>
@@ -17,13 +26,16 @@
     <a class="menu-item menu-item-mobile btn" href="https://www.booking.hodamilano.eu/{m.booknowlink()}" target="_blank">{m.booknow()}</a>
   </li>
   {#each availableLanguageTags as lang}
-    <li class="">
+    <li class="switch">
       <!-- the hreflang attribute decides which language the link points to -->
       <a
         data-sveltekit-reload
         class:it={(languageTag() === "it")}
         href={i18n.route($page.url.pathname)}
-        hreflang={lang}>{lang}
+        hreflang={lang}
+        aria-current={languageTag() === i18n.route($page.url.pathname)}
+        >
+        {lang}
       </a>
     </li>
   {/each}
@@ -88,5 +100,8 @@
     #bookNowContainer-container {
       margin-top: 15px;
     }
+  }
+  .switch {
+    text-transform: capitalize;
   }
 </style>
