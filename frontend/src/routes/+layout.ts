@@ -7,8 +7,6 @@ import type { PageLoad } from './$types';
 export const load:any = (async ({ url }) => {
   const { pathname } = url;
   const siteSettings = await getSiteSettings();
-  const initLocale = 'it'; // get from cookie, user session, ...
-  // await loadTranslations(initLocale, pathname); // keep this just before the `return`
   if (siteSettings) {
 		return {
 			siteSettings,

@@ -10,7 +10,7 @@ if (!PUBLIC_SANITY_PROJECT_ID || !PUBLIC_SANITY_DATASET) {
 export const client = createClient({
 	projectId: PUBLIC_SANITY_PROJECT_ID,
 	dataset: PUBLIC_SANITY_DATASET,
-	useCdn: false, // `false` if you want to ensure fresh data
+	useCdn: true, // `false` if you want to ensure fresh data
 	apiVersion: '2024-03-16' // date of setup
 });
 
@@ -71,33 +71,5 @@ export async function getSuites(): Promise<Suites[]> {
 		groq`*[_type == "suite" && language == "en"]{
 			...,
 			} | order(order asc)`
-	);
-}
-
-export async function getMenu(): Promise<Menu[]> {
-	return await client.fetch(
-		groq`*[_type == "menu"] {
-			title,
-			from,
-			to,
-			menuContents[] {
-				meal,
-				mealContent[] {
-					course,
-					dishes[] {
-						dishReference->{
-							title,
-							description,
-							price,
-							allergens[]->{
-								number,
-								title,
-								description
-							}
-						}
-					}
-				}
-			}
-		} | order(year desc)`
 	);
 }

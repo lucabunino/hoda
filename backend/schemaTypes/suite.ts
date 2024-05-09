@@ -59,14 +59,20 @@ export default {
       ],
     },
     {
-      name: "reservationURL",
-      title: "Reservation URL",
-      type: "url",
-    },
-    {
       name: "rentalId",
       title: "Rental ID",
       type: "string",
     },
+    {
+      name: "order",
+      title: "Order",
+      type: "number",
+    },
   ],
+  preview: {
+    select: {
+      title: 'title',
+      subtitle: 'language',
+    },
+  }
 }

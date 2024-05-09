@@ -1,6 +1,5 @@
 // src/routes/+page.js
-import { getHomepage } from '$lib/utils/sanity';
-import { getSuites } from '$lib/utils/sanity';
+import { getHomepage, getSuites } from '$lib/utils/sanity';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 

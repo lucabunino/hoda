@@ -2,13 +2,19 @@
   import type { PageData } from './$types';
   export let data: PageData;
   
-  import { onMount, afterUpdate, tick } from 'svelte';
+  import { onMount } from 'svelte';
   import { beforeNavigate, afterNavigate } from '$app/navigation';
-  import { page, navigating } from '$app/stores';
-  import { fade, slide, fly } from 'svelte/transition';
+  import { navigating, page } from '$app/stores';
+  import { fade, slide } from 'svelte/transition';
   import { quartInOut } from 'svelte/easing';
-  import { browser } from '$app/environment';
   import {urlFor} from '$lib/utils/image';
+  import Menu from '$lib/components/menu.svelte';
+  import Footer from '$lib/components/footer.svelte';
+  import { languageTag } from "$lib/paraglide/runtime.js";
+  $: lang = languageTag()
+
+  import { ParaglideJS } from '@inlang/paraglide-sveltekit'
+	import { i18n } from '$lib/i18n.js'
 
   $: ready = false
   $: innerWidth = 1280
@@ -29,9 +35,11 @@
   $: noTransition = false;
   $: resizeTimeout = "";
   $: delay1s = false;
+  $: mobileNewsletter = false
 
 
   onMount(() => {
+
     if (innerHeight !== null) {
       if (innerWidth > 900) {
         margin = 16
@@ -40,24 +48,29 @@
       }
       logoMaxWidth = (innerWidth - 2*margin);
       navMaxTop = (innerWidth - margin*2)*.266 + margin*2
-      ready = true;
+      calcHeaderPosition()
     }
+    ready = true;
 	});
+
   beforeNavigate(() => {
     delay1s = true
     setTimeout(() => {
       delay1s = false
+      calcHeaderPosition()
     }, 1000);
 	});
+
   afterNavigate(() => {
-    mobileMenu = false
+    mobileMenu = false;
+    lang = languageTag()
 	});
   
   function scrolling() {
     if ($navigating) {
       console.log("navigating");
     } else {
-      if (data.pathname === "/") {
+      if (data.pathname === "/" || data.pathname === "/it") {
         applyNoTransition();
         logoWidthDifference = (scrollY - 50)/(innerHeight);
         navTopDifference = (scrollY - 50)/(innerHeight*.9);
@@ -76,7 +89,7 @@
 
   function calcHeaderPosition() {
     const deltaScroll = scrollY - prevScrollY;
-    if (data.pathname === "/") {
+    if (data.pathname === "/" || data.pathname === "/it") {
       if (scrollY > innerHeight && deltaScroll > 0) {
         headerPosition = "up";
       } else if (deltaScroll < -10 || scrollY < 50) {
@@ -85,13 +98,13 @@
     } else {
       if (scrollY > 150 && deltaScroll > 10) {
         headerPosition = "up";
-        console.log("its me");
       } else if (deltaScroll < -10 || scrollY < 50) {
         headerPosition = "down";
       }
     }
     prevScrollY = scrollY
   }
+
   function applyNoTransition() {
     noTransition = true; // Set noTransition to true on resize
     clearTimeout(resizeTimeout); // Clear any existing timeout
@@ -99,6 +112,7 @@
       noTransition = false; // Set noTransition back to false after a delay
     }, 200); // Adjust the delay time as needed
   }
+
   function pageTransition(node, { delay, duration, offset=window.scrollY}) {
 		return {
 			delay,
@@ -112,83 +126,48 @@
 			}
 		};
 	}
-  function openMenu() {
-    mobileMenu = !mobileMenu
-	}
-  $: mobileNewsletter = false
-  function openNewsletter() {
-    mobileNewsletter = true
-	}
-  function closeNewsletter() {
-    mobileNewsletter = false
-	}
-  let bookNowButtons = false;
-  let lodgifyActive = ""
-  let scrollLock = false;
-  function book(i) {
-    scrollLock = true
-    lodgifyActive = i
-  }
-  function unbook(i) {
-    bookNowButtons = false
-    lodgifyActive = false
-    scrollLock = false
-  }
-  // let currentUrl = ""
-  // let wip = false;
-  // if (browser) {
-  //   currentUrl = window.location.host;
-  // }
-  // if (currentUrl === "hodamilano.eu") {
-  //   wip = true
-  // } else {
-  //   wip = false
-  // }
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={applyNoTransition} on:scroll={scrolling} on:wheel|nonpassive={e => {if(scrollLock)e.preventDefault()}}/>
+<svelte:window bind:innerWidth bind:innerHeight bind:scrollY={scrollY} on:resize={applyNoTransition} on:scroll={scrolling}/>
+
 <svelte:head>
-  <title>{data.siteSettings[0].SEOTitle.en}</title>
-  <meta name="description" content="{data.siteSettings[0].SEODescription.en}" />
+  <title>{data.siteSettings[0].SEOTitle[lang]}</title>
+  <meta name="description" content="{data.siteSettings[0].SEODescription[lang]}" />
   
-  <meta property="og:title" content="{data.siteSettings[0].SEOTitle.en}" />
+  <meta property="og:title" content="{data.siteSettings[0].SEOTitle[lang]}" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://hodamilano.eu/" />
   <meta property="og:image" content="{urlFor(data.siteSettings[0].SEOImage).url()}" />
 </svelte:head>
 
-<!-- {#if wip}
-<div style="position: fixed; display:grid; align-items:center; justify-items:center; background-color: #FFF, width: 100dvw; width: 100vw; height: 100dvh; height: 100vh;">
-  <h1>Coming soon</h1>
-</div>
-{:else} -->
-
+{#if ready}
 <header id="header"
 bind:clientHeight={logoHeight}
 class={headerPosition}
 class:true={mobileMenu}
-class:closed={$page.url.pathname !== "/"}
+class:closed={$page.url.pathname !== "/" && data.pathname !== "/it"}
 >
   <div class="headerBg"
   style={`--navHeight: ${navHeight}px`}
   class:true={mobileMenu}
   class:noTransition={noTransition == true}
-  class:headerBgHidden={$page.url.pathname === "/" && scrollY < innerHeight - logoHeight}
-  class:headerBgBorder={$page.url.pathname !== "/" || scrollY > innerHeight - logoHeight}>
+  class:headerBgHidden={$page.url.pathname === "/" && scrollY < innerHeight - logoHeight || data.pathname === "/it" && scrollY < innerHeight - logoHeight}
+  class:headerBgBorder={$page.url.pathname !== "/" && data.pathname !== "/it" || scrollY > innerHeight - logoHeight}>
   </div>
+
   {#if data.siteSettings[0].logo}
     <a id="logo"
-    style={scrollY > 50 && data.pathname === "/" && innerWidth ? `width: ${logoWidth}px` : ''}
+    style={scrollY > 50 && data.pathname === "/" && innerWidth || scrollY > 50 && data.pathname === "/it" && innerWidth ? `width: ${logoWidth}px` : ''}
     class:noTransition={noTransition == true && innerWidth > 900}
     class:delay1s={delay1s == true}
     class:true={mobileMenu}
-    class:closed={$page.url.pathname !== "/" || scrollY > 50}
-    href="/" aria-current={$page.url.pathname === '/'}>
+    class:closed={$page.url.pathname !== "/" && $page.url.pathname !== "/it" || scrollY > 50}
+    href={languageTag() === "en" ? "/" : "/" + languageTag()} aria-current={$page.url.pathname === '/' || $page.url.pathname === '/it'}>
       {@html data.siteSettings[0].logo}
     </a>
   {/if}
-  <!-- <button class="btn mobileOnly" class:true={mobileMenu} on:click={openMenu}>Test</button> -->
-  <div id="menuSwitch" class="mobileOnly" class:true={mobileMenu} on:click={openMenu}>
+
+  <div id="menuSwitch" class="mobileOnly" class:true={mobileMenu} on:click={() => { mobileMenu = !mobileMenu }}>
     <div class="line top" class:cross={mobileMenu}></div>
     <div class="line middle" style="transform: translateY(-50%) scaleX({mobileMenu ? 0 : 1})"></div>
     <div class="line bottom" class:cross={mobileMenu}></div>
@@ -197,104 +176,33 @@ class:closed={$page.url.pathname !== "/"}
   bind:clientHeight={navHeight}
   class:noTransition={noTransition == true}
   class={mobileMenu}
-  class:closed={$page.url.pathname !== "/" || scrollY > 50 && innerWidth > 900}
-  style={scrollY > 50 && data.pathname === "/" ? `top: ${navTop}px` : ''}
+  class:closed={$page.url.pathname !== "/" && $page.url.pathname !== "/it" || scrollY > 50 && innerWidth > 900}
+  style={scrollY > 50 && data.pathname === "/" || scrollY > 50 && data.pathname === "/it" ? `top: ${navTop}px` : ''}
   >
-    <ul>
-      <li><a class="menu-item menu-item-mobile" href="/about" aria-current={$page.url.pathname === '/about'}>About</a></li>
-      <li><a class="menu-item menu-item-mobile" href="/suites" aria-current={$page.url.pathname === '/suites'}>Suites</a></li>
-      <li class="hidden"><a class="menu-item menu-item-mobile" href="/neighborhood" aria-current={$page.url.pathname === '/neighborhood'}>Neighborhood</a></li>
-      <li class="hidden"><a class="menu-item menu-item-mobile" href="/shop" aria-current={$page.url.pathname === '/shop'}>Shop</a></li>
-    </ul>
-    <ul>
-      <li in:fade={{duration: 0, easing: quartInOut}}>
-        <a class="menu-item menu-item-mobile btn" href="https://www.booking.hodamilano.eu/en/all-properties" target="_blank" on:click={() => bookNowButtons = true}>Book now</a>
-      </li>
-      <!-- {#if !bookNowButtons && innerWidth > 900}
-        <li in:fade={{duration: 0, easing: quartInOut}}>
-          <p class="menu-item menu-item-mobile btn" href="/about" on:click={() => bookNowButtons = true}>Book now</p>
-        </li>
-      {:else}
-      <div id="bookNowContainer-container">
-        <p class="mobileOnly" style="display: inline-block; margin-right: var(--margin)">Book now</p>
-        <div id="bookNowContainer" in:fade={{duration: 0, easing: quartInOut}} on:mouseleave={() => {setTimeout(() => {bookNowButtons = false}, 2000);}}>
-          {#each data.suitesIds as suite, i (suite)}
-            <li>
-              <p class="menu-item btn" on:click={() => book(i)}>{suite.title}</p>
-            </li>
-          {/each}
-        </div>
-      </div>
-      {/if}
-      <style>
-      :root {
-        --ldg-psb-background: #ffffff;
-        --ldg-psb-border-radius: 0.42em;
-        --ldg-psb-box-shadow: 0px 24px 54px 0px rgba(0, 0, 0, 0.1);
-        --ldg-psb-padding: 16px;
-        --ldg-psb-input-background: #ffffff;
-        --ldg-psb-button-border-radius: 3.58em;
-        --ldg-psb-color-primary: #000000;
-        --ldg-psb-color-primary-lighter:#808080;
-        --ldg-psb-color-primary-darker: #000000;
-        --ldg-psb-color-primary-contrast: #ffffff;
-        --ldg-semantic-color-primary:  #000000;
-        --ldg-semantic-color-primary-lighter: #808080;
-        --ldg-semantic-color-primary-darker: #000000;
-        --ldg-semantic-color-primary-contrast: #ffffff;
-      }
-      #lodgify-search-bar { 
-        position: relative;
-        z-index: 999999;
-        width:100%;
-      }
-      </style>
-      <script src="https://app.lodgify.com/portable-search-bar/stable/renderPortableSearchBar.js"></script>
-      {#each data.suitesIds as suite, i (suite)}
-        {#if lodgifyActive === i}
-          <div id="lodgify-book-now-background" on:click={() => unbook(i)}></div>
-            <div
-            id="lodgify-book-now-box"
-            class="lodgify-book-now-box lodgify-{i}"
-            data-rental-id={suite.rentalId}
-            data-website-id="507783"
-            data-slug="sara-barbara"
-            data-language-code="en"
-            data-new-tab="true"
-            data-check-in-label="Arrival"
-            data-check-out-label="Departure"
-            data-guests-label="Guests"
-            data-guests-singular-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospite"
-            data-guests-plural-label="{'{'}{'{'}NumberOfGuests{'}'}{'}'} ospiti"
-            data-location-input-label="Location"
-            data-total-price-label="Total price:"
-            data-select-dates-to-see-price-label="Select dates to see total price"
-            data-minimum-price-per-night-first-label="From"
-            data-minimum-price-per-night-second-label="per night"
-            data-book-button-label="Book Now"
-            data-version="stable"
-            ></div>
-          <script src="https://app.lodgify.com/book-now-box/stable/renderBookNowBox.js"></script>
-        {/if}
-      {/each} -->
-      <li class="hidden"><a id="languageSwitch" class="menu-item btn-mobile" href="/it">En</a></li>
-    </ul>
+    <ParaglideJS {i18n}>
+      <Menu />
+    </ParaglideJS>
   </nav>
 </header>
+{/if}
 
+{#if ready}
 {#key data.pathname}
   <div style="min-height: 100vh;" in:fade={{duration: 1000, delay: 1000, easing: quartInOut}} out:pageTransition={{duration: 1000, easing: quartInOut}}>
-    <slot></slot>
+    <ParaglideJS {i18n}>
+      <slot />
+    </ParaglideJS>
   </div>
 {/key}
+{/if}
 
 
 {#if ready}
 <div id="newsletter"
 class="hidden"
 transition:slide={{duration: 1000, easing: quartInOut}}
-on:mouseenter={openNewsletter}
-on:mouseleave={closeNewsletter}
+on:mouseenter={() => { mobileNewsletter = true }}
+on:mouseleave={() => { mobileNewsletter = false }}
 class:true={mobileNewsletter}>
   <p>Join the newsletter</p>
   <p>Sign-up to enjoy 10% off your first order.</p>
@@ -311,52 +219,11 @@ class:true={mobileNewsletter}>
 </div>
 {/if}
 
-
-<footer>
-  <div>
-    <p>©{new Date().getFullYear()} d’ARIA Srl</p>
-    <p>{data.siteSettings[0].piva}</p>
-    {#if data.siteSettings[0].maps}
-      <p>{data.siteSettings[0].headquarters}</p>
-    {/if}
-  </div>
-  <div>
-    <p>We are located in:</p>
-    {#if data.siteSettings[0].maps}
-      <a class="maps" target="_blank" href="{data.siteSettings[0].mapsLink}">{data.siteSettings[0].maps}</a>
-    {/if}
-  </div>
-  <div>
-    <p>Contact us:</p>
-    <p>T. <a class="" target="_blank" href="tel:{data.siteSettings[0].phone.replace(/\s/g, '')}">{data.siteSettings[0].phone}</a></p>
-    {#if data.siteSettings[0].mail}
-      <p>M. <a target="_blank" href="mailto:{data.siteSettings[0].mail}">{data.siteSettings[0].mail}</a></p>
-    {/if}
-  </div>
-  <div>
-    <p>Follow us:</p>
-    {#if data.siteSettings[0].instagramLink}
-      <p><a target="_blank" href="{data.siteSettings[0].instagramLink}">{data.siteSettings[0].instagram}</a></p>
-    {/if}
-    {#if data.siteSettings[0].pinterestLink}
-      <p><a target="_blank" href="{data.siteSettings[0].pinterestLink}">{data.siteSettings[0].pinterest}</a></p>
-    {/if}
-  </div>
-  <div>
-    <p><a target="" href="/about">About</a></p>
-    <p><a target="" href="/suites">Suites</a></p>
-    <p class="hidden"><a target="" href="/neighbourhood">Neighbourhood</a></p>
-  </div>
-  <div class="hidden">
-    <p><a target="_blank" href="/shop">Shop</a></p>
-    <p>Return policy shop</p>
-    <p>Terms and conditions</p>
-  </div>
-  <div class="hidden">
-    <p>Cookie policy</p>
-    <p>Privacy policy</p>
-  </div>
-</footer>
+{#if ready}
+  <ParaglideJS {i18n}>
+    <Footer siteSettings={data.siteSettings[0]}/>
+  </ParaglideJS>
+{/if}
 
 <style lang="css">
   header {
@@ -553,18 +420,6 @@ class:true={mobileNewsletter}>
   ::-ms-input-placeholder { /* Edge 12 -18 */
     color: #000;
   }
-  footer {
-    padding: var(--gutter) var(--margin) calc(var(--margin)*2);
-    display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: 1fr var(--gutter) 1fr var(--gutter) 1fr var(--gutter) 1fr var(--gutter) 1fr var(--gutter) 1fr;
-    grid-template-columns: repeat(6, 1fr);
-    gap: var(--gutter);
-  }
-  footer>div>a:hover,
-  footer>div>p>a:hover {
-    color: var(--darkGray);
-  }
   @media only screen and (max-width: 900px) {
     header.up {
       -webkit-transform: translateY(-101%);
@@ -699,32 +554,6 @@ class:true={mobileNewsletter}>
               transition-delay: 0ms;
       opacity: 1;
     }
-    ul {
-      -webkit-box-orient: vertical;
-      -webkit-box-direction: normal;
-          -ms-flex-direction: column;
-              flex-direction: column;
-      padding: 0 var(--margin);
-      margin-top: 100px;
-      gap: 0;
-    }
-    ul+ul {
-      margin-top: 0;
-    }
-    .menu-item-mobile {
-      font-family: 'arizona-flare-light', 'Times New Roman', Times, serif;
-      font-size: 42px;
-      line-height: 53px;
-      letter-spacing: -0.03em;
-      padding: 0;
-      background-color: transparent;
-    }
-    .menu-item-mobile:hover {
-      color: inherit;
-    }
-    ul>button.active {
-      text-decoration: underline;
-    }
     #languageSwitch {
       position: absolute;
       right: 90px;
@@ -760,10 +589,6 @@ class:true={mobileNewsletter}>
       -ms-grid-columns: 1fr var(--gutter) 1fr;
       grid-template-columns: repeat(2, 1fr);
     }
-    footer {
-      -ms-grid-columns: (1fr)[2];
-      grid-template-columns: repeat(2, 1fr);
-    }
   }
   @media only screen and (max-width: 400px) {
     #newsletter>form>div {
@@ -773,10 +598,6 @@ class:true={mobileNewsletter}>
       -webkit-box-pack: justify;
           -ms-flex-pack: justify;
               justify-content: space-between;
-    }
-    footer {
-      -ms-grid-columns: (1fr)[1];
-      grid-template-columns: repeat(1, 1fr);
     }
   }
 </style>
