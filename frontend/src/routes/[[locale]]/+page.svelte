@@ -256,7 +256,7 @@
 {#if data.homepage[0].homepageCleo}
   <section id="cleo">
     <div id="cleo-spline" class:cleoPopup={cleoPopupVisible}>
-      <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.93/build/spline-viewer.js"></script>
+      <script type="module" src="https://unpkg.com/@splinetool/viewer@1.3.1/build/spline-viewer.js"></script>
       <spline-viewer class="desktopOnly" url="https://prod.spline.design/UEEj4bhUtCEMpMjB/scene.splinecode"></spline-viewer>
       <spline-viewer class="mobileOnly" url="https://prod.spline.design/ImmL4rt5FrQ2k-I9/scene.splinecode"></spline-viewer>
       <div id="logo-cover"></div>
