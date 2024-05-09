@@ -33,12 +33,14 @@
   import { enhance } from '$app/forms';  
 
   import { register } from 'swiper/element/bundle';
+
   register();
 
   $: scrollX = 0
   $: innerWidth = 0
 	$: innerHeight = 0
   $: cleoPopupVisible = false
+  $: ready = false
 
   onMount(() => {
     const swiperElements = document.querySelectorAll('.swiperEl');
@@ -117,6 +119,9 @@
         swiperEl.swiper.autoplay.stop();
       });
     });
+    setTimeout(() => {
+      ready = true;
+    }, 2000);
   });
 
   let lodgifyActive = ""
@@ -256,9 +261,11 @@
 {#if data.homepage[0].homepageCleo}
   <section id="cleo">
     <div id="cleo-spline" class:cleoPopup={cleoPopupVisible}>
-      <script type="module" src="https://unpkg.com/@splinetool/viewer@1.3.1/build/spline-viewer.js"></script>
-      <spline-viewer class="desktopOnly" url="https://prod.spline.design/UEEj4bhUtCEMpMjB/scene.splinecode"></spline-viewer>
-      <spline-viewer class="mobileOnly" url="https://prod.spline.design/ImmL4rt5FrQ2k-I9/scene.splinecode"></spline-viewer>
+      {#if ready}
+        <script type="module" src="https://unpkg.com/@splinetool/viewer@1.3.1/build/spline-viewer.js"></script>
+        <spline-viewer class="desktopOnly" url="https://prod.spline.design/UEEj4bhUtCEMpMjB/scene.splinecode"></spline-viewer>
+        <spline-viewer class="mobileOnly" url="https://prod.spline.design/ImmL4rt5FrQ2k-I9/scene.splinecode"></spline-viewer>
+      {/if}
       <div id="logo-cover"></div>
     </div>
     <div id="cleo-logo" class:cleoPopup={cleoPopupVisible}>
