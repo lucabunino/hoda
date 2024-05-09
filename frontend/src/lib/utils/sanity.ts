@@ -73,19 +73,3 @@ export async function getSuites(): Promise<Suites[]> {
 			} | order(order asc)`
 	);
 }
-
-export async function getSuitesEn(): Promise<Suites[]> {
-	return await client.fetch(
-		groq`*[_type == "suite" && language == "en"]{
-			...,
-			} | order(order asc)`
-	);
-}
-
-export async function getSuitesIt(): Promise<Suites[]> {
-	return await client.fetch(
-		groq`*[_type == "suite" && language == "it"]{
-			...,
-			} | order(order asc)`
-	);
-}
