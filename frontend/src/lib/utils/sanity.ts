@@ -68,7 +68,7 @@ export async function getAboutPage(): Promise<SuitesPage[]> {
 
 export async function getSuites(): Promise<Suites[]> {
 	return await client.fetch(
-		groq`*[_type == "suite" && language == "en"]{
+		groq`*[_type == "suite"]{
 			...,
 			} | order(order asc)`
 	);

@@ -67,6 +67,7 @@
       slidesPerView:1.1,
       rewind:'false',
       loop:'true',
+      simulateTouch:'true',
       breakpoints: {
         900: {
           autoplay: {
@@ -74,7 +75,7 @@
           },
           slidesPerView:1,
           simulateTouch:'false',
-          rewind:'true',
+          rewind:'false',
           loop:'false',
         }
       },
@@ -166,7 +167,6 @@
         thumbs-swiper={`.swiperThumbs${i}`}
         slidesPerView=1
         navigation=true
-        simulateTouch=true
         >
           {#each suite.slider as slide, i (slide)}
             <swiper-slide>
@@ -333,6 +333,9 @@
     display: block;
     cursor: pointer;
   }
+  :global(swiper-slide.swiper-slide-active) {
+    opacity: 1 !important;
+  }
   swiper-slide>picture>img {
     width: 100%;
     height: 100%;
@@ -344,7 +347,7 @@
     width: calc(85% - var(--gutter)/4);
     height: 100%;
   }
-  swiper-slide.swiperEl>picture {
+  :global(swiper-slide.swiperEl>picture) {
     width: 100%;
     height: 100%;
     display: block;
