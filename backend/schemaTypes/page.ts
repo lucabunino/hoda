@@ -15,6 +15,20 @@ export default {
   ],
   fields: [
     {
+      name: 'homepageHeroDesktop',
+      title: 'Desktop',
+      type: 'image',
+      group: 'homepage',
+      fieldset: 'hero'
+    },
+    {
+      name: 'homepageHeroMobile',
+      title: 'Mobile',
+      type: 'image',
+      group: 'homepage',
+      fieldset: 'hero'
+    },
+    {
       name: 'homepageIntro',
       title: 'Homepage Intro',
       type: 'object',
@@ -95,20 +109,6 @@ export default {
           }]
         },
       ],
-    },
-    {
-      name: 'homepageHeroDesktop',
-      title: 'Desktop',
-      type: 'image',
-      group: 'homepage',
-      fieldset: 'hero'
-    },
-    {
-      name: 'homepageHeroMobile',
-      title: 'Mobile',
-      type: 'image',
-      group: 'homepage',
-      fieldset: 'hero'
     },
     {
       name: 'homepageLogoCleo',
