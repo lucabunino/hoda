@@ -71,21 +71,6 @@ export default {
       })
     },
     {
-      name: 'pinterest',
-      title: 'Pinterest',
-      type: 'string',
-      fieldset: 'contacts',
-    },
-    {
-      name: 'pinterestLink',
-      title: 'Pinterest Link',
-      type: 'url',
-      fieldset: 'contacts',
-      validation: Rule => Rule.uri({
-        scheme: ['https'],
-      })
-    },
-    {
       name: 'mail',
       title: 'Email',
       type: 'string',
