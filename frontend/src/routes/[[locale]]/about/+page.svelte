@@ -166,7 +166,7 @@
   <p>{m.contactsquestion1()}<br>
     {m.contactswriteat()} <a href="mailto:together@d-aria.eu" target="_blank" class="">together@d-aria.eu</a></p>
   <p>{m.contactsquestion2()}<br>
-    Write at <a href="mailto:welcome@hodamilano.eu" target="_blank" class="">welcome@hodamilano.eu</a></p>
+    {languageTag() === "en" ? "Write at" : "Scrivi a"} <a href="mailto:welcome@hodamilano.eu" target="_blank" class="">welcome@hodamilano.eu</a></p>
 </section>
 
 <style>
